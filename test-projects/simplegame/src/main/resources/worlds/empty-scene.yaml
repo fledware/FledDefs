@@ -1,0 +1,4 @@
+systems:
+  - movement
+components:
+  custom-scene-data: {}

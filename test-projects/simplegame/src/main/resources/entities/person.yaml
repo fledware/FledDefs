@@ -1,0 +1,5 @@
+components:
+  placement: {}
+  movement:
+    deltaX: 0
+    deltaY: 0

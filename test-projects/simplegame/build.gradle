@@ -1,0 +1,4 @@
+dependencies {
+  implementation "io.fledware:fledecs:$fledEcsVersion"
+  implementation project(":definitions-ecs")
+}

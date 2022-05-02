@@ -1,0 +1,7 @@
+name: info
+version: 0.1.0
+dependencies:
+  - name: core
+    version: ">= 0.1.0"
+  - name: betterinput
+    version: ">= 0.1.0"

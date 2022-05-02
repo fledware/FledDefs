@@ -1,0 +1,4 @@
+components:
+  map-dimensions:
+    sizeX: 100
+    sizeY: 100

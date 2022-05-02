@@ -1,0 +1,4 @@
+package loading
+
+class HelloSomeClass {
+}

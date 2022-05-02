@@ -1,0 +1,10 @@
+components:
+  system-location:
+    x: 0
+    y: 0
+  2d-graphics: {}
+systems:
+  - orbit-graph
+  - orbit
+  - solar-system-graphics
+  - solar-system-input

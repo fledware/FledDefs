@@ -1,0 +1,5 @@
+tags: [planet]
+weight: 100
+entityType: points.planet
+childrenCount: {"start":-1,"end":2}
+childrenTags: [ belt, moon ]

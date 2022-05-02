@@ -1,0 +1,13 @@
+
+dependencies {
+  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+  api "io.github.libktx:ktx-app:$ktxVersion"
+  api "io.github.libktx:ktx-style:$ktxVersion"
+  api "io.github.libktx:ktx-actors:$ktxVersion"
+  api "io.github.libktx:ktx-scene2d:$ktxVersion"
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
+
+  api "io.fledware:fledecs:$fledEcsVersion"
+  api project(":definitions")
+  api project(":definitions-ecs")
+}

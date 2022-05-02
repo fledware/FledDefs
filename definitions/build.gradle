@@ -1,0 +1,39 @@
+dependencies {
+  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+  api "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+  api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
+
+  api "io.fledware:fledutils:$fledUtilsVersion"
+  api "org.slf4j:slf4j-api:$slf4jVersion"
+  api "com.vdurmont:semver4j:$semver4jVersion"
+
+  api "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
+  api "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion"
+  api("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion") {
+    exclude module: "org.jetbrains.kotlin", group: "kotlin-reflect"
+    exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"
+  }
+
+  testRuntimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
+  testRuntimeOnly "org.apache.logging.log4j:log4j-api:$log4jVersion"
+  testRuntimeOnly "org.apache.logging.log4j:log4j-core:$log4jVersion"
+
+  testImplementation project(":definitions-test-util")
+  testImplementation project(":test-projects:simpledefs")
+  testImplementation project(":test-projects:simpledefs-api")
+}
+
+test {
+  // this cannot be depended on directly because the app class loader
+  // will load this class, making it able to run on all permissions
+  // and wouldn't be a true gather.
+  it.dependsOn(":test-projects:evil:build")
+  it.dependsOn(":test-projects:loading:build")
+  it.dependsOn(":test-projects:loading-2:build")
+  it.dependsOn(":test-projects:loading-invalid:build")
+  it.dependsOn(":test-projects:simpledefs:build")
+  it.dependsOn(":test-projects:simpledefs-api:build")
+  it.dependsOn(":test-projects:simpledefs-override-2:build")
+  it.dependsOn(":test-projects:simplegame:build")
+  it.dependsOn(":test-projects:simplegame-overrides:build")
+}

@@ -1,0 +1,6 @@
+components:
+  orbit: {}
+  size:
+    size: 20
+  metadata:
+    type: star

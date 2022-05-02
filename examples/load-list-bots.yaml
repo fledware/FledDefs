@@ -1,0 +1,8 @@
+orderedLoad:
+  # basic helpers
+  - type: load
+    target: libgdx-helpers/build/libs/libgdx-helpers-0.1.0-SNAPSHOT.jar
+
+  # load the core of the game
+  - type: gather
+    target: bots-core/build/libs/bots-core-0.1.0-SNAPSHOT.jar

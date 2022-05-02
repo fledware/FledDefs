@@ -1,0 +1,6 @@
+lifecycle: somefile
+commands:
+  - definitions: ok*
+    command: //strings!append(lala)
+  - definitions: ok*
+    command: //meta/mutated!set(you)

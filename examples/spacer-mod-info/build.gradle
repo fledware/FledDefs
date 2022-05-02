@@ -1,0 +1,4 @@
+dependencies {
+  api project(":examples:spacer-core")
+  api project(":examples:spacer-mod-betterinput")
+}

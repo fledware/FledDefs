@@ -1,0 +1,7 @@
+someInt: 123
+strings: [ "string", "hello" ]
+blah: true
+meta:
+  first: ok
+  new: blah
+  number: 234

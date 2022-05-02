@@ -1,0 +1,6 @@
+components:
+  orbit: {}
+  size:
+    size: 3
+  metadata:
+    type: planet

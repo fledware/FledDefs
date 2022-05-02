@@ -1,0 +1,6 @@
+dependencies {
+  implementation "io.fledware:fledecs:$fledEcsVersion"
+  implementation project(":definitions-ecs")
+
+  implementation project(":test-projects:simplegame")
+}

@@ -1,0 +1,17 @@
+systems:
+  - movement
+entities:
+  - type: map
+    name: map
+  - type: person
+    components:
+      placement:
+        x: 1
+        y: 1
+        size: 1
+  - type: person
+    components:
+      placement:
+        x: 8
+        y: 8
+        size: 1

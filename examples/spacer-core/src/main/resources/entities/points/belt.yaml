@@ -1,0 +1,6 @@
+components:
+  orbit: {}
+  size:
+    size: 5
+  metadata:
+    type: belt

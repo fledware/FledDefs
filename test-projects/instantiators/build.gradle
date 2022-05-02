@@ -1,0 +1,7 @@
+dependencies {
+  implementation project(":definitions")
+  implementation project(":definitions-ecs")
+  implementation project(":definitions-ecs-ashely")
+  implementation project(":definitions-ecs-fled")
+  implementation "io.fledware:fledecs:$fledEcsVersion"
+}

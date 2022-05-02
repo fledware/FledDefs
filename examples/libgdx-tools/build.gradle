@@ -1,0 +1,20 @@
+apply plugin: 'application'
+
+dependencies {
+  api project(":examples:libgdx-helpers")
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+}
+
+task generateAtlases(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  main = "driver.tools.GenerateAtlasKt"
+}
+
+task generateAtlasAndShow(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  main = "driver.tools.GenerateAtlasAndShowKt"
+}

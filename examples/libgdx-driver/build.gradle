@@ -1,0 +1,49 @@
+apply plugin: 'application'
+
+dependencies {
+  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+  api "io.fledware:fledecs:$fledEcsVersion"
+  api project(":definitions")
+  api project(":definitions-ecs")
+  api project(":definitions-ecs-fled")
+  api project(":definitions-libgdx")
+  api "io.github.libktx:ktx-app:$ktxVersion"
+  api "io.github.libktx:ktx-style:$ktxVersion"
+  api "io.github.libktx:ktx-actors:$ktxVersion"
+  api "io.github.libktx:ktx-scene2d:$ktxVersion"
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+
+  runtimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
+  runtimeOnly "org.apache.logging.log4j:log4j-api:$log4jVersion"
+  runtimeOnly "org.apache.logging.log4j:log4j-core:$log4jVersion"
+}
+
+task runSpacer(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'driver.MainKt'
+  args = [ "../load-list-spacer.yaml" ]
+
+  // we don't want to add any of the game code into the classpath
+  // of the driver, but we still need to make sure the dependent
+  // code is compiled. In a real example, the way to distribute a
+  // module/mod would be to load a jar, which would be already
+  // compiled. So, this pattern doesn't break the expected design.
+  dependsOn(":examples:libgdx-helpers:build")
+  dependsOn(":examples:spacer-core:build")
+  dependsOn(":examples:spacer-mod-betterinput:build")
+  dependsOn(":examples:spacer-mod-hyperspace-renderer:build")
+  dependsOn(":examples:spacer-mod-info:build")
+}
+
+task runBots(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'driver.MainKt'
+  args = [ "../load-list-bots.yaml" ]
+
+  dependsOn(":examples:libgdx-helpers:build")
+  dependsOn(":examples:bots-core:build")
+}

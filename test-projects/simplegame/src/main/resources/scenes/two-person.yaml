@@ -1,0 +1,17 @@
+entities:
+  - type: map
+    name: map
+  - type: person
+    name: person1
+    components:
+      placement:
+        x: 1
+        y: 1
+        size: 1
+  - type: person
+    name: person2
+    components:
+      placement:
+        x: 8
+        y: 8
+        size: 1

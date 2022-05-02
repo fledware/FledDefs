@@ -1,0 +1,6 @@
+components:
+  2d-graphics: {}
+systems:
+  - solar-system-locations
+  - hyperspace-graphics
+  - hyperspace-input

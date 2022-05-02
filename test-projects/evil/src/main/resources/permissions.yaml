@@ -1,0 +1,7 @@
+permissions:
+  - klass: java.io.FilePermission
+    name: ..
+    actions: read
+  - klass: java.util.PropertyPermission
+    name: user.dir
+    actions: read

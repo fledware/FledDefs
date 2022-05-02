@@ -1,0 +1,15 @@
+dependencies {
+  implementation project(':definitions')
+
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+
+  testImplementation "io.fledware:fledecs:$fledEcsVersion"
+  testImplementation project(":definitions-ecs")
+  testImplementation project(":definitions-test-util")
+}
+
+
+test {
+  it.dependsOn(":test-projects:simplegame:build")
+}
