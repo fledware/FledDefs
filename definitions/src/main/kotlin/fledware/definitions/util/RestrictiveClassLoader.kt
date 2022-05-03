@@ -14,6 +14,14 @@ import java.security.ProtectionDomain
 import java.security.SecurityPermission
 import java.util.PropertyPermission
 
+/**
+ * A class loader that automatically extends the ClassLoader.
+ * It also will try to set up security checks.
+ *
+ * NOTE: the security manager and policy are being removed soon.
+ * It will soon be on the implementor of the driver to ensure that
+ * code is loaded from trusted places if jars are allowed to be uploaded.
+ */
 @Suppress("MemberVisibilityCanBePrivate")
 open class RestrictiveClassLoaderWrapper {
   private val logger = LoggerFactory.getLogger(RestrictiveClassLoader::class.java)
@@ -37,6 +45,11 @@ open class RestrictiveClassLoaderWrapper {
     if (permissions.isReadOnly)
       throw IllegalStateException("wrapper is read only")
   }
+
+  /**
+   * Tests if the given permission is implied (allowed).
+   */
+  fun implies(permission: Permission) = permissions.implies(permission)
 
   /**
    * Appends the classpath with the given path.

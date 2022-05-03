@@ -4,6 +4,8 @@ import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.GatherIterationType
 import fledware.definitions.RawDefinitionFrom
 import fledware.definitions.util.SerializationFormats
+import fledware.utilities.debug
+import fledware.utilities.info
 import org.slf4j.LoggerFactory
 import java.io.File
 
@@ -53,9 +55,12 @@ fun DefinitionsBuilder.gatherDir(dirPath: String, iteration: GatherIterationType
  * Note, this method will modify the class loader.
  */
 fun DefinitionsBuilder.gatherDir(dirPath: File, iteration: GatherIterationType = GatherIterationType.SINGLE) {
+  if (!dirPath.isDirectory)
+    throw IllegalArgumentException("gatherDir can only be called on a directory: $dirPath")
   logger.info("gatherDir on $dirPath")
   this.appendToClasspath(dirPath)
   val reader = FileRawDefinitionReader(this.classLoader, this.serialization, dirPath)
   reader.setupPackageDetails()
+  logger.debug { "found ${reader.entries.size} entries" }
   this.gather(reader, iteration)
 }

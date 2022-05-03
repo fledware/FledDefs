@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package thing.evil
 
 import fledware.definitions.DefinitionsBuilder
@@ -50,4 +52,3 @@ fun evilAddAllPermissions(builder: DefinitionsBuilder)  {
   val wrapper = (builder as DefaultDefinitionsBuilder).classLoaderWrapper
   wrapper.permit(AllPermission())
 }
-

@@ -246,6 +246,8 @@ open class DefaultDefinitionsBuilder(
   protected open fun figureSelectionInfo(infos: MutableList<SelectionInfo>,
                                          reader: RawDefinitionReader,
                                          entry: String) {
+    if (entry.isBlank())
+      throw IllegalArgumentException("entry is empty at ${reader.root}: ${reader.entries}")
     if (!selectionInfoFilter(entry)) return
     when {
       // Root class files. This is how we find root methods.

@@ -1,5 +1,6 @@
 package fledware.definitions.builtin
 
+import fledware.definitions.DefinitionException
 import fledware.definitions.Lifecycle
 import fledware.definitions.RawDefinitionFromParent
 import fledware.definitions.reader.gatherDir
@@ -12,13 +13,17 @@ import java.security.AccessControlException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class PermissionDefinitionTest {
-  private fun builder(withPermissions: Boolean, block: (builder: DefaultDefinitionsBuilder) -> Unit) {
+  private fun builder(withPermissions: Boolean, withAddLifecycle: Boolean = false,
+                      block: (builder: DefaultDefinitionsBuilder) -> Unit) {
     val lifecycles = mutableListOf<Lifecycle>()
     lifecycles += ConfigLifecycle()
     lifecycles += BuilderEventsLifecycle()
+    if (withAddLifecycle) lifecycles += AddLifecycleLifecycle()
     if (withPermissions) lifecycles += PermissionsLifecycle()
     val builder = DefaultDefinitionsBuilder(lifecycles)
     builder.classLoaderWrapper.ensureSecuritySetup()
@@ -79,5 +84,16 @@ class PermissionDefinitionTest {
       builder.gatherDir("evil-files".testFilePath.absolutePath)
     }
     assertEquals("never allowed to have AllPermission", exception.message)
+  }
+
+  @Test
+  fun testCannotAddPermissionLifecycle() = builder(false, true) { builder ->
+    val exception = assertFailsWith<DefinitionException> {
+      builder.gatherJar("evil-clever".testJarPath.absolutePath)
+    }
+    val invocation = assertIs<InvocationTargetException>(exception.cause)
+    val access = assertIs<AccessControlException>(invocation.cause)
+    assertEquals("access denied (\"java.security.AllPermission\" \"<all permissions>\" \"<all actions>\")", access.message)
+    assertNull(builder.lifecycles["permission"])
   }
 }

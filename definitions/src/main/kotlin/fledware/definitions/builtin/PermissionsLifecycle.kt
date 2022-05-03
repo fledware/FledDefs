@@ -19,6 +19,7 @@ import fledware.definitions.reader.readValue
 import fledware.definitions.registry.DefaultDefinitionsBuilder
 import fledware.definitions.registry.SimpleDefinitionRegistry
 import org.slf4j.LoggerFactory
+import java.security.AllPermission
 import java.security.Permission
 
 
@@ -95,11 +96,15 @@ fun DefinitionsBuilder.errorOnDeniedPermission() {
 //
 // ==================================================================
 
-class PermissionRawDefinitionMutator(private val acceptPermission: (permission: Permission) -> Boolean)
+private class PermissionRawDefinitionMutator(private val acceptPermission: (permission: Permission) -> Boolean)
   : AbstractNonMutableProcessor<PermissionRawDefinition>(ProcessorIterationGroup.BUILDER) {
 
   companion object {
     private val logger = LoggerFactory.getLogger(PermissionRawDefinitionMutator::class.java)
+  }
+
+  init {
+    System.getSecurityManager()?.checkPermission(AllPermission())
   }
 
   override fun gatherBegin(reader: RawDefinitionReader) {
@@ -162,12 +167,24 @@ class PermissionRawDefinitionMutator(private val acceptPermission: (permission: 
 //
 // ==================================================================
 
-open class PermissionsLifecycle : Lifecycle {
-  // TODO: maybe add a permission check here to even construct this lifecycle?
+/**
+ * The only way to add permissions is to have AllPermission. But,
+ * because permissions are always added from the gathering process,
+ * there are potentially ways to add other [PermissionsLifecycle] with
+ * a different name. To protect against this, we check that the calling
+ * code has [AllPermission] before the lifecycle is passed back
+ * to the gather process (which is on a thread with [AllPermission]).
+ */
+class PermissionsLifecycle(
+    private val acceptPermission: (permission: Permission) -> Boolean = { true }
+) : Lifecycle {
+  init {
+    System.getSecurityManager()?.checkPermission(AllPermission())
+  }
 
   override val name = "permission"
   override val rawDefinition = RawDefinitionLifecycle<PermissionRawDefinition> {
-    PermissionRawDefinitionMutator { true }
+    PermissionRawDefinitionMutator(acceptPermission)
   }
 
   override val definition = DefinitionLifecycle<PermissionDefinition> { definitions, ordered, froms ->

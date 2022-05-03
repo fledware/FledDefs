@@ -4,6 +4,7 @@ import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.GatherIterationType
 import fledware.definitions.RawDefinitionFrom
 import fledware.definitions.util.SerializationFormats
+import fledware.utilities.debug
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.jar.JarFile
@@ -61,6 +62,7 @@ fun DefinitionsBuilder.gatherJar(jarPath: File, iteration: GatherIterationType =
   logger.info("gatherJar on $jarPath")
   this.appendToClasspath(jarPath)
   val reader = JarRawDefinitionReader(this.classLoader, this.serialization, jarPath)
+  logger.debug { "found ${reader.entries.size} entries" }
   reader.setupPackageDetails()
   this.gather(reader, iteration)
 }
