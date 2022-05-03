@@ -1,0 +1,4 @@
+permissions:
+  - klass: java.io.FilePermission
+    name: "<<all>>"
+    actions: execute

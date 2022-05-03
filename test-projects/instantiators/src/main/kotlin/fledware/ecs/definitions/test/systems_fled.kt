@@ -12,6 +12,7 @@ import fledware.ecs.WorldData
 import fledware.ecs.componentIndexOf
 import fledware.ecs.definitions.systemDefinitions
 
+@Suppress("unused")
 @BuilderEvent(BuilderEventType.OnBeforeBuild)
 fun addFledSystems(builder: DefinitionsBuilder) {
   val config = builder.configDefinitions["type"].config["type"]

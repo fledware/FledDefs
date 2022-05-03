@@ -1,3 +1,9 @@
 dependencies {
   api project(':definitions')
+
+  testImplementation project(':definitions-test-util')
+}
+
+test {
+  dependsOn(':test-projects:instantiators:build')
 }

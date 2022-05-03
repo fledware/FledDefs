@@ -14,6 +14,7 @@ import fledware.definitions.builtin.configDefinitions
 import fledware.definitions.lifecycle.BasicClassDefinition
 import fledware.ecs.definitions.systemDefinitions
 
+@Suppress("unused")
 @BuilderEvent(BuilderEventType.OnBeforeBuild)
 fun addAshelySystems(builder: DefinitionsBuilder) {
   val config = builder.configDefinitions["type"].config["type"]

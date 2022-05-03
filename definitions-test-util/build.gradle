@@ -2,6 +2,12 @@ dependencies {
   implementation project(':definitions')
   implementation project(':definitions-libgdx')
 
+  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+  api "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+  api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
+  api "io.fledware:fledutils:$fledUtilsVersion"
+  api "org.slf4j:slf4j-api:$slf4jVersion"
+  api "com.vdurmont:semver4j:$semver4jVersion"
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
   api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 	api "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
