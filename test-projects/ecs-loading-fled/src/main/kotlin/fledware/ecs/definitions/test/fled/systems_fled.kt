@@ -18,7 +18,7 @@ val WorldData.map get() = entitiesNamed["map"] ?: throw IllegalStateException("m
 @EcsSystem("movement")
 class FledMovementSystem : GroupIteratorSystem() {
 
-  val placementIndex by lazy { data.definedComponentIndexOf<Placement>("placement") }
+  val placementIndex by lazy { data.definedComponentIndexOf<Placement>() }
   val movementIndex by lazy { data.componentIndexOf<Movement>() }
   val mapIndex by lazy { data.componentIndexOf<MapDimensions>() }
 

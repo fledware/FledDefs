@@ -1,7 +1,0 @@
-dependencies {
-  implementation project(":definitions")
-  implementation project(":definitions-ecs")
-  implementation project(":definitions-ecs-ashley")
-  implementation project(":definitions-ecs-fled")
-  implementation "io.fledware:fledecs:$fledEcsVersion"
-}

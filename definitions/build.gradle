@@ -21,7 +21,6 @@ test {
   it.dependsOn(":test-projects:evil-clever:build")
   it.dependsOn(":test-projects:file-search:build")
   it.dependsOn(":test-projects:loading:build")
-  it.dependsOn(":test-projects:loading-2:build")
   it.dependsOn(":test-projects:loading-invalid:build")
   it.dependsOn(":test-projects:simpledefs:build")
   it.dependsOn(":test-projects:simpledefs-api:build")

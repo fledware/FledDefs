@@ -3,11 +3,9 @@ package fledware.ecs.definitions
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
 import fledware.definitions.InstantiatedLifecycle
-import fledware.definitions.lifecycle.BasicClassDefinition
 import fledware.definitions.lifecycle.BasicClassProcessor
 import fledware.definitions.lifecycle.ClassDefinitionRegistry
 import fledware.definitions.lifecycle.classLifecycle
-import fledware.definitions.registry.SimpleDefinitionRegistry
 
 
 /**
@@ -17,11 +15,11 @@ import fledware.definitions.registry.SimpleDefinitionRegistry
 annotation class EcsSystem(val name: String)
 
 /**
- * gets the [ClassDefinitionRegistry]<BasicClassDefinition> for systems
+ * gets the [ClassDefinitionRegistry] for systems
  */
 @Suppress("UNCHECKED_CAST")
-val DefinitionsManager.systemDefinitions: ClassDefinitionRegistry<BasicClassDefinition>
-  get() = registry(systemLifecycleName) as ClassDefinitionRegistry<BasicClassDefinition>
+val DefinitionsManager.systemDefinitions: ClassDefinitionRegistry
+  get() = registry(systemLifecycleName) as ClassDefinitionRegistry
 
 /**
  * gets the [BasicClassProcessor] for systems

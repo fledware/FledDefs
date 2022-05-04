@@ -24,6 +24,7 @@ import fledware.ecs.definitions.worldLifecycleName
 import fledware.ecs.ex.importScene
 import fledware.ecs.util.MapperIndex
 import fledware.utilities.get
+import fledware.utilities.getMaybe
 import kotlin.reflect.full.isSuperclassOf
 
 
@@ -60,10 +61,9 @@ val WorldData.definitions: DefinitionsManager
  *
  * Example of this is in the ecs-loading test project.
  */
-inline fun <reified T : Any> EngineData.definedComponentIndexOf(componentName: String): MapperIndex<T> {
-  val componentType = definitions.componentDefinitions.indexedTypes.get<T>()
-  if (!T::class.isSuperclassOf(componentType))
-    throw IllegalArgumentException("component $componentName is not a subclass of ${T::class}: $componentType")
+inline fun <reified T : Any> EngineData.definedComponentIndexOf(): MapperIndex<T> {
+  val componentType = definitions.componentDefinitions.typeIndex.getMaybe<T>()
+      ?: throw IllegalArgumentException("no type found that extends: ${T::class}")
   @Suppress("UNCHECKED_CAST")
   return entityComponentIndexOf(componentType) as MapperIndex<T>
 }
@@ -79,8 +79,8 @@ inline fun <reified T : Any> EngineData.definedComponentIndexOf(componentName: S
  *
  * Example of this is in the ecs-loading test project.
  */
-inline fun <reified T : Any> WorldData.definedComponentIndexOf(componentName: String): MapperIndex<T> {
-  return engine.data.definedComponentIndexOf(componentName)
+inline fun <reified T : Any> WorldData.definedComponentIndexOf(): MapperIndex<T> {
+  return engine.data.definedComponentIndexOf()
 }
 
 
