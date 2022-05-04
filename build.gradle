@@ -29,6 +29,7 @@ buildscript {
 
 allprojects {
   apply plugin: 'java-library'
+  apply plugin: 'java-test-fixtures'
   apply plugin: 'kotlin'
   apply plugin: 'idea'
   compileJava {
@@ -48,6 +49,24 @@ allprojects {
 subprojects {
   version = new File('version.txt').text
   ext.appName = 'fledecs'
+
+  dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    testRuntimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
+    testRuntimeOnly "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    testRuntimeOnly "org.apache.logging.log4j:log4j-core:$log4jVersion"
+
+    testFixturesImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    testFixturesImplementation "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVersion"
+    testFixturesImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+  }
 
   test {
     useJUnitPlatform()

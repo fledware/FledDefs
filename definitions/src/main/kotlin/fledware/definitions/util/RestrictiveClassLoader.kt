@@ -100,9 +100,6 @@ open class RestrictiveClassLoaderWrapper {
    * setupSecurityManager after the execution of the trusted code is
    * finished, but before loading untrusted code.
    *
-   * ** Do not run even trusted code if you don't control the build process **
-   * Only run code when you control the entire build process.
-   *
    * Note, ensureSecuritySetup can be called after this and this
    * call will be like it didn't happen.
    */

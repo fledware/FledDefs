@@ -9,6 +9,7 @@ import fledware.ecs.EntityFactory
 import fledware.ecs.World
 import fledware.ecs.WorldData
 import fledware.ecs.createWorldAndFlush
+import fledware.ecs.definitions.componentDefinitions
 import fledware.ecs.definitions.componentLifecycle
 import fledware.ecs.definitions.componentLifecycleName
 import fledware.ecs.definitions.entityLifecycle
@@ -21,7 +22,9 @@ import fledware.ecs.definitions.systemLifecycleName
 import fledware.ecs.definitions.worldLifecycle
 import fledware.ecs.definitions.worldLifecycleName
 import fledware.ecs.ex.importScene
+import fledware.ecs.util.MapperIndex
 import fledware.utilities.get
+import kotlin.reflect.full.isSuperclassOf
 
 
 // ==================================================================
@@ -35,6 +38,50 @@ val EngineData.definitions: DefinitionsManager
 
 val AbstractSystem.definitions: DefinitionsManager
   get() = this.engine.data.definitions
+
+val WorldData.definitions: DefinitionsManager
+  get() = this.engine.data.definitions
+
+
+// ==================================================================
+//
+// defined component indexes
+//
+// ==================================================================
+
+/**
+ * Gets the MapperIndex for the given entity component based on the name.
+ * This will attempt to find the concrete class that is defined. It will also
+ * check that the concrete type extends [T].
+ *
+ * This is useful for when component types are allowed to be overridden.
+ * There should be a common interface (or base class) defined and that
+ * way systems don't need to know the concrete type.
+ *
+ * Example of this is in the ecs-loading test project.
+ */
+inline fun <reified T : Any> EngineData.definedComponentIndexOf(componentName: String): MapperIndex<T> {
+  val componentType = definitions.componentDefinitions.indexedTypes.get<T>()
+  if (!T::class.isSuperclassOf(componentType))
+    throw IllegalArgumentException("component $componentName is not a subclass of ${T::class}: $componentType")
+  @Suppress("UNCHECKED_CAST")
+  return entityComponentIndexOf(componentType) as MapperIndex<T>
+}
+
+/**
+ * Gets the MapperIndex for the given entity component based on the name.
+ * This will attempt to find the concrete class that is defined. It will also
+ * check that the concrete type extends [T].
+ *
+ * This is useful for when component types are allowed to be overridden.
+ * There should be a common interface (or base class) defined and that
+ * way systems don't need to know the concrete type.
+ *
+ * Example of this is in the ecs-loading test project.
+ */
+inline fun <reified T : Any> WorldData.definedComponentIndexOf(componentName: String): MapperIndex<T> {
+  return engine.data.definedComponentIndexOf(componentName)
+}
 
 
 // ==================================================================

@@ -8,6 +8,7 @@ import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty1
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.memberProperties
 
@@ -20,8 +21,43 @@ interface DefinitionReflectionException {
   val arguments: Map<String, ReflectCallerReport>
 }
 
+/**
+ * Not sure if this is actually correct. But it seems to be
+ * protecting against the error that would be thrown.
+ */
 fun KClass<*>.isSynthetic(): Boolean {
   return this.simpleName == null
+}
+
+// ==================================================================
+//
+// safe property getters/setters
+//
+// ==================================================================
+
+fun Any.safeFindProperty(propertyName: String): KProperty1<Any, Any?> {
+  val memberProperties = this::class.memberProperties
+  @Suppress("UNCHECKED_CAST")
+  return memberProperties.firstOrNull { it.name == propertyName }
+      as? KProperty1<Any, Any?> ?: throw IllegalArgumentException(
+          "property $propertyName not found for ${this::class}: " +
+              "available properties ${memberProperties.map { it.name }}")
+}
+
+/**
+ *
+ */
+fun Any.safeGet(propertyName: String): Any? {
+  return safeFindProperty(propertyName).get(this)
+}
+
+/**
+ *
+ */
+fun Any.safeSet(propertyName: String, value: Any?) {
+  val mutableProperty = safeFindProperty(propertyName) as? KMutableProperty1<Any, Any?>
+      ?: throw IllegalArgumentException("property $propertyName is not mutable on ${this::class}")
+  mutableProperty.set(this, value)
 }
 
 // ==================================================================

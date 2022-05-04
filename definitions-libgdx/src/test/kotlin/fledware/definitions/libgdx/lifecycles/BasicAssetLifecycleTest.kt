@@ -10,6 +10,7 @@ import fledware.definitions.libgdx.createAssetManager
 import fledware.definitions.libgdx.loadAll
 import fledware.definitions.tests.LibGdxTest
 import fledware.definitions.tests.builder
+import fledware.definitions.tests.libgdxBuilder
 import fledware.definitions.tests.testFilePath
 import fledware.definitions.tests.testJarPath
 import org.junit.jupiter.params.ParameterizedTest
@@ -37,14 +38,14 @@ class BasicAssetLifecycleTest : LibGdxTest() {
 
   @ParameterizedTest
   @MethodSource("getData")
-  fun canLoadFromDir(lifecycle: Lifecycle) = builder(listOf(lifecycle)) { builder ->
+  fun canLoadFromDir(lifecycle: Lifecycle) = libgdxBuilder(listOf(lifecycle)) { builder ->
     builder.gatherDir(File("simplegame".testFilePath, "src/main/resources").canonicalPath)
     actualTest(builder, lifecycle)
   }
 
   @ParameterizedTest
   @MethodSource("getData")
-  fun canLoadFromArchive(lifecycle: Lifecycle) = builder(listOf(lifecycle)) { builder ->
+  fun canLoadFromArchive(lifecycle: Lifecycle) = libgdxBuilder(listOf(lifecycle)) { builder ->
     builder.gatherJar("simplegame".testJarPath.canonicalPath)
     actualTest(builder, lifecycle)
   }
@@ -64,14 +65,14 @@ class BasicAssetLifecycleTest : LibGdxTest() {
 
   @ParameterizedTest
   @MethodSource("getData")
-  fun assetManagerCanLoadFromDir(lifecycle: Lifecycle) = builder(listOf(lifecycle)) { builder ->
+  fun assetManagerCanLoadFromDir(lifecycle: Lifecycle) = libgdxBuilder(listOf(lifecycle)) { builder ->
     builder.gatherDir(File("simplegame".testFilePath, "src/main/resources").canonicalPath)
     assetManagerActualTest(builder, lifecycle)
   }
 
   @ParameterizedTest
   @MethodSource("getData")
-  fun assetManagerCanLoadFromArchive(lifecycle: Lifecycle) = builder(listOf(lifecycle)) { builder ->
+  fun assetManagerCanLoadFromArchive(lifecycle: Lifecycle) = libgdxBuilder(listOf(lifecycle)) { builder ->
     builder.gatherJar("simplegame".testJarPath.canonicalPath)
     assetManagerActualTest(builder, lifecycle)
   }

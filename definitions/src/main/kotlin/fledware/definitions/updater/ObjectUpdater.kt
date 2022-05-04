@@ -140,7 +140,7 @@ open class ObjectUpdater(
    */
   fun apply(target: Any, overrides: Any): Int {
     if (!overrides.isAllowedValueType())
-      throw IllegalArgumentException("value type not allowed: $overrides")
+      throw IllegalArgumentException("value type not allowed (${overrides::class}): $overrides")
     return applyRecursive(mutableListOf(), target, overrides)
   }
 

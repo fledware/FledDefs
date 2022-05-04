@@ -14,6 +14,8 @@ import fledware.definitions.processor.AbstractRawDefinitionState
 import fledware.definitions.processor.RawDefinitionAggregator
 import fledware.definitions.reader.RawDefinitionReader
 import fledware.definitions.registry.SimpleDefinitionRegistry
+import fledware.utilities.ConcurrentTypedMap
+import fledware.utilities.TypedMap
 import kotlin.reflect.KClass
 import kotlin.reflect.safeCast
 
@@ -100,6 +102,25 @@ class BasicClassHandler(
   }
 }
 
+// ==================================================================
+//
+//
+//
+// ==================================================================
+
+class ClassDefinitionRegistry<D : Definition>(
+    definitions: Map<String, D>,
+    orderedDefinitions: List<D>,
+    fromDefinitions: Map<String, List<RawDefinitionFrom>>
+) : SimpleDefinitionRegistry<D>(definitions, orderedDefinitions, fromDefinitions) {
+  val indexedTypes: TypedMap<Any>
+  init {
+    val index = ConcurrentTypedMap()
+    orderedDefinitions.forEach { index.add(it) }
+    indexedTypes = index
+  }
+}
+
 
 // ==================================================================
 //
@@ -117,7 +138,7 @@ class BasicClassLifecycle(override val name: String,
   }
 
   override val definition = DefinitionLifecycle<BasicClassDefinition> { definitions, ordered, froms ->
-    SimpleDefinitionRegistry(definitions, ordered, froms)
+    ClassDefinitionRegistry(definitions, ordered, froms)
   }
 }
 

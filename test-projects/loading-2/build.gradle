@@ -1,4 +1,0 @@
-dependencies {
-  implementation project(":test-projects:loading")
-  implementation project(":definitions")
-}

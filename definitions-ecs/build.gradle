@@ -1,9 +1,10 @@
 dependencies {
   api project(':definitions')
 
-  testImplementation project(':definitions-test-util')
+  testFixturesApi testFixtures(project(":definitions"))
 }
 
 test {
-  dependsOn(':test-projects:instantiators:build')
+  dependsOn(':test-projects:ecs-loading:build')
+  dependsOn(':test-projects:ecs-loading-override:build')
 }

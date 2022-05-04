@@ -6,7 +6,16 @@ dependencies {
 
   testImplementation "io.fledware:fledecs:$fledEcsVersion"
   testImplementation project(":definitions-ecs")
-  testImplementation project(":definitions-test-util")
+
+  testFixturesApi testFixtures(project(":definitions"))
+  testFixturesApi "com.badlogicgames.gdx:gdx:$gdxVersion"
+  testFixturesApi "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+	testFixturesApi "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+	testFixturesApi "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+	testFixturesApi "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+  testFixturesApi "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+	testFixturesApi "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+  testFixturesApi "org.mockito.kotlin:mockito-kotlin:4.0.0"
 }
 
 

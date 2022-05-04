@@ -1,0 +1,15 @@
+dependencies {
+  api project(':definitions')
+  api project(':definitions-ecs')
+  api("com.badlogicgames.ashley:ashley:1.7.4"){
+    exclude group: 'com.badlogicgames.gdx', module: 'gdx'
+  }
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
+
+  testImplementation testFixtures(project(":definitions-ecs"))
+}
+
+test {
+  dependsOn(':test-projects:ecs-loading:build')
+  dependsOn(':test-projects:ecs-loading-ashley:build')
+}

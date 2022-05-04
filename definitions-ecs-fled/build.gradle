@@ -4,4 +4,11 @@ dependencies {
   api "io.fledware:fledecs:$fledEcsVersion"
   api "org.eclipse.collections:eclipse-collections-api:$eclipseCollectionsVersion"
   api "org.eclipse.collections:eclipse-collections:$eclipseCollectionsVersion"
+
+  testImplementation testFixtures(project(":definitions-ecs"))
+}
+
+test {
+  dependsOn(':test-projects:ecs-loading:build')
+  dependsOn(':test-projects:ecs-loading-fled:build')
 }
