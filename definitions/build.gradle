@@ -17,8 +17,6 @@ test {
   // this cannot be depended on directly because the app class loader
   // will load this class, making it able to run on all permissions
   // and wouldn't be a true gather.
-  it.dependsOn(":test-projects:evil:build")
-  it.dependsOn(":test-projects:evil-clever:build")
   it.dependsOn(":test-projects:file-search:build")
   it.dependsOn(":test-projects:loading:build")
   it.dependsOn(":test-projects:loading-invalid:build")

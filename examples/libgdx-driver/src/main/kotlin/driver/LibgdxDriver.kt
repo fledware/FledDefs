@@ -13,7 +13,6 @@ import fledware.definitions.ex.gatherAll
 import fledware.definitions.libgdx.setupLibGdxFilesWrapper
 import fledware.definitions.libgdx.withAssetManager
 import fledware.definitions.registry.DefaultDefinitionsBuilder
-import fledware.definitions.util.permitStandardInspection
 import fledware.ecs.Engine
 import fledware.utilities.get
 import org.slf4j.LoggerFactory
@@ -39,8 +38,6 @@ class LibgdxDriver(val lifecycles: List<Lifecycle>, val loadList: File) : Game()
 
     logger.info("create()")
     val builder = DefaultDefinitionsBuilder(lifecycles)
-    builder.classLoaderWrapper.ensureSecuritySetup()
-    builder.classLoaderWrapper.permitStandardInspection()
     builder.setupLibGdxFilesWrapper()
     builder.errorOnPackageVersionWarning()
     builder.withAssetManager()

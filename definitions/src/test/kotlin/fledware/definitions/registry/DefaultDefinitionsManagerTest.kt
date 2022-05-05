@@ -1,46 +1,18 @@
 package fledware.definitions.registry
 
-import fledware.definitions.DefinitionsManager
-import fledware.definitions.reader.gatherDir
-import fledware.definitions.reader.gatherJar
+import fledware.definitions.tests.manager
 import fledware.definitions.tests.testFilePath
 import fledware.definitions.tests.testJarPath
-import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
 class DefaultDefinitionsManagerTest {
-  @Suppress("PropertyName")
-  var _manager: DefinitionsManager? = null
-  val manager get() = _manager ?: throw IllegalStateException("make registry")
-
-  @AfterTest
-  fun after() {
-    _manager?.tearDown()
-  }
-
-  fun simpleSetup(override: Boolean = false) {
-    val builder = DefaultDefinitionsBuilder(listOf(
-        SomeClassLifecycle,
-        SomeFileLifecycle
-    ))
-    builder.classLoaderWrapper.ensureSecuritySetup()
-    try {
-      builder.gatherJar("simpledefs".testJarPath.path)
-      if (override)
-        builder.gatherDir("simpledefs-override".testFilePath.path)
-      _manager = builder.build()
-    }
-    catch (ex: Throwable) {
-      builder.classLoaderWrapper.ensureSecurityShutdown()
-      throw ex
-    }
-  }
-
   @Test
-  fun testSomeClassDefinition() {
-    simpleSetup()
+  fun testSomeClassDefinition() = manager(
+      listOf(SomeClassLifecycle, SomeFileLifecycle),
+      "simpledefs".testJarPath.path
+  ) { manager ->
     val someClassDefRegistry = manager.someClassDefinitions
     assertEquals(2, someClassDefRegistry.definitions.size)
     assertEquals(2, someClassDefRegistry.fromDefinitions.size)
@@ -49,8 +21,10 @@ class DefaultDefinitionsManagerTest {
   }
 
   @Test
-  fun testSomeFileDefinition() {
-    simpleSetup()
+  fun testSomeFileDefinition() = manager(
+      listOf(SomeClassLifecycle, SomeFileLifecycle),
+      "simpledefs".testJarPath.path
+  ) { manager ->
     val someFileDefRegistry = manager.someFileDefinitions
     assertEquals(2, someFileDefRegistry.definitions.size)
     assertEquals(2, someFileDefRegistry.fromDefinitions.size)
@@ -67,8 +41,11 @@ class DefaultDefinitionsManagerTest {
   }
 
   @Test
-  fun testSomeFileDefinitionOverridden() {
-    simpleSetup(true)
+  fun testSomeFileDefinitionOverridden() = manager(
+      listOf(SomeClassLifecycle, SomeFileLifecycle),
+      "simpledefs".testJarPath.path,
+      "simpledefs-override".testFilePath.path
+  ) { manager ->
     val someFileDefRegistry = manager.someFileDefinitions
     assertEquals(2, someFileDefRegistry.definitions.size)
     assertEquals(2, someFileDefRegistry.fromDefinitions.size)

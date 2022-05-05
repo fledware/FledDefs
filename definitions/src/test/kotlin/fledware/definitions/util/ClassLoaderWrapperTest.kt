@@ -3,68 +3,22 @@ package fledware.definitions.util
 import com.fasterxml.jackson.module.kotlin.readValue
 import fledware.definitions.tests.testJarPath
 import fledware.definitions.tests.testResourcePath
-import java.io.FilePermission
 import java.lang.reflect.InvocationTargetException
-import java.security.AccessControlException
-import java.util.PropertyPermission
 import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.jvm.kotlinFunction
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
-class RestrictiveClassLoaderTest {
-  val target = RestrictiveClassLoaderWrapper()
-
-  @BeforeTest
-  fun before() {
-    target.ensureSecuritySetup()
-  }
-
-  @AfterTest
-  fun after() {
-    target.ensureSecurityShutdown()
-  }
-
-  @Test
-  fun testEvilProcess() {
-    target.append("evil".testJarPath)
-
-    val evilClass = target.currentLoader.loadClass("thing.evil.EvilProcessKt")
-    val evilMethod = evilClass.getMethod("someSuperEvilSearchMethodOrSomething").kotlinFunction
-
-    val exception = assertFailsWith<InvocationTargetException> {
-      evilMethod!!.call()
-    }
-    val cause = exception.cause
-    assertNotNull(cause)
-    assertEquals(AccessControlException::class.java, cause::class.java)
-  }
-
-  @Test
-  fun testEvilProcessButOk() {
-    target.permit(FilePermission("..", "read"))
-    target.permit(PropertyPermission("user.dir", "read"))
-    target.append("evil".testJarPath)
-
-    val evilClass = target.currentLoader.loadClass("thing.evil.EvilProcessKt")
-    val evilMethod = evilClass.getMethod("someSuperEvilSearchMethodOrSomething")
-
-    @Suppress("UNCHECKED_CAST")
-    val list = evilMethod.invoke(null) as List<String>
-    assertTrue(list.isNotEmpty())
-  }
+class ClassLoaderWrapperTest {
+  private val target = ClassLoaderWrapper()
 
   @Test
   fun testLoadDirectory() {
-    assertNull(target.currentLoader.getResource("permissions.yaml"))
-    target.append("evil".testResourcePath)
-    println(assertNotNull(target.currentLoader.getResource("permissions.yaml")))
+    assertNull(target.currentLoader.getResource("README.md"))
+    target.append("file-search".testResourcePath)
+    assertNotNull(target.currentLoader.getResource("README.md"))
   }
 
   @Test

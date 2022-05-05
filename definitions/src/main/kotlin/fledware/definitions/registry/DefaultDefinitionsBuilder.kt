@@ -20,7 +20,7 @@ import fledware.definitions.ResourceSelectionInfo
 import fledware.definitions.SelectionInfo
 import fledware.definitions.reader.RawDefinitionReader
 import fledware.definitions.updater.ObjectUpdater
-import fledware.definitions.util.RestrictiveClassLoaderWrapper
+import fledware.definitions.util.ClassLoaderWrapper
 import fledware.definitions.util.SerializationFormats
 import fledware.definitions.util.isSynthetic
 import fledware.definitions.util.runBlockingForEach
@@ -48,7 +48,7 @@ open class DefaultDefinitionsBuilder(
 
   protected val logger = LoggerFactory.getLogger(DefaultDefinitionsBuilder::class.java)!!
 
-  val classLoaderWrapper = RestrictiveClassLoaderWrapper()
+  val classLoaderWrapper = ClassLoaderWrapper()
   final override val classLoader: ClassLoader
     get() = classLoaderWrapper.currentLoader
 

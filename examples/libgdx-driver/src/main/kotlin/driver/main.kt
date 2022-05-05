@@ -6,7 +6,6 @@ import fledware.definitions.builtin.AddLifecycleLifecycle
 import fledware.definitions.builtin.BuilderEventsLifecycle
 import fledware.definitions.builtin.ConfigLifecycle
 import fledware.definitions.builtin.PackageDetailsLifecycle
-import fledware.definitions.builtin.PermissionsLifecycle
 import fledware.definitions.builtin.functionLifecycle
 import fledware.definitions.libgdx.lifecycles.BitmapFontLifecycle
 import fledware.definitions.libgdx.lifecycles.FreeTypeFontLifecycle
@@ -35,7 +34,6 @@ fun main(args: Array<String>) {
       PackageDetailsLifecycle(),
       ConfigLifecycle(),
       functionLifecycle(),
-      PermissionsLifecycle(),
       AddLifecycleLifecycle(),
 
       // fled ecs definitions

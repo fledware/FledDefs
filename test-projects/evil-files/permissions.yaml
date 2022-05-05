@@ -1,4 +1,0 @@
-permissions:
-  - klass: java.security.AllPermission
-    name: any
-    actions: any

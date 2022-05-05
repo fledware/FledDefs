@@ -13,13 +13,7 @@ fun builder(lifecycles: List<Lifecycle> = emptyList(),
             serialization: SerializationFormats = SerializationFormats(),
             block: (builder: DefaultDefinitionsBuilder) -> Unit) {
   val builder = DefaultDefinitionsBuilder(lifecycles, options, serialization)
-  builder.classLoaderWrapper.ensureSecuritySetup()
-  try {
-    block(builder)
-  }
-  finally {
-    builder.classLoaderWrapper.ensureSecurityShutdown()
-  }
+  block(builder)
 }
 
 fun manager(lifecycles: List<Lifecycle>, vararg gathers: String,
@@ -30,5 +24,11 @@ fun manager(lifecycles: List<Lifecycle>, vararg gathers: String,
     else
       builder.gatherDir(it)
   }
-  block(builder.build() as DefaultDefinitionsManager)
+  val result = builder.build() as DefaultDefinitionsManager
+  try {
+    block(result)
+  }
+  finally {
+    result.tearDown()
+  }
 }

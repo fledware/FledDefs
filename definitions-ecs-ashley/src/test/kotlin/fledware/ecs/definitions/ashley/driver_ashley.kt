@@ -22,7 +22,6 @@ fun createAshleyManager() = DefaultDefinitionsBuilder(listOf(
     ashleySystemDefinitionLifecycle(),
     ashleyWorldDefinitionLifecycle()
 )).also {
-  it.classLoaderWrapper.suppressSecurityChecks()
   it.gatherJar("ecs-loading".testJarPath)
   it.gatherJar("ecs-loading-ashley".testJarPath)
 }.build()

@@ -10,7 +10,7 @@ import fledware.definitions.RawDefinitionsResult
 import fledware.definitions.UnknownDefinitionException
 import fledware.definitions.instantiator.NotInstantiableFactory
 import fledware.definitions.util.EmptyDefinition
-import fledware.definitions.util.RestrictiveClassLoaderWrapper
+import fledware.definitions.util.ClassLoaderWrapper
 import fledware.utilities.MutableTypedMap
 import java.util.concurrent.ConcurrentHashMap
 
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap
 // ==================================================================
 
 @Suppress("MemberVisibilityCanBePrivate")
-open class DefaultDefinitionsManager(val classLoaderWrapper: RestrictiveClassLoaderWrapper,
+open class DefaultDefinitionsManager(val classLoaderWrapper: ClassLoaderWrapper,
                                      final override val contexts: MutableTypedMap<Any>,
                                      results: Map<Lifecycle, RawDefinitionsResult?>)
   : DefinitionsManager {
@@ -81,6 +81,5 @@ open class DefaultDefinitionsManager(val classLoaderWrapper: RestrictiveClassLoa
   override fun tearDown() {
     registries.values.forEach { it.tearDown() }
     instantiatorsCache.clear()
-    classLoaderWrapper.ensureSecurityShutdown()
   }
 }

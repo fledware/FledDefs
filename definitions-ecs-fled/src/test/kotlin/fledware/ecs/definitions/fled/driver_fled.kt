@@ -3,8 +3,6 @@
 package fledware.ecs.definitions.fled
 
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.builtin.ConfigLifecycle
-import fledware.definitions.builtin.BuilderEventsLifecycle
 import fledware.definitions.reader.gatherJar
 import fledware.definitions.registry.DefaultDefinitionsBuilder
 import fledware.definitions.tests.testJarPath
@@ -12,17 +10,6 @@ import fledware.ecs.DefaultEngine
 import fledware.ecs.Engine
 import fledware.ecs.Entity
 import fledware.ecs.World
-import fledware.ecs.definitions.fled.createDefinedWorldAndFlush
-import fledware.ecs.definitions.fled.definitionType
-import fledware.ecs.definitions.fled.entityInstantiator
-import fledware.ecs.definitions.fled.fledComponentDefinitionLifecycle
-import fledware.ecs.definitions.fled.fledEntityDefinitionLifecycle
-import fledware.ecs.definitions.fled.fledSceneDefinitionLifecycle
-import fledware.ecs.definitions.fled.fledSystemDefinitionLifecycle
-import fledware.ecs.definitions.fled.fledWorldDefinitionLifecycle
-import fledware.ecs.definitions.fled.importSceneFromDefinitions
-import fledware.ecs.definitions.fled.sceneInstantiator
-import fledware.ecs.definitions.fled.withDefinitionsManager
 import fledware.ecs.definitions.instantiator.EntityInstantiator
 import fledware.ecs.definitions.instantiator.SceneInstantiator
 import fledware.ecs.definitions.test.ManagerDriver
@@ -38,7 +25,6 @@ fun createFledManager() = DefaultDefinitionsBuilder(listOf(
     fledSystemDefinitionLifecycle(),
     fledWorldDefinitionLifecycle()
 )).also {
-  it.classLoaderWrapper.suppressSecurityChecks()
   it.gatherJar("ecs-loading".testJarPath)
   it.gatherJar("ecs-loading-fled".testJarPath)
 }.build()

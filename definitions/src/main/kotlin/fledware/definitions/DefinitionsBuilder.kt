@@ -5,7 +5,6 @@ import fledware.definitions.updater.ObjectUpdater
 import fledware.definitions.util.SerializationFormats
 import fledware.utilities.MutableTypedMap
 import java.io.File
-import java.security.AccessControlException
 
 /**
  * The builder to be used to create a DefinitionsManager.
@@ -59,10 +58,9 @@ interface DefinitionsBuilder {
    * Load and append the path to the classpath. The path can be any
    * file/folder that can be loaded by a URLClassLoader.
    *
-   * see [fledware.definitions.util.RestrictiveClassLoaderWrapper] for more details.
+   * see [fledware.definitions.util.ClassLoaderWrapper] for more details.
    *
    * @throws IllegalStateException if the classpath is immutable
-   * @throws AccessControlException when the caller does not have permission to append the classpath
    */
   fun appendToClasspath(path: File)
 
