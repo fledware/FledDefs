@@ -2,19 +2,30 @@ package fledware.definitions.tests
 
 import java.io.File
 
-val thisVersion by lazy { File("../version.txt").readText() }
+private var testPathPrefix = ".."
+val thisVersion by lazy {
+  val check = File("../version.txt")
+  if (check.exists()) return@lazy check.readText()
+  // a bit of a hack, but this will allow projects in the
+  // examples and test-projects folders to use these helpers
+  testPathPrefix = "../.."
+  File("../../version.txt").readText()
+}
 
 val String.testJarPath: File
-  get() = File("../test-projects/$this/build/libs/$this-$thisVersion.jar").canonicalFile
+  get() {
+    val version = thisVersion
+    return File("$testPathPrefix/test-projects/$this/build/libs/$this-$version.jar").canonicalFile
+  }
 
 val String.testFilePath: File
-  get() = File("../test-projects/$this/").canonicalFile
+  get() {
+    thisVersion
+    return File("$testPathPrefix/test-projects/$this/").canonicalFile
+  }
 
 val String.testResourcePath: File
-  get() = File("../test-projects/$this/src/main/resources").canonicalFile
-
-val String.runtimeJarPath: File
-  get() = File("test-projects/$this/build/libs/$this-$thisVersion.jar").canonicalFile
-
-val String.runtimeFilePath: File
-  get() = File("test-projects/$this/").canonicalFile
+  get() {
+    thisVersion
+    return File("$testPathPrefix/test-projects/$this/src/main/resources").canonicalFile
+  }

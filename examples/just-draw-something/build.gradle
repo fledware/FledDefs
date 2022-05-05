@@ -5,6 +5,7 @@ dependencies {
   implementation project(":definitions-ecs")
   implementation project(":definitions-libgdx")
   implementation "io.fledware:fledecs:$fledEcsVersion"
+  implementation testFixtures(project(":definitions"))
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
   api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
   api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
@@ -21,5 +22,5 @@ application {
 }
 
 run {
-  it.dependsOn(":definitions-tests:simplegame:build")
+  it.dependsOn(":test-projects:simplegame:build")
 }

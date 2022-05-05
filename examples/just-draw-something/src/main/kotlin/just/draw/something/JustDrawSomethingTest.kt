@@ -39,6 +39,7 @@ import fledware.definitions.libgdx.lifecycles.trueTypeFontDefinitions
 import fledware.definitions.libgdx.loadAll
 import fledware.definitions.libgdx.setupLibGdxFilesWrapper
 import fledware.definitions.registry.DefaultDefinitionsBuilder
+import fledware.definitions.tests.testJarPath
 import kotlin.system.measureTimeMillis
 
 
@@ -74,11 +75,11 @@ private class JustDrawSomething(val lifecycles: List<Lifecycle>) : ApplicationLi
   lateinit var music: Music
 
   override fun create() {
+
     measureTimeMillis {
       val builder = DefaultDefinitionsBuilder(lifecycles)
-      builder.classLoaderWrapper.ensureSecuritySetup()
       builder.setupLibGdxFilesWrapper()
-      builder.gatherJar("../../definitions-tests/simplegame/build/libs/simplegame-0.0.1-SNAPSHOT.jar")
+      builder.gatherJar("simplegame".testJarPath)
       definitions = builder.build()
     }.also { println("gathered and built definitions in $it ms") }
     measureTimeMillis {
