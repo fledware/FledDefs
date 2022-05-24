@@ -15,7 +15,7 @@
       <AppenderRef ref="console"/>
     </Root>
 
-    <Logger name="fledware.definitions" additivity="false" level="debug">
+    <Logger name="fledware.definitions" additivity="false" level="info">
       <AppenderRef ref="console"/>
     </Logger>
     <Logger name="empire.generate.GenerateSolarSystem" additivity="false" level="warn">

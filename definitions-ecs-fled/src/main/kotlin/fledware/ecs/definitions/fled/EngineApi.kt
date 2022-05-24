@@ -6,7 +6,7 @@ import fledware.ecs.EngineData
 import fledware.ecs.EngineDataLifecycle
 
 fun Engine.withDefinitionsManager(manager: DefinitionsManager): Engine {
-  data.components.put(DefinitionsManagerWrapper(manager))
+  data.contexts.put(DefinitionsManagerWrapper(manager))
   return this
 }
 
@@ -15,7 +15,6 @@ data class DefinitionsManagerWrapper(val manager: DefinitionsManager)
   override fun init(engine: Engine) {
     manager.contexts.put(engine)
     manager.contexts.put(engine.data)
-    engine.updateStrategy.setThreadContext(manager.classLoader)
 
     val engineEvents = manager.engineEventDefinitionsMaybe
     @Suppress("IfThenToSafeAccess")
@@ -23,8 +22,8 @@ data class DefinitionsManagerWrapper(val manager: DefinitionsManager)
       engineEvents.definitions.values.forEach { function ->
         val annotation = function.annotation as EngineEvent
         when (annotation.type) {
-          EngineEventType.OnEngineCreated -> engine.events.onEngineCreated += { function.callWith(it) }
-          EngineEventType.OnEngineDestroyed -> engine.events.onEngineDestroyed += { function.callWith(it) }
+          EngineEventType.OnEngineStarted -> engine.events.onEngineStart += { function.callWith(it) }
+          EngineEventType.OnEngineShutdown -> engine.events.onEngineShutdown += { function.callWith(it) }
           EngineEventType.OnWorldCreated -> engine.events.onWorldCreated += { function.callWith(it) }
           EngineEventType.OnWorldDestroyed -> engine.events.onWorldDestroyed += { function.callWith(it) }
         }

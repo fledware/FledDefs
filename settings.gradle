@@ -1,9 +1,14 @@
 rootProject.name = 'fleddefs'
+
+// released code
 include 'definitions'
 include 'definitions-ecs'
 include 'definitions-ecs-ashley'
 include 'definitions-ecs-fled'
 include 'definitions-libgdx'
+include 'simple-libgdx-driver'
+
+// examples
 include 'examples:bots-core'
 include 'examples:just-draw-something'
 include 'examples:libgdx-driver'
@@ -13,6 +18,8 @@ include 'examples:spacer-core'
 include 'examples:spacer-mod-betterinput'
 include 'examples:spacer-mod-hyperspace-renderer'
 include 'examples:spacer-mod-info'
+
+// test projects
 include 'test-projects:ecs-loading'
 include 'test-projects:ecs-loading-ashley'
 include 'test-projects:ecs-loading-fled'

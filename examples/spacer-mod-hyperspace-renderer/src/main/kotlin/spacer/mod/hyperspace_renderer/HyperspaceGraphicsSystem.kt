@@ -32,12 +32,12 @@ class HyperspaceGraphicsSystem : GraphicsSystem() {
   private val background by lazy { assetManager.get(definitions.textureDefinitions["hyperspace.background"].assetDescriptor) }
   private val backgroundColor = Color(Color.WHITE).also { it.a = 0.25f }
 
-  private val shapeRenderer by lazy { engine.data.components.get<ShapeRenderer>() }
-  private val batchRenderer by lazy { engine.data.components.get<Batch>() }
+  private val shapeRenderer by lazy { engine.data.contexts.get<ShapeRenderer>() }
+  private val batchRenderer by lazy { engine.data.contexts.get<Batch>() }
   private val systems by lazy { data.entityGroups["systems"]!! }
   private val mousePosition by lazy { data.systems.get<InputSystem>().mousePosition }
-  private val camera by lazy { data.components.get<TwoDGraphics>().camera }
-  private val viewport by lazy { data.components.get<TwoDGraphics>().viewport }
+  private val camera by lazy { data.contexts.get<TwoDGraphics>().camera }
+  private val viewport by lazy { data.contexts.get<TwoDGraphics>().viewport }
   private val workCircle = Circle()
 
   var gridSize = 100

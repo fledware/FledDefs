@@ -31,8 +31,8 @@ fun DefinitionsBuilder.gatherAll(loadList: File)
 /**
  *
  */
-data class LoadCommandContext(val builderMaybe: DefinitionsBuilder?,
-                              val managerMaybe: DefinitionsManager?) {
+data class LoadCommandState(val builderMaybe: DefinitionsBuilder?,
+                            val managerMaybe: DefinitionsManager?) {
   val builder: DefinitionsBuilder
     get() = builderMaybe ?: throw IllegalStateException("builder not available")
   val manager: DefinitionsManager
@@ -47,7 +47,7 @@ data class LoadCommandContext(val builderMaybe: DefinitionsBuilder?,
 interface LoadCommand {
   val name: String
   val weight: Int
-  operator fun invoke(context: LoadCommandContext)
+  operator fun invoke(context: LoadCommandState)
 }
 
 /**
@@ -68,7 +68,7 @@ interface BlockingLoadCommand : LoadCommand {
  */
 @Suppress("FunctionName")
 fun LoadCommand(name: String, weight: Int,
-                block: LoadCommand.(context: LoadCommandContext) -> Unit) =
+                block: LoadCommand.(context: LoadCommandState) -> Unit) =
     BasicLoadCommand(name, weight, block)
 
 /**
@@ -76,8 +76,8 @@ fun LoadCommand(name: String, weight: Int,
  */
 data class BasicLoadCommand(override val name: String,
                             override val weight: Int,
-                            val block: LoadCommand.(context: LoadCommandContext) -> Unit) : LoadCommand {
-  override fun invoke(context: LoadCommandContext) {
+                            val block: LoadCommand.(state: LoadCommandState) -> Unit) : LoadCommand {
+  override fun invoke(context: LoadCommandState) {
     block(context)
   }
 }
@@ -94,7 +94,7 @@ data class BasicLoadCommand(override val name: String,
 data class BuildManagerCommand(override val weight: Int = 200) : LoadCommand {
   override val name: String = "BuildManager"
 
-  override fun invoke(context: LoadCommandContext) {
+  override fun invoke(context: LoadCommandState) {
     throw IllegalStateException("should not call this command... it's special")
   }
 }
@@ -261,12 +261,12 @@ class LoadIterator(val commands: List<LoadCommand>,
           this@LoadIterator.builder = null
         }
         is BlockingLoadCommand -> {
-          command(LoadCommandContext(builder, manager))
+          command(LoadCommandState(builder, manager))
           commandAtInvoked = true
           command.finished.await()
           commandAtInvoked = false
         }
-        else -> command(LoadCommandContext(builder, manager))
+        else -> command(LoadCommandState(builder, manager))
       }
     }
   }

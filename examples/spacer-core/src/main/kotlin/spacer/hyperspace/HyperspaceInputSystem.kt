@@ -16,8 +16,8 @@ import fledware.utilities.get
 @Suppress("unused")
 @EcsSystem("hyperspace-input")
 class HyperspaceInputSystem : InputSystem() {
-  private val camera by lazy { data.components.get<TwoDGraphics>().camera }
-  private val viewport by lazy { data.components.get<TwoDGraphics>().viewport }
+  private val camera by lazy { data.contexts.get<TwoDGraphics>().camera }
+  private val viewport by lazy { data.contexts.get<TwoDGraphics>().viewport }
   private val systems by lazy { data.entityGroups["systems"]!! }
 
   override fun update(delta: Float) {

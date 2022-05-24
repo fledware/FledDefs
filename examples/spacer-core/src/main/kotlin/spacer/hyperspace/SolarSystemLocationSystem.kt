@@ -26,7 +26,7 @@ class SolarSystemLocationSystem : AbstractSystem() {
   }
 
   private fun onWorldCreated(world: World) {
-    val location = world.data.components.getMaybe<SolarSystemLocation>() ?: return
+    val location = world.data.contexts.getMaybe<SolarSystemLocation>() ?: return
     data.createDefinedEntity(world.name, "points.system", listOf(
         EntityArgument("system-location", "x", location.x),
         EntityArgument("system-location", "y", location.y)

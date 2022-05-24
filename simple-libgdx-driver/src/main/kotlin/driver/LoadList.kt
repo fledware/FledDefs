@@ -21,7 +21,7 @@ import java.io.File
 
 private val logger = LoggerFactory.getLogger("driver.LoadList")
 
-fun DefinitionsBuilder.createLoadCommands(loadList: File, vararg engineComponents: Any): List<LoadCommand> {
+fun DefinitionsBuilder.createLoadCommands(loadList: File, vararg engineContexts: Any): List<LoadCommand> {
   val loadCommands = mutableListOf<LoadCommand>()
   logger.info("load list: $loadList")
   // gather definitions
@@ -36,9 +36,9 @@ fun DefinitionsBuilder.createLoadCommands(loadList: File, vararg engineComponent
 
   // initialize the ecs engine
   loadCommands += FunctionLoadCommand("initialize-ecs-engine", 10, "InitializeEcsEngine")
-  loadCommands += LoadCommand("EcsEngineComponents", 1) { contexts ->
-    val engine = contexts.manager.contexts.get<Engine>()
-    engineComponents.forEach { engine.data.contexts.add(it) }
+  loadCommands += LoadCommand("EcsEngineComponents", 1) { state ->
+    val engine = state.manager.contexts.get<Engine>()
+    engineContexts.forEach { engine.data.contexts.add(it) }
   }
 
   // initialize the game data

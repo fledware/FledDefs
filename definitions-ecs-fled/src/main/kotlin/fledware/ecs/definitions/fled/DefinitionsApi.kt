@@ -8,6 +8,7 @@ import fledware.ecs.Entity
 import fledware.ecs.EntityFactory
 import fledware.ecs.World
 import fledware.ecs.WorldData
+import fledware.ecs.componentIndexOf
 import fledware.ecs.createWorldAndFlush
 import fledware.ecs.definitions.componentDefinitions
 import fledware.ecs.definitions.componentLifecycle
@@ -35,7 +36,7 @@ import kotlin.reflect.full.isSuperclassOf
 // ==================================================================
 
 val EngineData.definitions: DefinitionsManager
-  get() = components.get<DefinitionsManagerWrapper>().manager
+  get() = contexts.get<DefinitionsManagerWrapper>().manager
 
 val AbstractSystem.definitions: DefinitionsManager
   get() = this.engine.data.definitions
@@ -64,8 +65,7 @@ val WorldData.definitions: DefinitionsManager
 inline fun <reified T : Any> EngineData.definedComponentIndexOf(): MapperIndex<T> {
   val componentType = definitions.componentDefinitions.typeIndex.getMaybe<T>()
       ?: throw IllegalArgumentException("no type found that extends: ${T::class}")
-  @Suppress("UNCHECKED_CAST")
-  return entityComponentIndexOf(componentType) as MapperIndex<T>
+  return componentMapper.indexOf(componentType)
 }
 
 /**

@@ -38,7 +38,7 @@ fun seedWithClusterOfSystems(manager: DefinitionsManager) {
         ?: throw IllegalArgumentException("not SolarSystemGenerateResult: $seedResult")
     val world = engine.createDefinedWorldAndFlush("solar-system-$it", systemWorld)
     world.data.importEntities(result.entities)
-    world.data.components.getMaybe<SolarSystemLocation>()?.also { location ->
+    world.data.contexts.getMaybe<SolarSystemLocation>()?.also { location ->
       location.x = MathUtils.random(-400f, 400f)
       location.y = MathUtils.random(-400f, 400f)
     }

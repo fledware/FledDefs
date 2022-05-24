@@ -24,8 +24,8 @@ data class EntityClickInfo(var x: Float = 0f,
                            var size: Float = 0f)
 
 abstract class AbstractBetterInputSystem : InputSystem() {
-  val camera by lazy { data.components.get<TwoDGraphics>().camera }
-  val viewport by lazy { data.components.get<TwoDGraphics>().viewport }
+  val camera by lazy { data.contexts.get<TwoDGraphics>().camera }
+  val viewport by lazy { data.contexts.get<TwoDGraphics>().viewport }
   val mouse by lazy { MouseInputProcessor(viewport) }
   val onEntityClick = mutableListOf<(entity: Entity) -> Unit>()
   var zoomSensitivity: Float = 0.1f
