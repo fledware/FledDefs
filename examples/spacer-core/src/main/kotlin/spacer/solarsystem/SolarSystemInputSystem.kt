@@ -14,7 +14,7 @@ import fledware.utilities.get
 @Suppress("unused")
 @EcsSystem("solar-system-input")
 class SolarSystemInputSystem : InputSystem() {
-  private val camera by lazy { data.components.get<TwoDGraphics>().camera }
+  private val camera by lazy { data.contexts.get<TwoDGraphics>().camera }
 
   override fun update(delta: Float) {
     if (isKeyPressed(Input.Keys.A))

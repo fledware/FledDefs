@@ -28,9 +28,9 @@ class SolarSystemGraphicsSystem : GraphicsSystem() {
   private val metadataIndex by lazy { data.componentIndexOf<PointMetadata>() }
   private val locationIndex by lazy { data.componentIndexOf<PointLocation>() }
 
-  private val shapeRenderer by lazy { engine.data.components.get<ShapeRenderer>() }
-  private val camera by lazy { data.components.get<TwoDGraphics>().camera }
-  private val viewport by lazy { data.components.get<TwoDGraphics>().viewport }
+  private val shapeRenderer by lazy { engine.data.contexts.get<ShapeRenderer>() }
+  private val camera by lazy { data.contexts.get<TwoDGraphics>().camera }
+  private val viewport by lazy { data.contexts.get<TwoDGraphics>().viewport }
   var gridSize = 50
   var gridColor = Color(Color.GRAY).also { it.a = 0.5f }
 

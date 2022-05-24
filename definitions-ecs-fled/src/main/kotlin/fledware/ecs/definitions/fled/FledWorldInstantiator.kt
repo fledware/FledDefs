@@ -6,7 +6,7 @@ import fledware.definitions.UnknownDefinitionException
 import fledware.ecs.Entity
 import fledware.ecs.System
 import fledware.ecs.WorldBuilder
-import fledware.ecs.WorldBuilderLambda
+import fledware.ecs.WorldBuilderDecorator
 import fledware.ecs.definitions.WorldDefinition
 import fledware.ecs.definitions.entityLifecycleName
 import fledware.ecs.definitions.instantiator.WorldInstantiator
@@ -30,7 +30,7 @@ class FledWorldInstantiator(definition: WorldDefinition,
   override fun systemInstantiator(manager: DefinitionsManager, type: String) =
       manager.systemInstantiator(type)
 
-  val decorator: WorldBuilderLambda = { decorateWorld(this) }
+  val decorator: WorldBuilderDecorator = { decorateWorld(this) }
 
   fun decorateWorld(builder: WorldBuilder) {
     systems.forEach { builder.addSystem(it.value.create()) }

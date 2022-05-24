@@ -11,7 +11,7 @@ import fledware.ecs.definitions.fled.EngineEventType
 import fledware.utilities.info
 import org.slf4j.LoggerFactory
 
-@EngineEvent(EngineEventType.OnEngineCreated)
+@EngineEvent(EngineEventType.OnEngineStarted)
 fun registerWorldDecorator(engine: Engine) {
   engine.addCreateWorldDecorator {
     addSystem(InfoPrinterSystem())

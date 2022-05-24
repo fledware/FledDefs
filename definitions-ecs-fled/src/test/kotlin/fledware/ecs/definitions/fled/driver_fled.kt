@@ -6,7 +6,6 @@ import fledware.definitions.DefinitionsManager
 import fledware.definitions.reader.gatherJar
 import fledware.definitions.registry.DefaultDefinitionsBuilder
 import fledware.definitions.tests.testJarPath
-import fledware.ecs.DefaultEngine
 import fledware.ecs.Engine
 import fledware.ecs.Entity
 import fledware.ecs.World
@@ -15,6 +14,7 @@ import fledware.ecs.definitions.instantiator.SceneInstantiator
 import fledware.ecs.definitions.test.ManagerDriver
 import fledware.ecs.ex.withEntityFlags
 import fledware.ecs.ex.withWorldScenes
+import fledware.ecs.impl.DefaultEngine
 import kotlin.reflect.KClass
 
 

@@ -24,7 +24,7 @@ dependencies {
 
 task runSpacer(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
-  main = 'driver.MainKt'
+  mainClass = 'driver.MainKt'
   args = [ "../load-list-spacer.yaml" ]
 
   // we don't want to add any of the game code into the classpath
@@ -41,7 +41,7 @@ task runSpacer(type: JavaExec) {
 
 task runBots(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
-  main = 'driver.MainKt'
+  mainClass = 'driver.MainKt'
   args = [ "../load-list-bots.yaml" ]
 
   dependsOn(":examples:libgdx-helpers:build")

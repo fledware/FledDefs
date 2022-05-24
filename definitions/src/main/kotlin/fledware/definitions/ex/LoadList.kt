@@ -73,7 +73,7 @@ fun LoadListElement.toLoadCommand(loadListDir: File, allowConcurrentLoad: Boolea
 data class AppendToClasspathCommand(override val name: String,
                                     override val weight: Int,
                                     val target: File) : LoadCommand {
-  override fun invoke(context: LoadCommandContext) {
+  override fun invoke(context: LoadCommandState) {
     context.builder.appendToClasspath(target)
   }
 }
@@ -85,7 +85,7 @@ data class GatherCommand(override val name: String,
                          override val weight: Int,
                          val target: File,
                          val iteration: GatherIterationType) : LoadCommand {
-  override fun invoke(context: LoadCommandContext) {
+  override fun invoke(context: LoadCommandState) {
     when {
       target.path.endsWith(".jar") -> context.builder.gatherJar(target, iteration)
       target.isDirectory -> context.builder.gatherDir(target, iteration)

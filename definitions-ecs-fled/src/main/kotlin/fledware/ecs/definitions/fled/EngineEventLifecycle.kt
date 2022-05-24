@@ -12,8 +12,8 @@ import fledware.definitions.lifecycle.rootFunctionLifecycle
 annotation class EngineEvent(val type: EngineEventType)
 
 enum class EngineEventType {
-  OnEngineCreated,
-  OnEngineDestroyed,
+  OnEngineStarted,
+  OnEngineShutdown,
   OnWorldCreated,
   OnWorldDestroyed
 }

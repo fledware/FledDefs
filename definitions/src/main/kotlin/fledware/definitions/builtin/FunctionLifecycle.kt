@@ -8,7 +8,7 @@ import fledware.definitions.RawDefinitionFromParent
 import fledware.definitions.RawDefinitionProcessor
 import fledware.definitions.ex.BlockingLoadCommand
 import fledware.definitions.ex.LoadCommand
-import fledware.definitions.ex.LoadCommandContext
+import fledware.definitions.ex.LoadCommandState
 import fledware.definitions.lifecycle.BasicFunctionDefinition
 import fledware.definitions.lifecycle.rootFunctionLifecycle
 import java.util.concurrent.CountDownLatch
@@ -53,7 +53,7 @@ data class FunctionLoadCommand(val functionName: String,
                                override val weight: Int,
                                override val name: String = "Function $functionName")
   : LoadCommand {
-  override fun invoke(context: LoadCommandContext) {
+  override fun invoke(context: LoadCommandState) {
     val function = context.builderMaybe?.functionDefinitions?.get(functionName)
         ?: context.managerMaybe?.functionDefinitions?.get(functionName)
         ?: throw IllegalStateException("function not found: $functionName")
@@ -79,7 +79,7 @@ data class FunctionBlockingLoadCommand(val functionName: String,
     finished.countDown()
   }
 
-  override fun invoke(context: LoadCommandContext) {
+  override fun invoke(context: LoadCommandState) {
     function = context.builderMaybe?.functionDefinitions?.get(functionName)
         ?: context.managerMaybe?.functionDefinitions?.get(functionName)
             ?: throw IllegalStateException("function not found: $functionName")

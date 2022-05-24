@@ -1,4 +1,4 @@
-package empire.hyperspace
+package spacer.hyperspace
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
@@ -21,11 +21,11 @@ import fledware.utilities.get
 @EcsSystem("hyperspace-graphics")
 class HyperspaceGraphicsSystem : GraphicsSystem() {
   private val systemLocationIndex by lazy { data.componentIndexOf<SolarSystemLocation>() }
-  private val shapeRenderer by lazy { engine.data.components.get<ShapeRenderer>() }
+  private val shapeRenderer by lazy { engine.data.contexts.get<ShapeRenderer>() }
   private val systems by lazy { data.entityGroups["systems"]!! }
   private val mousePosition by lazy { data.systems.get<InputSystem>().mousePosition }
-  private val camera by lazy { data.components.get<TwoDGraphics>().camera }
-  private val viewport by lazy { data.components.get<TwoDGraphics>().viewport }
+  private val camera by lazy { data.contexts.get<TwoDGraphics>().camera }
+  private val viewport by lazy { data.contexts.get<TwoDGraphics>().viewport }
   private val workCircle = Circle()
   var gridSize = 50
   var gridColor = Color(Color.GRAY).also { it.a = 0.5f }
