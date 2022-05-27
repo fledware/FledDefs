@@ -10,10 +10,11 @@ import fledware.definitions.Lifecycle
 import fledware.definitions.RawDefinitionLifecycle
 import fledware.definitions.ResourceSelectionInfo
 import fledware.definitions.SelectionInfo
+import fledware.definitions.lifecycle.directoryResourceWithRawLifecycle
+import fledware.definitions.processor.ObjectUpdaterRawAggregator
 import fledware.definitions.processor.RawDefinitionAggregator
 import fledware.definitions.reader.RawDefinitionReader
 import fledware.definitions.reader.removePrefixAndExtension
-import fledware.definitions.util.Combines
 import fledware.utilities.globToRegex
 import somegame.defssetup.SomeClass
 import somegame.defssetup.SomeClassDefinition
@@ -69,55 +70,12 @@ val DefinitionsBuilder.someClassDefinitions: SomeClassRawDefinitionProcessor
 //
 // ==================================================================
 
-class SomeFileRawDefinitionProcessor
-  : RawDefinitionAggregator<SomeFileRawDefinition, SomeFileDefinition>() {
-  private val resourceRegex = "somefiles/**.*".globToRegex()
-  override fun process(reader: RawDefinitionReader, info: SelectionInfo): Boolean {
-    val classInfo = info as? ResourceSelectionInfo ?: return false
-    if (!resourceRegex.matches(classInfo.entry)) return false
-    val raw = serialization.figureSerializer(classInfo.entry)
-        .readValue<SomeFileRawDefinition>(reader.read(info.entry))
-    apply(info.entry.removePrefixAndExtension("somefiles/"), info.from, raw)
-    return true
-  }
-
-  override fun combine(original: SomeFileRawDefinition, new: SomeFileRawDefinition): SomeFileRawDefinition {
-    return SomeFileRawDefinition(
-        new.someInt ?: original.someInt,
-        new.strings ?: original.strings,
-        new.blah ?: original.blah,
-        Combines.combineMap(original.meta, new.meta)
-    )
-  }
-
-  override fun result(name: String, final: SomeFileRawDefinition): SomeFileDefinition {
-    return SomeFileDefinition(
-        name,
-        final.someInt ?: throw IllegalStateException("someInt"),
-        final.strings ?: throw IllegalStateException("strings"),
-        final.blah ?: false,
-        final.meta ?: mapOf()
-    )
-  }
-}
-
-object SomeFileLifecycle : Lifecycle {
-  override val name = "somefile"
-
-  override val rawDefinition = RawDefinitionLifecycle<SomeFileRawDefinition> {
-    SomeFileRawDefinitionProcessor()
-  }
-
-  override val definition = DefinitionLifecycle<SomeFileDefinition> { definitions, ordered, froms ->
-    SimpleDefinitionRegistry(definitions, ordered, froms)
-  }
-
-  override val instantiated = InstantiatedLifecycle()
-}
+val someFileLifecycle = directoryResourceWithRawLifecycle<SomeFileRawDefinition, SomeFileDefinition>("somefiles", "somefile")
 
 @Suppress("UNCHECKED_CAST")
 val DefinitionsManager.someFileDefinitions: SimpleDefinitionRegistry<SomeFileDefinition>
   get() = this.registry("somefile") as SimpleDefinitionRegistry<SomeFileDefinition>
 
-val DefinitionsBuilder.someFileDefinitions: SomeFileRawDefinitionProcessor
-  get() = this["somefile"] as SomeFileRawDefinitionProcessor
+@Suppress("UNCHECKED_CAST")
+val DefinitionsBuilder.someFileDefinitions: ObjectUpdaterRawAggregator<SomeFileRawDefinition, SomeFileDefinition>
+  get() = this["somefile"] as ObjectUpdaterRawAggregator<SomeFileRawDefinition, SomeFileDefinition>

@@ -48,7 +48,7 @@ class ObjectUpdaterRawAggregator<R : Any, D : Definition>(
     }
     catch (ex: Throwable) {
       throw IncompleteDefinitionException(lifecycle.definition.type, name,
-                                          serialization.merger.writeValueAsString(final),
+                                          serialization.merger.writeValueAsString(target),
                                           ex)
     }
   }

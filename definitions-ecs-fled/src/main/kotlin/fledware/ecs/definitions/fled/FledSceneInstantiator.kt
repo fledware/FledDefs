@@ -17,7 +17,6 @@ class FledSceneInstantiator(definition: SceneDefinition,
     }
   }
 
-  override fun entityInstantiator(manager: DefinitionsManager, type: String) = manager.entityInstantiator(type)
   override fun setNameMaybe(entity: Entity, name: String) = exec { entity.name = name }
   override fun factory(entities: List<Entity>): Scene = Scene(definition.defName, entities)
 }

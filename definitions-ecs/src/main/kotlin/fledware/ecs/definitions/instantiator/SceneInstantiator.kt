@@ -27,7 +27,10 @@ abstract class SceneInstantiator<E : Any, C : Any, S : Any>(
     }
   }
 
-  protected abstract fun entityInstantiator(manager: DefinitionsManager, type: String): EntityInstantiator<E, C>
+  @Suppress("UNCHECKED_CAST")
+  protected open fun entityInstantiator(manager: DefinitionsManager, type: String) =
+      manager.instantiator(entityLifecycleName, type) as EntityInstantiator<E, C>
+
   protected abstract fun setNameMaybe(entity: E, name: String)
   protected abstract fun factory(entities: List<E>): S
 

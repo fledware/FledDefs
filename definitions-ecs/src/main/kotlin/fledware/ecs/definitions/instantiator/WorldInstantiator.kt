@@ -2,9 +2,13 @@ package fledware.ecs.definitions.instantiator
 
 import fledware.definitions.DefinitionInstantiator
 import fledware.definitions.DefinitionsManager
+import fledware.definitions.builtin.functionDefinitions
 import fledware.definitions.ex.walk
 import fledware.ecs.definitions.EntityInstance
 import fledware.ecs.definitions.WorldDefinition
+import fledware.ecs.definitions.componentLifecycleName
+import fledware.ecs.definitions.entityLifecycleName
+import fledware.ecs.definitions.systemLifecycleName
 import fledware.ecs.definitions.worldDefinitions
 
 abstract class WorldInstantiator<E : Any, C : Any, S : Any>(
@@ -17,6 +21,8 @@ abstract class WorldInstantiator<E : Any, C : Any, S : Any>(
   val componentValues = mutableMapOf<String, MutableMap<String, Any?>>()
   val entityInstantiators = mutableMapOf<String, EntityInstantiator<E, C>>()
   val entities = mutableListOf<EntityInstance>()
+  val decorateFunction = definition.decorateFunction?.let { manager.functionDefinitions[it] }
+  val initFunction = definition.initFunction?.let { manager.functionDefinitions[it] }
 
   init {
     manager.worldDefinitions.walk(definition.defName) {
@@ -38,7 +44,15 @@ abstract class WorldInstantiator<E : Any, C : Any, S : Any>(
     }
   }
 
-  abstract fun componentInstantiator(manager: DefinitionsManager, type: String): ComponentInstantiator<C>
-  abstract fun entityInstantiator(manager: DefinitionsManager, type: String): EntityInstantiator<E, C>
-  abstract fun systemInstantiator(manager: DefinitionsManager, type: String): SystemInstantiator<S>
+  @Suppress("UNCHECKED_CAST")
+  protected open fun componentInstantiator(manager: DefinitionsManager, type: String) =
+      manager.instantiator(componentLifecycleName, type) as ComponentInstantiator<C>
+
+  @Suppress("UNCHECKED_CAST")
+  protected open fun entityInstantiator(manager: DefinitionsManager, type: String) =
+      manager.instantiator(entityLifecycleName, type) as EntityInstantiator<E, C>
+
+  @Suppress("UNCHECKED_CAST")
+  protected open fun systemInstantiator(manager: DefinitionsManager, type: String) =
+      manager.instantiator(systemLifecycleName, type) as SystemInstantiator<S>
 }

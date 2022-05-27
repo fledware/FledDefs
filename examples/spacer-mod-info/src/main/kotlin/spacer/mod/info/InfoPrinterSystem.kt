@@ -11,6 +11,7 @@ import fledware.ecs.definitions.fled.EngineEventType
 import fledware.utilities.info
 import org.slf4j.LoggerFactory
 
+@Suppress("unused")
 @EngineEvent(EngineEventType.OnEngineStarted)
 fun registerWorldDecorator(engine: Engine) {
   engine.addCreateWorldDecorator {

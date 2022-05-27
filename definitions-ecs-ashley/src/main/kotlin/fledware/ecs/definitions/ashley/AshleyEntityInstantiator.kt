@@ -21,9 +21,6 @@ class AshleyEntityInstantiator(definition: EntityDefinition,
 
   val engine = manager.contexts.get<Engine>()
 
-  override fun componentInstantiator(manager: DefinitionsManager, type: String) =
-      manager.componentInstantiator(type)
-
   override fun actualCreate(input: Map<String, Map<String, Any?>>): Entity {
     val entity = engine.createEntity()
     entity.add(engine.createComponent(EntityDefinitionInfo::class.java).also {

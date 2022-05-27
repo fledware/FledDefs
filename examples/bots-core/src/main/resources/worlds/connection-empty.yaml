@@ -1,0 +1,7 @@
+components:
+  2d-graphics: {}
+  grid-map: {}
+decorateFunction: fill-grid-world
+systems:
+  - graphics
+  - input

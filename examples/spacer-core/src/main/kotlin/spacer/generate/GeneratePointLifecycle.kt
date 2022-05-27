@@ -41,6 +41,7 @@ data class GeneratePoint(
 ) : Definition, WeightedPick
 
 @AddLifecycle
+@Suppress("unused")
 fun generatePointLifecycle() = directoryResourceLifecycle<GeneratePoint>("points", "point")
 
 @Suppress("UNCHECKED_CAST")

@@ -1,6 +1,7 @@
 package fledware.ecs.definitions.test
 
 import fledware.definitions.UnknownDefinitionException
+import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

@@ -8,14 +8,13 @@ import fledware.ecs.Entity
 import fledware.ecs.EntityFactory
 import fledware.ecs.World
 import fledware.ecs.WorldData
-import fledware.ecs.componentIndexOf
 import fledware.ecs.createWorldAndFlush
 import fledware.ecs.definitions.componentDefinitions
 import fledware.ecs.definitions.componentLifecycle
 import fledware.ecs.definitions.componentLifecycleName
 import fledware.ecs.definitions.entityLifecycle
 import fledware.ecs.definitions.entityLifecycleName
-import fledware.ecs.definitions.instantiator.EntityArgument
+import fledware.ecs.definitions.instantiator.ComponentArgument
 import fledware.ecs.definitions.sceneLifecycle
 import fledware.ecs.definitions.sceneLifecycleName
 import fledware.ecs.definitions.systemLifecycle
@@ -26,7 +25,6 @@ import fledware.ecs.ex.importScene
 import fledware.ecs.util.MapperIndex
 import fledware.utilities.get
 import fledware.utilities.getMaybe
-import kotlin.reflect.full.isSuperclassOf
 
 
 // ==================================================================
@@ -147,7 +145,7 @@ fun EngineData.createDefinedEntity(name: String?, type: String, inputs: Map<Stri
   return entity
 }
 
-fun EngineData.createDefinedEntity(name: String?, type: String, inputs: List<EntityArgument>): Entity {
+fun EngineData.createDefinedEntity(name: String?, type: String, inputs: List<ComponentArgument>): Entity {
   val entity = definitions.entityInstantiator(type).createWithArgs(inputs)
   if (name != null)
     entity.name = name
@@ -173,13 +171,13 @@ fun EntityFactory.createDefinedEntity(name: String, type: String): Entity {
   return entity
 }
 
-fun EntityFactory.createDefinedEntity(type: String, inputs: List<EntityArgument>): Entity {
+fun EntityFactory.createDefinedEntity(type: String, inputs: List<ComponentArgument>): Entity {
   val entity = engine.data.createDefinedEntity(null, type, inputs)
   importEntity(entity)
   return entity
 }
 
-fun EntityFactory.createDefinedEntity(name: String, type: String, inputs: List<EntityArgument>): Entity {
+fun EntityFactory.createDefinedEntity(name: String, type: String, inputs: List<ComponentArgument>): Entity {
   val entity = engine.data.createDefinedEntity(name, type, inputs)
   importEntity(entity)
   return entity
@@ -206,24 +204,149 @@ fun EntityFactory.createDefinedEntity(name: String, type: String, inputs: Map<St
 
 data class DefinedWorldOptions(val type: String, val options: Any?)
 
-fun Engine.requestCreateDefinedWorld(name: String, type: String, options: Any? = null) {
-  val decorator = data.definitions.worldInstantiator(type).decorator
-  requestCreateWorld(name, DefinedWorldOptions(type, options), decorator)
+/**
+ * Requests the creation of a defined world.
+ *
+ * @param name the name of the world
+ * @param type the [fledware.definitions.Definition.defName] of the world
+ */
+fun Engine.requestCreateDefinedWorld(name: String,
+                                     type: String = name) {
+  val instantiator = data.definitions.worldInstantiator(type)
+  requestCreateWorld(name, DefinedWorldOptions(type, null),
+                     instantiator::decorateWorld)
 }
 
-fun Engine.createDefinedWorldAndFlush(name: String, type: String, options: Any? = null): World {
-  val decorator = data.definitions.worldInstantiator(type).decorator
-  return createWorldAndFlush(name, DefinedWorldOptions(type, options), decorator)
+/**
+ * Requests the creation of a defined world.
+ *
+ * @param nameAndType the name and [fledware.definitions.Definition.defName] of the world
+ */
+fun Engine.requestCreateDefinedWorld(nameAndType: String,
+                                     componentInput: Map<String, Map<String, Any?>>) {
+  val instantiator = data.definitions.worldInstantiator(nameAndType)
+  requestCreateWorld(nameAndType, DefinedWorldOptions(nameAndType, null)) {
+    instantiator.decorateWorldWithNames(this, componentInput)
+  }
 }
 
-fun Engine.requestCreateDefinedWorld(nameAndType: String, options: Any? = null) {
-  val decorator = data.definitions.worldInstantiator(nameAndType).decorator
-  requestCreateWorld(nameAndType, DefinedWorldOptions(nameAndType, options), decorator)
+/**
+ * Requests the creation of a defined world.
+ *
+ * @param name the name of the world
+ * @param type the [fledware.definitions.Definition.defName] of the world
+ * @param componentInput the inputs used to create the [WorldData.contexts] objects
+ */
+fun Engine.requestCreateDefinedWorld(name: String, type: String,
+                                     componentInput: Map<String, Map<String, Any?>>) {
+  val instantiator = data.definitions.worldInstantiator(type)
+  requestCreateWorld(name, DefinedWorldOptions(type, null)) {
+    instantiator.decorateWorldWithNames(this, componentInput)
+  }
 }
 
-fun Engine.createDefinedWorldAndFlush(nameAndType: String, options: Any? = null): World {
-  val decorator = data.definitions.worldInstantiator(nameAndType).decorator
-  return createWorldAndFlush(nameAndType, DefinedWorldOptions(nameAndType, options), decorator)
+
+/**
+ * Requests the creation of a defined world.
+ *
+ * @param name the name of the world
+ * @param type the [fledware.definitions.Definition.defName] of the world
+ * @param componentInput the inputs used to create the [WorldData.contexts] objects
+ */
+fun Engine.requestCreateDefinedWorld(name: String, type: String,
+                                     componentInput: List<ComponentArgument>) {
+  val instantiator = data.definitions.worldInstantiator(type)
+  requestCreateWorld(name, DefinedWorldOptions(type, null)) {
+    instantiator.decorateWorldWithArgs(this, componentInput)
+  }
+}
+
+
+/**
+ * Requests the creation of a defined world.
+ *
+ * @param nameAndType the name and [fledware.definitions.Definition.defName] of the world
+ * @param componentInput the inputs used to create the [WorldData.contexts] objects
+ */
+fun Engine.requestCreateDefinedWorld(nameAndType: String,
+                                     componentInput: List<ComponentArgument>) {
+  val instantiator = data.definitions.worldInstantiator(nameAndType)
+  requestCreateWorld(nameAndType, DefinedWorldOptions(nameAndType, null)) {
+    instantiator.decorateWorldWithArgs(this, componentInput)
+  }
+}
+
+
+/**
+ * Immediately creates a defined world.
+ *
+ * @param name the name of the world
+ * @param type the [fledware.definitions.Definition.defName] of the world
+ */
+fun Engine.createDefinedWorldAndFlush(name: String,
+                                      type: String = name): World {
+  val instantiator = data.definitions.worldInstantiator(type)
+  return createWorldAndFlush(name, DefinedWorldOptions(type, null),
+                             instantiator::decorateWorld)
+}
+
+/**
+ * Immediately creates a defined world.
+ *
+ * @param nameAndType the name and [fledware.definitions.Definition.defName] of the world
+ */
+fun Engine.createDefinedWorldAndFlush(nameAndType: String,
+                                      componentInput: Map<String, Map<String, Any?>>): World {
+  val instantiator = data.definitions.worldInstantiator(nameAndType)
+  return createWorldAndFlush(nameAndType, DefinedWorldOptions(nameAndType, null)) {
+    instantiator.decorateWorldWithNames(this, componentInput)
+  }
+}
+
+/**
+ * Immediately creates a defined world.
+ *
+ * @param name the name of the world
+ * @param type the [fledware.definitions.Definition.defName] of the world
+ * @param componentInput the inputs used to create the [WorldData.contexts] objects
+ */
+fun Engine.createDefinedWorldAndFlush(name: String, type: String,
+                                      componentInput: Map<String, Map<String, Any?>>): World {
+  val instantiator = data.definitions.worldInstantiator(type)
+  return createWorldAndFlush(name, DefinedWorldOptions(type, null)) {
+    instantiator.decorateWorldWithNames(this, componentInput)
+  }
+}
+
+
+/**
+ * Immediately creates a defined world.
+ *
+ * @param name the name of the world
+ * @param type the [fledware.definitions.Definition.defName] of the world
+ * @param componentInput the inputs used to create the [WorldData.contexts] objects
+ */
+fun Engine.createDefinedWorldAndFlush(name: String, type: String,
+                                      componentInput: List<ComponentArgument>): World {
+  val instantiator = data.definitions.worldInstantiator(type)
+  return createWorldAndFlush(name, DefinedWorldOptions(type, null)) {
+    instantiator.decorateWorldWithArgs(this, componentInput)
+  }
+}
+
+
+/**
+ * Immediately creates a defined world.
+ *
+ * @param nameAndType the name and [fledware.definitions.Definition.defName] of the world
+ * @param componentInput the inputs used to create the [WorldData.contexts] objects
+ */
+fun Engine.createDefinedWorldAndFlush(nameAndType: String,
+                                      componentInput: List<ComponentArgument>): World {
+  val instantiator = data.definitions.worldInstantiator(nameAndType)
+  return createWorldAndFlush(nameAndType, DefinedWorldOptions(nameAndType, null)) {
+    instantiator.decorateWorldWithArgs(this, componentInput)
+  }
 }
 
 
@@ -233,6 +356,9 @@ fun Engine.createDefinedWorldAndFlush(nameAndType: String, options: Any? = null)
 //
 // ==================================================================
 
+/**
+ * Creates a defined scene and immediately imports it.
+ */
 fun WorldData.importSceneFromDefinitions(name: String) {
   val instantiator = engine.data.definitions.sceneInstantiator(name)
   importScene(instantiator.create())
