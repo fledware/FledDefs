@@ -2,7 +2,7 @@ package fledware.ecs.definitions.fled
 
 import fledware.definitions.util.ReflectCallerState
 import fledware.definitions.util.ReflectionCallException
-import fledware.ecs.definitions.instantiator.EntityArgument
+import fledware.ecs.definitions.instantiator.ComponentArgument
 import fledware.ecs.definitions.test.EntityTest
 import fledware.ecs.definitions.test.ManagerDriver
 import kotlin.test.Test
@@ -31,8 +31,8 @@ class FledEntityTest : EntityTest() {
     val entityInstantiator = driver.entityInstantiator("person")
     val exception = assertFailsWith<ReflectionCallException> {
       entityInstantiator.createWithArgs(listOf(
-          EntityArgument("placement", "x", 4),
-          EntityArgument("placement", "y", 4)
+          ComponentArgument("placement", "x", 4),
+          ComponentArgument("placement", "y", 4)
       ))
     }
     assertEquals("placement", exception.definition?.defName)

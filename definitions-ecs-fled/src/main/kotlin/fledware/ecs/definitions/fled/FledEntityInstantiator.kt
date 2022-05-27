@@ -20,9 +20,6 @@ class FledEntityInstantiator(definition: EntityDefinition,
 
   private val engineData = manager.contexts.get<EngineData>()
 
-  override fun componentInstantiator(manager: DefinitionsManager, type: String) =
-      manager.componentInstantiator(type)
-
   override fun actualCreate(input: Map<String, Map<String, Any?>>): Entity {
     return engineData.createEntity {
       add(EntityDefinitionInfo(definition.defName))

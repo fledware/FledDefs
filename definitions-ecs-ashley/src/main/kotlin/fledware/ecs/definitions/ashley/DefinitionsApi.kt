@@ -6,7 +6,7 @@ import fledware.ecs.definitions.componentLifecycle
 import fledware.ecs.definitions.componentLifecycleName
 import fledware.ecs.definitions.entityLifecycle
 import fledware.ecs.definitions.entityLifecycleName
-import fledware.ecs.definitions.instantiator.EntityArgument
+import fledware.ecs.definitions.instantiator.ComponentArgument
 import fledware.ecs.definitions.sceneLifecycle
 import fledware.ecs.definitions.sceneLifecycleName
 import fledware.ecs.definitions.systemLifecycle
@@ -95,7 +95,7 @@ fun DefinitionsManager.createDefinedEntity(type: String, inputs: Map<String, Map
  * @param type the definition type for create
  * @param inputs the inputs for the components of the entity
  */
-fun DefinitionsManager.createDefinedEntity(type: String, inputs: List<EntityArgument>) =
+fun DefinitionsManager.createDefinedEntity(type: String, inputs: List<ComponentArgument>) =
     entityInstantiator(type).createWithArgs(inputs)
 
 /**
@@ -123,7 +123,7 @@ fun DefinitionsManager.addDefinedEntity(type: String, inputs: Map<String, Map<St
  * @param type the definition type for create
  * @param inputs the inputs for the components of the entity
  */
-fun DefinitionsManager.addDefinedEntity(type: String, inputs: List<EntityArgument>) =
+fun DefinitionsManager.addDefinedEntity(type: String, inputs: List<ComponentArgument>) =
     entityInstantiator(type).createWithArgs(inputs)
         .also { contexts.get<Engine>().addEntity(it) }
 

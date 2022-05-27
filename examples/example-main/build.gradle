@@ -1,0 +1,31 @@
+apply plugin: 'application'
+
+dependencies {
+  api project(":definitions-main-libgdx")
+}
+
+task runSpacer(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = 'driver.MainKt'
+  args = [ "../load-list-spacer.yaml" ]
+
+  // we don't want to add any of the game code into the classpath
+  // of the driver, but we still need to make sure the dependent
+  // code is compiled. In a real example, the way to distribute a
+  // module/mod would be to load a jar, which would be already
+  // compiled. So, this pattern doesn't break the expected design.
+  dependsOn(":examples:libgdx-helpers:build")
+  dependsOn(":examples:spacer-core:build")
+  dependsOn(":examples:spacer-mod-betterinput:build")
+  dependsOn(":examples:spacer-mod-hyperspace-renderer:build")
+  dependsOn(":examples:spacer-mod-info:build")
+}
+
+task runBots(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = 'driver.MainKt'
+  args = [ "../load-list-bots.yaml" ]
+
+  dependsOn(":examples:libgdx-helpers:build")
+  dependsOn(":examples:bots-core:build")
+}

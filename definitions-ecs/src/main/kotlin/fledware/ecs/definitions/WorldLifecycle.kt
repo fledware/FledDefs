@@ -9,15 +9,20 @@ import fledware.definitions.processor.ObjectUpdaterRawAggregator
 import fledware.definitions.registry.SimpleDefinitionRegistry
 
 
-data class WorldDefinition(override val defName: String,
-                           val extends: String?,
-                           val systems: List<String> = emptyList(),
-                           val components: Map<String, Map<String, Any>> = emptyMap(),
-                           val entities: List<EntityInstance> = emptyList())
-  : Definition
+data class WorldDefinition(
+    override val defName: String,
+    val extends: String?,
+    val initFunction: String?,
+    val decorateFunction: String?,
+    val systems: List<String> = emptyList(),
+    val components: Map<String, Map<String, Any>> = emptyMap(),
+    val entities: List<EntityInstance> = emptyList()
+) : Definition
 
 data class WorldRawDefinition(
     val extends: String?,
+    val initFunction: String?,
+    val decorateFunction: String?,
     val systems: Set<String>?,
     val components: Map<String, Map<String, Any>>?,
     val entities: List<RawEntityInstance>?

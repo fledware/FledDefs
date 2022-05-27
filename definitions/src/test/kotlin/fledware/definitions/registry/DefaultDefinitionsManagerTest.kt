@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 class DefaultDefinitionsManagerTest {
   @Test
   fun testSomeClassDefinition() = manager(
-      listOf(SomeClassLifecycle, SomeFileLifecycle),
+      listOf(SomeClassLifecycle, someFileLifecycle),
       "simpledefs".testJarPath.path
   ) { manager ->
     val someClassDefRegistry = manager.someClassDefinitions
@@ -22,7 +22,7 @@ class DefaultDefinitionsManagerTest {
 
   @Test
   fun testSomeFileDefinition() = manager(
-      listOf(SomeClassLifecycle, SomeFileLifecycle),
+      listOf(SomeClassLifecycle, someFileLifecycle),
       "simpledefs".testJarPath.path
   ) { manager ->
     val someFileDefRegistry = manager.someFileDefinitions
@@ -42,7 +42,7 @@ class DefaultDefinitionsManagerTest {
 
   @Test
   fun testSomeFileDefinitionOverridden() = manager(
-      listOf(SomeClassLifecycle, SomeFileLifecycle),
+      listOf(SomeClassLifecycle, someFileLifecycle),
       "simpledefs".testJarPath.path,
       "simpledefs-override".testFilePath.path
   ) { manager ->

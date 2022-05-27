@@ -1,0 +1,5 @@
+components:
+  placement:
+    size: 1
+  grid-point:
+    passable: true

@@ -85,7 +85,7 @@ object OUU {
 
   fun Any?.isAllowedMapKey(): Boolean {
     return when (this) {
-      is String -> ObjectUpdater.allowedPath.matches(this)
+      is String -> isNotBlank() //ObjectUpdater.allowedPath.matches(this)
       else -> false
     }
   }

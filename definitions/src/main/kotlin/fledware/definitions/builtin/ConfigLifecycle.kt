@@ -14,7 +14,6 @@ import fledware.definitions.SelectionInfo
 import fledware.definitions.processor.RawDefinitionAggregator
 import fledware.definitions.reader.RawDefinitionReader
 import fledware.definitions.registry.SimpleDefinitionRegistry
-import fledware.definitions.util.Combines
 import fledware.utilities.globToRegex
 
 
@@ -37,7 +36,7 @@ data class ConfigRawDefinition(val config: Map<String, Any>)
 //
 // ==================================================================
 
-class ConfigRawDefinitionProcessor(private val gatherGlob: String,
+class ConfigRawDefinitionProcessor(gatherGlob: String,
                                    private val gatherGlobNameTransform: (entry: String) -> String)
   : RawDefinitionAggregator<ConfigRawDefinition, ConfigDefinition>() {
   private val gatherRegex: Regex = gatherGlob.globToRegex()
@@ -53,7 +52,10 @@ class ConfigRawDefinitionProcessor(private val gatherGlob: String,
   }
 
   override fun combine(original: ConfigRawDefinition, new: ConfigRawDefinition): ConfigRawDefinition {
-    return ConfigRawDefinition(Combines.combineMap(original.config, new.config)!!)
+    @Suppress("UNCHECKED_CAST")
+    val result = builder.objectUpdater.start(original.config) as Map<String, Any>
+    builder.objectUpdater.apply(result, new.config)
+    return ConfigRawDefinition(result)
   }
 
   override fun result(name: String, final: ConfigRawDefinition): ConfigDefinition {

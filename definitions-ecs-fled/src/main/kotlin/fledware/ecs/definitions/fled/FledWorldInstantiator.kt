@@ -6,10 +6,11 @@ import fledware.definitions.UnknownDefinitionException
 import fledware.ecs.Entity
 import fledware.ecs.System
 import fledware.ecs.WorldBuilder
-import fledware.ecs.WorldBuilderDecorator
 import fledware.ecs.definitions.WorldDefinition
 import fledware.ecs.definitions.entityLifecycleName
+import fledware.ecs.definitions.instantiator.ComponentArgument
 import fledware.ecs.definitions.instantiator.WorldInstantiator
+import fledware.ecs.ex.initWith
 
 @Suppress("MemberVisibilityCanBePrivate")
 class FledWorldInstantiator(definition: WorldDefinition,
@@ -21,20 +22,35 @@ class FledWorldInstantiator(definition: WorldDefinition,
     }
   }
 
-  override fun componentInstantiator(manager: DefinitionsManager, type: String) =
-      manager.componentInstantiator(type)
+  fun decorateWorldWithNames(builder: WorldBuilder,
+                             componentInput: Map<String, Map<String, Any?>>) {
+    val inputs = mutableMapOf<String, MutableMap<String, Any?>>()
+    componentValues.forEach { inputs[it.key] = it.value.toMutableMap() }
+    componentInput.forEach { (name, values) ->
+      inputs.computeIfAbsent(name) { mutableMapOf() }.putAll(values)
+    }
+    return actualDecorateWorld(builder, inputs)
+  }
 
-  override fun entityInstantiator(manager: DefinitionsManager, type: String) =
-      manager.entityInstantiator(type)
-
-  override fun systemInstantiator(manager: DefinitionsManager, type: String) =
-      manager.systemInstantiator(type)
-
-  val decorator: WorldBuilderDecorator = { decorateWorld(this) }
+  fun decorateWorldWithArgs(builder: WorldBuilder,
+                            componentInput: List<ComponentArgument>) {
+    val inputs = mutableMapOf<String, MutableMap<String, Any?>>()
+    componentValues.forEach { inputs[it.key] = it.value.toMutableMap() }
+    componentInput.forEach {
+      val component = inputs.computeIfAbsent(it.componentType) { mutableMapOf() }
+      component[it.componentField] = it.value
+    }
+    return actualDecorateWorld(builder, inputs)
+  }
 
   fun decorateWorld(builder: WorldBuilder) {
+    actualDecorateWorld(builder, componentValues)
+  }
+
+  private fun actualDecorateWorld(builder: WorldBuilder,
+                                  components: Map<String, Map<String, Any?>>) {
     systems.forEach { builder.addSystem(it.value.create()) }
-    componentValues.forEach { (type, values) ->
+    components.forEach { (type, values) ->
       val instantiator = componentInstantiators[type]
           ?: throw IllegalStateException("unknown component definition: $type")
       builder.components.put(instantiator.createWithNames(values))
@@ -45,6 +61,10 @@ class FledWorldInstantiator(definition: WorldDefinition,
       val entity = instantiator.createWithNames(instance.components)
       instance.name?.also { entity.name = it }
       builder.importEntity(entity)
+    }
+    decorateFunction?.callWith(builder)
+    initFunction?.also {
+      builder.initWith { world, data -> it.callWith(world, data) }
     }
   }
 }

@@ -10,7 +10,7 @@ import fledware.definitions.builtin.functionDefinitions
 import fledware.ecs.Entity
 import fledware.ecs.debugToString
 import fledware.ecs.definitions.fled.entityInstantiator
-import fledware.ecs.definitions.instantiator.EntityArgument
+import fledware.ecs.definitions.instantiator.ComponentArgument
 import fledware.ecs.get
 import org.slf4j.LoggerFactory
 import kotlin.random.Random
@@ -21,6 +21,7 @@ private val logger = LoggerFactory.getLogger("empire.generate.GenerateSolarSyste
 data class SolarSystemGenerateResult(val entities: List<Entity>)
 
 @Function("generate-solar-system")
+@Suppress("unused")
 fun generateSolarSystem(manager: DefinitionsManager): SolarSystemGenerateResult {
   val systemConfig = manager.pointDefinitions.findTypeTags("system").weightedPick()
   val results = mutableListOf<Entity>()
@@ -35,6 +36,7 @@ fun generateSolarSystem(manager: DefinitionsManager): SolarSystemGenerateResult 
 }
 
 @Function("generate-point")
+@Suppress("unused")
 fun generatePoint(manager: DefinitionsManager,
                   results: MutableList<Entity>,
                   config: GeneratePoint,
@@ -44,7 +46,7 @@ fun generatePoint(manager: DefinitionsManager,
     // some configurations just start the generate process and don't actually
     // create an entity within the system
     val instantiator = manager.entityInstantiator(config.entityType)
-    val arguments = mutableListOf<EntityArgument>()
+    val arguments = mutableListOf<ComponentArgument>()
     figureOrbit(parent, arguments)
     figureSize(arguments)
     result = instantiator.createWithArgs(arguments)
@@ -67,22 +69,22 @@ fun generatePoint(manager: DefinitionsManager,
   return result
 }
 
-fun figureOrbit(parent: Entity?, arguments: MutableList<EntityArgument>) {
+fun figureOrbit(parent: Entity?, arguments: MutableList<ComponentArgument>) {
   if (parent == null) {
-    arguments += EntityArgument("orbit", PointOrbit::orbitingId.name, -1L)
-    arguments += EntityArgument("orbit", PointOrbit::alpha.name, 0f)
-    arguments += EntityArgument("orbit", PointOrbit::distance.name, 0f)
-    arguments += EntityArgument("orbit", PointOrbit::deltaPerSecond.name, 0f)
+    arguments += ComponentArgument("orbit", PointOrbit::orbitingId.name, -1L)
+    arguments += ComponentArgument("orbit", PointOrbit::alpha.name, 0f)
+    arguments += ComponentArgument("orbit", PointOrbit::distance.name, 0f)
+    arguments += ComponentArgument("orbit", PointOrbit::deltaPerSecond.name, 0f)
   }
   else {
-    arguments += EntityArgument("orbit", PointOrbit::orbitingId.name, parent.id)
-    arguments += EntityArgument("orbit", PointOrbit::alpha.name, Random.Default.nextFloat() * MathUtils.PI2)
-    arguments += EntityArgument("orbit", PointOrbit::distance.name, 10)
-    arguments += EntityArgument("orbit", PointOrbit::deltaPerSecond.name, Random.Default.nextFloat())
+    arguments += ComponentArgument("orbit", PointOrbit::orbitingId.name, parent.id)
+    arguments += ComponentArgument("orbit", PointOrbit::alpha.name, Random.Default.nextFloat() * MathUtils.PI2)
+    arguments += ComponentArgument("orbit", PointOrbit::distance.name, 10)
+    arguments += ComponentArgument("orbit", PointOrbit::deltaPerSecond.name, Random.Default.nextFloat())
   }
 }
 
-fun figureSize(arguments: MutableList<EntityArgument>) {
-  arguments += EntityArgument("size", PointSize::mass.name, 100f)
+fun figureSize(arguments: MutableList<ComponentArgument>) {
+  arguments += ComponentArgument("size", PointSize::mass.name, 100f)
 //  arguments += EntityArgument("size", PointSize::size.name, 10f)
 }

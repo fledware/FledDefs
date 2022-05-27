@@ -4,7 +4,7 @@ import fledware.definitions.DefinitionException
 import fledware.definitions.util.DefinitionReflectionException
 import fledware.definitions.util.ReflectCallerState
 import fledware.definitions.util.safeGet
-import fledware.ecs.definitions.instantiator.EntityArgument
+import fledware.ecs.definitions.instantiator.ComponentArgument
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -16,9 +16,9 @@ abstract class EntityTest {
   @Test
   fun canCreatePersonEntityWithArgs() = testCreatedPersonEntity {
     entityInstantiator("person").createWithArgs(listOf(
-        EntityArgument("placement", "x", 1),
-        EntityArgument("placement", "y", 2),
-        EntityArgument("placement", "size", 3)
+        ComponentArgument("placement", "x", 1),
+        ComponentArgument("placement", "y", 2),
+        ComponentArgument("placement", "size", 3)
     ))
   }
 
@@ -61,9 +61,9 @@ abstract class EntityTest {
     val entityInstantiator = driver.entityInstantiator("person")
     val exception = assertFailsWith<DefinitionException> {
       entityInstantiator.createWithArgs(listOf(
-          EntityArgument("placement", "x", 4),
-          EntityArgument("placement", "y", 4),
-          EntityArgument("placement", "size", "big!")
+          ComponentArgument("placement", "x", 4),
+          ComponentArgument("placement", "y", 4),
+          ComponentArgument("placement", "size", "big!")
       ))
     } as DefinitionReflectionException
     assertMissingPlacementException(exception)

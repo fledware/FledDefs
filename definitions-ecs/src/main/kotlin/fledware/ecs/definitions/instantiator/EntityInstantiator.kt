@@ -4,6 +4,7 @@ import fledware.definitions.DefinitionInstantiator
 import fledware.definitions.DefinitionsManager
 import fledware.definitions.ex.walk
 import fledware.ecs.definitions.EntityDefinition
+import fledware.ecs.definitions.componentLifecycleName
 import fledware.ecs.definitions.entityDefinitions
 import kotlin.collections.component1
 import kotlin.collections.component2
@@ -18,7 +19,10 @@ abstract class EntityInstantiator<E : Any, C : Any>(
   protected val defaultComponentValues = mutableMapOf<String, MutableMap<String, Any?>>()
   protected val componentInstantiators = mutableMapOf<String, ComponentInstantiator<C>>()
 
-  abstract fun componentInstantiator(manager: DefinitionsManager, type: String): ComponentInstantiator<C>
+  @Suppress("UNCHECKED_CAST")
+  protected open fun componentInstantiator(manager: DefinitionsManager, type: String) =
+      manager.instantiator(componentLifecycleName, type) as ComponentInstantiator<C>
+
   protected abstract fun actualCreate(input: Map<String, Map<String, Any?>>): E
   protected abstract fun getComponent(entity: E, component: KClass<out Any>): Any
 
@@ -43,7 +47,7 @@ abstract class EntityInstantiator<E : Any, C : Any>(
     }
   }
 
-  fun mutateWithArgs(entity: E, mutations: List<EntityArgument>) {
+  fun mutateWithArgs(entity: E, mutations: List<ComponentArgument>) {
     mutations.forEach {
       val component = componentInstantiators[it.componentType]
           ?: throw IllegalStateException("unknown component definition: ${it.componentType}")
@@ -65,7 +69,7 @@ abstract class EntityInstantiator<E : Any, C : Any>(
     return actualCreate(inputs)
   }
 
-  fun createWithArgs(componentInput: List<EntityArgument>): E {
+  fun createWithArgs(componentInput: List<ComponentArgument>): E {
     val inputs = mutableMapOf<String, MutableMap<String, Any?>>()
     defaultComponentValues.forEach { inputs[it.key] = it.value.toMutableMap() }
     componentInput.forEach {

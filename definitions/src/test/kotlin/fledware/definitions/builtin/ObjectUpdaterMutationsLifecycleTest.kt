@@ -1,6 +1,6 @@
 package fledware.definitions.builtin
 
-import fledware.definitions.registry.SomeFileLifecycle
+import fledware.definitions.registry.someFileLifecycle
 import fledware.definitions.registry.someFileDefinitions
 import fledware.definitions.tests.manager
 import fledware.definitions.tests.testFilePath
@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class ObjectUpdaterMutationsLifecycleTest {
   @Test
   fun testBasicLoading() = manager(
-      listOf(SomeFileLifecycle, ObjectUpdaterMutationsLifecycle()),
+      listOf(someFileLifecycle, ObjectUpdaterMutationsLifecycle()),
       "simpledefs".testJarPath.absolutePath,
       "simpledefs-override".testFilePath.absolutePath
   ) { manager ->

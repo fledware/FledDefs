@@ -7,7 +7,7 @@ import fledware.ecs.WorldData
 import fledware.ecs.componentIndexOf
 import fledware.ecs.definitions.EcsSystem
 import fledware.ecs.definitions.fled.createDefinedEntity
-import fledware.ecs.definitions.instantiator.EntityArgument
+import fledware.ecs.definitions.instantiator.ComponentArgument
 import fledware.utilities.getMaybe
 
 @Suppress("unused")
@@ -28,8 +28,8 @@ class SolarSystemLocationSystem : AbstractSystem() {
   private fun onWorldCreated(world: World) {
     val location = world.data.contexts.getMaybe<SolarSystemLocation>() ?: return
     data.createDefinedEntity(world.name, "points.system", listOf(
-        EntityArgument("system-location", "x", location.x),
-        EntityArgument("system-location", "y", location.y)
+        ComponentArgument("system-location", "x", location.x),
+        ComponentArgument("system-location", "y", location.y)
     ))
   }
 

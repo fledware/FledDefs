@@ -16,6 +16,7 @@ import fledware.definitions.processor.RawDefinitionAggregator
 import fledware.definitions.reader.RawDefinitionReader
 import fledware.definitions.registry.SimpleDefinitionRegistry
 import fledware.definitions.util.safeCallBy
+import fledware.utilities.TypedMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
@@ -47,7 +48,7 @@ data class BasicFunctionDefinition(val function: KFunction<*>,
    */
   fun callWith(contexts: List<Any>): Any? {
     val inputs = mutableMapOf<KParameter, Any?>()
-    parameters.forEach { (_, parameter) ->
+    function.parameters.forEach { parameter ->
       val klass = parameter.type.classifier as KClass<*>
       val value = contexts.firstOrNull { klass.isInstance(it) }
       setParam(inputs, parameter, value)
@@ -61,7 +62,7 @@ data class BasicFunctionDefinition(val function: KFunction<*>,
    */
   fun callWith(vararg contexts: Any?): Any? {
     val inputs = mutableMapOf<KParameter, Any?>()
-    parameters.forEach { (_, parameter) ->
+    function.parameters.forEach { parameter ->
       val klass = parameter.type.classifier as KClass<*>
       val value = contexts.firstOrNull { klass.isInstance(it) }
       setParam(inputs, parameter, value)
@@ -77,6 +78,19 @@ data class BasicFunctionDefinition(val function: KFunction<*>,
     val inputs = mutableMapOf<KParameter, Any?>()
     parameters.forEach { (name, parameter) ->
       setParam(inputs, parameter, contexts[name])
+    }
+    return function.safeCallBy(this, inputs)
+  }
+
+  /**
+   *
+   */
+  fun callWith(contexts: TypedMap<Any>): Any? {
+    val inputs = mutableMapOf<KParameter, Any?>()
+    function.parameters.forEach { parameter ->
+      val klass = parameter.type.classifier as KClass<*>
+      val value = contexts.getMaybe(klass)
+      setParam(inputs, parameter, value)
     }
     return function.safeCallBy(this, inputs)
   }

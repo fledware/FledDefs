@@ -83,7 +83,7 @@ data class BasicLoadCommand(override val name: String,
 }
 
 /**
- * A built in command that is used to build the manager.
+ * A builtin command that is used to build the manager.
  *
  * This pattern allows for loading to happen after the [DefinitionsBuilder]
  * is finished and the [DefinitionsManager] is built.
