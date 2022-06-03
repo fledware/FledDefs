@@ -11,7 +11,7 @@ buildscript {
     log4jVersion="2.17.2"
     gdxVersion="1.11.0"
     eclipseCollectionsVersion="11.0.0"
-    fledUtilsVersion="0.1.4-SNAPSHOT"
+    fledUtilsVersion="0.1.5-SNAPSHOT"
     fledEcsVersion="0.1.4"
   }
 
