@@ -1,0 +1,6 @@
+components:
+  grid-point:
+    passable: true
+    speed: 1.0
+  grid-point-graphics:
+    color: white

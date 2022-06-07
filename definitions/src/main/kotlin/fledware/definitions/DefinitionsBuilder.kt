@@ -85,7 +85,7 @@ interface DefinitionsBuilder {
    * gets a RawDefinitionProcessor based on the processors RawDefinition class,
    * or null if it doesn't exist.
    */
-  fun getMaybe(lifecycleName: String): RawDefinitionProcessor<out Any>?
+  fun getOrNull(lifecycleName: String): RawDefinitionProcessor<out Any>?
 
   /**
    * This iterates over each processor and

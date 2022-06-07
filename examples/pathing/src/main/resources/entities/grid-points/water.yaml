@@ -1,0 +1,6 @@
+extends: /grid-point
+components:
+  grid-point:
+    passable: false
+  grid-point-graphics:
+    color: blue

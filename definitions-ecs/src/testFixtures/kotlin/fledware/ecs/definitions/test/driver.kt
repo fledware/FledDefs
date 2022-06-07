@@ -19,7 +19,7 @@ interface ManagerDriver {
 
   fun entityInstantiator(type: String): EntityInstantiator<Any, Any>
   fun entityComponent(entity: Any, type: KClass<out Any>): Any
-  fun entityComponentMaybe(entity: Any, type: KClass<out Any>): Any?
+  fun entityComponentOrNull(entity: Any, type: KClass<out Any>): Any?
   fun entityDefinitionType(entity: Any): String
 
   fun sceneInstantiator(type: String): SceneInstantiator<Any, Any, Any>

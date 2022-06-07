@@ -59,11 +59,11 @@ open class DefaultDefinitionsManager(val classLoaderWrapper: ClassLoaderWrapper,
 
   override fun instantiator(lifecycleName: String, definitionName: String)
       : DefinitionInstantiator<out Definition> {
-    return instantiatorMaybe(lifecycleName, definitionName)
+    return instantiatorOrNull(lifecycleName, definitionName)
         ?: throw DefinitionNotInstantiableException(lifecycleName, definitionName)
   }
 
-  override fun instantiatorMaybe(lifecycleName: String, definitionName: String)
+  override fun instantiatorOrNull(lifecycleName: String, definitionName: String)
       : DefinitionInstantiator<out Definition>? {
     val check = instantiatorsCache
         .computeIfAbsent(lifecycleName) { ConcurrentHashMap() }

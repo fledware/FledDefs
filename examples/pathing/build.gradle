@@ -1,0 +1,19 @@
+dependencies {
+  // these need to be loaded by the driver. It is not included automatically
+  api project(":examples:libgdx-helpers")
+  api "com.github.xaguzman:pathfinding:0.2.6"
+
+  // this is already included in the driver, but we need to include
+  // it here as well to access it because we're not depending on the
+  // driver directly.
+  api "io.fledware:fledecs:$fledEcsVersion"
+  api project(":definitions")
+  api project(":definitions-ecs")
+  api project(":definitions-ecs-fled")
+  api project(":definitions-libgdx")
+  api "io.github.libktx:ktx-app:$ktxVersion"
+  api "io.github.libktx:ktx-style:$ktxVersion"
+  api "io.github.libktx:ktx-actors:$ktxVersion"
+  api "io.github.libktx:ktx-scene2d:$ktxVersion"
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
+}

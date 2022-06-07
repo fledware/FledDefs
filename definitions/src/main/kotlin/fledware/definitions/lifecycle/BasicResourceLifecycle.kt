@@ -73,8 +73,8 @@ inline fun <reified R : Any, reified D : Definition> rootResourceWithRawLifecycl
     name: String,
     instantiated: InstantiatedLifecycle = InstantiatedLifecycle()
 ) = BasicResourceWithRawLifecycle(name, instantiated, R::class, D::class, "*.$name.*") {
-      it.substringBeforeLast('.').removeSuffix(".$name")
-    }
+  it.substringBeforeLast('.').removeSuffix(".$name")
+}
 
 /**
  * finds files within a directory.
@@ -90,8 +90,8 @@ inline fun <reified R : Any, reified D : Definition> directoryResourceWithRawLif
     name: String,
     instantiated: InstantiatedLifecycle = InstantiatedLifecycle()
 ) = BasicResourceWithRawLifecycle(name, instantiated, R::class, D::class, "$directory/**.*") {
-      it.removePrefixAndExtension("$directory/")
-    }
+  it.removePrefixAndExtension(directory)
+}
 
 /**
  * finds files on the root of the reader entries.
@@ -108,8 +108,8 @@ inline fun <reified D : Definition> rootResourceLifecycle(
     name: String,
     instantiated: InstantiatedLifecycle = InstantiatedLifecycle()
 ) = BasicResourceLifecycle(name, instantiated, D::class, "*.$name.*") {
-      it.substringBeforeLast('.').removeSuffix(".$name")
-    }
+  it.substringBeforeLast('.').removeSuffix(".$name")
+}
 
 /**
  * finds files within a directory.
@@ -128,5 +128,5 @@ inline fun <reified D : Definition> directoryResourceLifecycle(
     name: String,
     instantiated: InstantiatedLifecycle = InstantiatedLifecycle()
 ) = BasicResourceLifecycle(name, instantiated, D::class, "$directory/**.*") {
-      it.removePrefixAndExtension("$directory/")
-    }
+  it.removePrefixAndExtension(directory)
+}

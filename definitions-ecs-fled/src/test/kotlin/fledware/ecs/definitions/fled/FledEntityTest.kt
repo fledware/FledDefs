@@ -15,7 +15,7 @@ class FledEntityTest : EntityTest() {
   @Test
   fun throwsOnMissingEntityName() {
     val driver = createDriver()
-    val entityInstantiator = driver.entityInstantiator("person")
+    val entityInstantiator = driver.entityInstantiator("/person")
     val exception = assertFailsWith<ReflectionCallException> {
       entityInstantiator.createWithNames(mapOf("placement" to mapOf("x" to 4, "y" to 4)))
     }
@@ -28,7 +28,7 @@ class FledEntityTest : EntityTest() {
   @Test
   fun throwsOnMissingEntityArgument() {
     val driver = createDriver()
-    val entityInstantiator = driver.entityInstantiator("person")
+    val entityInstantiator = driver.entityInstantiator("/person")
     val exception = assertFailsWith<ReflectionCallException> {
       entityInstantiator.createWithArgs(listOf(
           ComponentArgument("placement", "x", 4),

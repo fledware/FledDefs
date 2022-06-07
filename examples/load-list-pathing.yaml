@@ -1,0 +1,11 @@
+maven-libraries:
+  - com.github.xaguzman:pathfinding:0.2.6
+
+mods:
+  # basic helpers
+  - type: local-gather
+    target: libgdx-helpers/build/libs/libgdx-helpers-0.1.0-SNAPSHOT.jar
+
+  # load the core of the game
+  - type: local-gather
+    target: pathing/build/libs/pathing-0.1.0-SNAPSHOT.jar

@@ -14,7 +14,7 @@ import fledware.definitions.libgdx.descriptor
 import fledware.definitions.libgdx.fileHandle
 import fledware.definitions.reader.RawDefinitionReader
 import fledware.definitions.registry.SimpleDefinitionRegistry
-import fledware.utilities.getMaybe
+import fledware.utilities.getOrNull
 import kotlin.collections.set
 
 
@@ -56,7 +56,7 @@ class TextureAtlasDefinitionRegistry(
     fromDefinitions: Map<String, List<RawDefinitionFrom>>
 ) : SimpleDefinitionRegistry<TextureAtlasDefinition>(definitions, orderedDefinitions, fromDefinitions) {
   private fun indexTextureRegions(): Map<String, TextureAtlas.AtlasRegion> {
-    val assets = manager.contexts.getMaybe<AssetManager>()
+    val assets = manager.contexts.getOrNull<AssetManager>()
         ?: throw IllegalStateException("AssetManager required to index atlases")
     val result = mutableMapOf<String, TextureAtlas.AtlasRegion>()
     orderedDefinitions.forEach { atlasDefinition ->

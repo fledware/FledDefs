@@ -9,7 +9,6 @@ import fledware.definitions.libgdx.LibGdxDefinition
 import fledware.definitions.libgdx.createAssetManager
 import fledware.definitions.libgdx.loadAll
 import fledware.definitions.tests.LibGdxTest
-import fledware.definitions.tests.builder
 import fledware.definitions.tests.libgdxBuilder
 import fledware.definitions.tests.testFilePath
 import fledware.definitions.tests.testJarPath

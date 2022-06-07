@@ -21,6 +21,15 @@ task runSpacer(type: JavaExec) {
   dependsOn(":examples:spacer-mod-info:build")
 }
 
+task runPathing(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = 'driver.MainKt'
+  args = [ "../load-list-pathing.yaml" ]
+
+  dependsOn(":examples:libgdx-helpers:build")
+  dependsOn(":examples:pathing:build")
+}
+
 task runBots(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = 'driver.MainKt'

@@ -23,7 +23,7 @@ import kotlin.reflect.full.isSubclassOf
 /**
  * a common way of finding params to be loaded by the AssetManager
  */
-fun <T : Any> RawDefinitionReader.findParametersMaybe(entry: String, paramClass: KClass<T>): T? {
+fun <T : Any> RawDefinitionReader.findParametersOrNull(entry: String, paramClass: KClass<T>): T? {
   val paramEntry = findEntryOrNull("$entry.params") ?: return null
   val serializer = serialization.figureSerializer(paramEntry)
   return serializer.readValue(read(paramEntry), paramClass.java)

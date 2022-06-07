@@ -1,6 +1,8 @@
 components:
   2d-graphics: {}
   grid-map: {}
+  grid-map-graphics:
+    cellSize: 10
 decorateFunction: fill-grid-world
 systems:
   - graphics

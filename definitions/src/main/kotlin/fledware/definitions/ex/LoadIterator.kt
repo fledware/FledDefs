@@ -4,7 +4,6 @@ import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
 import fledware.utilities.infoMeasure
 import org.slf4j.LoggerFactory
-import java.io.File
 import java.util.concurrent.CountDownLatch
 import kotlin.system.measureTimeMillis
 
@@ -18,28 +17,15 @@ fun DefinitionsBuilder.gatherAll(commands: List<LoadCommand>)
 }
 
 /**
- * performs a gather on every line of the file.
- *
- * If the paths are not absolute, then the path is considered
- * from the directory of the file.
- */
-fun DefinitionsBuilder.gatherAll(loadList: File)
-    : LoadIterator {
-  return LoadIterator(this.loadListFor(loadList, false) + BuildManagerCommand(), this)
-}
-
-/**
  *
  */
-data class LoadCommandState(val builderMaybe: DefinitionsBuilder?,
-                            val managerMaybe: DefinitionsManager?) {
+data class LoadCommandState(val builderOrNull: DefinitionsBuilder?,
+                            val managerOrNull: DefinitionsManager?) {
   val builder: DefinitionsBuilder
-    get() = builderMaybe ?: throw IllegalStateException("builder not available")
+    get() = builderOrNull ?: throw IllegalStateException("builder not available")
   val manager: DefinitionsManager
-    get() = managerMaybe ?: throw IllegalStateException("manager not available")
+    get() = managerOrNull ?: throw IllegalStateException("manager not available")
 }
-
-
 
 /**
  *
@@ -202,7 +188,7 @@ class LoadIterator(val commands: List<LoadCommand>,
   }
   /**
    * Call this every frame if there are [LoadCommand]s that
-   * require to be ran on the main thread.
+   * require to be run on the main thread.
    *
    * For instance, loading assets in libgdx.
    */
@@ -249,7 +235,7 @@ class LoadIterator(val commands: List<LoadCommand>,
 
     private fun ensureCorrectClassLoader() {
       this.contextClassLoader = builder?.classLoader ?: manager?.classLoader
-              ?: throw IllegalStateException("no class loader found")
+          ?: throw IllegalStateException("no class loader found")
     }
 
     private fun consumeCommand(command: LoadCommand) {

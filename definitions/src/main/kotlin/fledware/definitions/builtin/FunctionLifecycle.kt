@@ -54,10 +54,10 @@ data class FunctionLoadCommand(val functionName: String,
                                override val name: String = "Function $functionName")
   : LoadCommand {
   override fun invoke(context: LoadCommandState) {
-    val function = context.builderMaybe?.functionDefinitions?.get(functionName)
-        ?: context.managerMaybe?.functionDefinitions?.get(functionName)
+    val function = context.builderOrNull?.functionDefinitions?.get(functionName)
+        ?: context.managerOrNull?.functionDefinitions?.get(functionName)
         ?: throw IllegalStateException("function not found: $functionName")
-    function.callWith(context.managerMaybe ?: context.builderMaybe)
+    function.callWith(context.managerOrNull ?: context.builderOrNull)
   }
 }
 
@@ -80,9 +80,9 @@ data class FunctionBlockingLoadCommand(val functionName: String,
   }
 
   override fun invoke(context: LoadCommandState) {
-    function = context.builderMaybe?.functionDefinitions?.get(functionName)
-        ?: context.managerMaybe?.functionDefinitions?.get(functionName)
+    function = context.builderOrNull?.functionDefinitions?.get(functionName)
+        ?: context.managerOrNull?.functionDefinitions?.get(functionName)
             ?: throw IllegalStateException("function not found: $functionName")
-    contextCallContext = (context.managerMaybe ?: context.builderMaybe)!!
+    contextCallContext = (context.managerOrNull ?: context.builderOrNull)!!
   }
 }

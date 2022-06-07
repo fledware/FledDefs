@@ -15,7 +15,8 @@ class ObjectUpdaterMutationsLifecycleTest {
       "simpledefs".testJarPath.absolutePath,
       "simpledefs-override".testFilePath.absolutePath
   ) { manager ->
-    val okok = manager.someFileDefinitions["okok"]
+    println(manager.someFileDefinitions.definitions.keys)
+    val okok = manager.someFileDefinitions["/okok"]
     assertEquals(listOf("string", "hello", "lala"), okok.strings)
     assertEquals(mapOf("first" to "ok", "new" to "blah", "number" to 234, "mutated" to "you"),
                  okok.meta)

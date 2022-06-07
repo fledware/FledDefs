@@ -1,0 +1,4 @@
+extends: /person
+components:
+  health:
+    health: 10

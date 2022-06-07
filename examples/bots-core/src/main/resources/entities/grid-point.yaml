@@ -2,4 +2,9 @@ components:
   placement:
     size: 1
   grid-point:
-    passable: true
+    airPassable: true
+    airSpeed: 1.0
+    landPassable: true
+    landSpeed: 1.0
+  grid-point-graphics:
+    color: white

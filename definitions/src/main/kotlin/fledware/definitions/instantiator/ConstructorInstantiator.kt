@@ -20,9 +20,9 @@ open class ConstructorInstantiator<D : Definition, I : Any>(
   private val arguments: Map<KParameter, Any?>
 
   init {
-    val argumentsMaybe = mutableMapOf<KParameter, Any?>()
+    val argumentsCheck = mutableMapOf<KParameter, Any?>()
     val check = instantiating.constructors.firstOrNull {
-      argumentsMaybe.clear()
+      argumentsCheck.clear()
       val parameters = it.parameters
       if (arguments.size > parameters.size)
         return@firstOrNull false
@@ -37,17 +37,17 @@ open class ConstructorInstantiator<D : Definition, I : Any>(
           val type = parameter.type.classifier as KClass<*>
           if (!type.isInstance(argument))
             return@firstOrNull false
-          argumentsMaybe[parameter] = argument
+          argumentsCheck[parameter] = argument
         }
       }
       // they could be different parameter names, so if all the arguments
       // passed in are not used, then it's considered not found as well
-      return@firstOrNull argumentsMaybe.size == arguments.size
+      return@firstOrNull argumentsCheck.size == arguments.size
     }
     constructor = check ?: throw IncompleteDefinitionException(
         definition::class, definition.defName,
         "can't find constructor for $instantiating with $arguments")
-    this.arguments = argumentsMaybe
+    this.arguments = argumentsCheck
   }
 
   fun create(): I = instantiating.cast(constructor.callBy(arguments))
