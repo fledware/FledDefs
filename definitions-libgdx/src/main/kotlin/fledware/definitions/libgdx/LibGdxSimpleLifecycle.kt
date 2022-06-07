@@ -50,8 +50,8 @@ abstract class LibGdxSimpleLifecycle<R : Any, P : Any, D : Definition> : Lifecyc
     override fun process(reader: RawDefinitionReader, info: SelectionInfo): Boolean {
       val resource = info as? ResourceSelectionInfo ?: return false
       if (!entryRegex.matches(resource.entry)) return false
-      val name = resource.entry.removePrefixAndExtension("$directory/")
-      val parameters = parameterType?.let { reader.findParametersMaybe(resource.entry, it) }
+      val name = resource.entry.removePrefixAndExtension(directory)
+      val parameters = parameterType?.let { reader.findParametersOrNull(resource.entry, it) }
       val raw = gatherHit(reader, resource.entry, name, parameters)
       apply(name, resource.from, raw)
       return true

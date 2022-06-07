@@ -1,8 +1,8 @@
-orderedLoad:
+mods:
   # basic helpers
-  - type: load
+  - type: local-gather
     target: libgdx-helpers/build/libs/libgdx-helpers-0.1.0-SNAPSHOT.jar
 
   # load the core of the game
-  - type: gather
+  - type: local-gather
     target: bots-core/build/libs/bots-core-0.1.0-SNAPSHOT.jar

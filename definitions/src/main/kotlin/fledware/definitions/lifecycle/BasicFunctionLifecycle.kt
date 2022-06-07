@@ -89,7 +89,7 @@ data class BasicFunctionDefinition(val function: KFunction<*>,
     val inputs = mutableMapOf<KParameter, Any?>()
     function.parameters.forEach { parameter ->
       val klass = parameter.type.classifier as KClass<*>
-      val value = contexts.getMaybe(klass)
+      val value = contexts.getOrNull(klass)
       setParam(inputs, parameter, value)
     }
     return function.safeCallBy(this, inputs)

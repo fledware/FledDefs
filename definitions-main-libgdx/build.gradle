@@ -5,6 +5,7 @@ dependencies {
   api project(":definitions")
   api project(":definitions-ecs")
   api project(":definitions-ecs-fled")
+  api project(":definitions-load-list")
   api project(":definitions-libgdx")
 
   api "io.github.libktx:ktx-app:$ktxVersion"

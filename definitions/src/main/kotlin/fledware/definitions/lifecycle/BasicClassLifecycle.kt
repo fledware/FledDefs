@@ -15,9 +15,7 @@ import fledware.definitions.processor.RawDefinitionAggregator
 import fledware.definitions.reader.RawDefinitionReader
 import fledware.definitions.registry.SimpleDefinitionRegistry
 import fledware.utilities.ConcurrentHierarchyMap
-import fledware.utilities.ConcurrentTypedMap
 import fledware.utilities.HierarchyMap
-import fledware.utilities.TypedMap
 import kotlin.reflect.KClass
 import kotlin.reflect.safeCast
 
@@ -116,6 +114,7 @@ class ClassDefinitionRegistry(
     fromDefinitions: Map<String, List<RawDefinitionFrom>>
 ) : SimpleDefinitionRegistry<BasicClassDefinition>(definitions, orderedDefinitions, fromDefinitions) {
   val typeIndex: HierarchyMap<Any>
+
   init {
     val index = ConcurrentHierarchyMap()
     orderedDefinitions.forEach { index.add(it.klass) }

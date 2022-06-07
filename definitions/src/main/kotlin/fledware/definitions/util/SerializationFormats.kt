@@ -51,7 +51,7 @@ class SerializationFormats {
         ?: throw IllegalArgumentException("unable to find serializer format: $path")
   }
 
-  fun figureSerializerMaybe(path: String): ObjectMapper? {
+  fun figureSerializerOrNull(path: String): ObjectMapper? {
     val extension = path.substringAfterLast(".")
     return formats[extension]
   }

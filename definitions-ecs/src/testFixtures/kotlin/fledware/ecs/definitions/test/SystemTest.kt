@@ -16,9 +16,9 @@ abstract class SystemTest {
     val placementClass = driver.componentClass("placement")
     val movementClass = driver.componentClass("movement")
 
-    driver.decorateWithWorld("main")
-    val entity1 = driver.entities.first { driver.entityComponentMaybe(it, placementClass)?.safeGet("x") == 1 }
-    val entity8 = driver.entities.first { driver.entityComponentMaybe(it, placementClass)?.safeGet("x") == 8 }
+    driver.decorateWithWorld("/main")
+    val entity1 = driver.entities.first { driver.entityComponentOrNull(it, placementClass)?.safeGet("x") == 1 }
+    val entity8 = driver.entities.first { driver.entityComponentOrNull(it, placementClass)?.safeGet("x") == 8 }
 
     assertEquals(1, driver.entityComponent(entity1, placementClass).safeGet("x"))
     assertEquals(1, driver.entityComponent(entity1, placementClass).safeGet("y"))
@@ -50,8 +50,8 @@ abstract class SystemTest {
     val placementClass = driver.componentClass("placement")
     val healthClass = driver.componentClass("health")
 
-    driver.decorateWithWorld("main")
-    val entity1 = driver.entities.first { driver.entityComponentMaybe(it, placementClass)?.safeGet("x") == 1 }
+    driver.decorateWithWorld("/main")
+    val entity1 = driver.entities.first { driver.entityComponentOrNull(it, placementClass)?.safeGet("x") == 1 }
 
     assertTrue(entity1 in driver.entities)
     driver.entityComponent(entity1, healthClass).safeSet("health", 0)

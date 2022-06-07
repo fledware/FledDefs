@@ -90,16 +90,16 @@ private class JustDrawSomething(val lifecycles: List<Lifecycle>) : ApplicationLi
 
     spriteBatch = SpriteBatch()
 
-    exoFont = assetManager.get(definitions.bitmapFontDefinitions["exo"].assetDescriptor)
+    exoFont = assetManager.get(definitions.bitmapFontDefinitions["/exo"].assetDescriptor)
     ttfDefaults = assetManager.get(definitions.trueTypeFontDefinitions["defaults"].assetDescriptor)
     ttfBigs = assetManager.get(definitions.trueTypeFontDefinitions["bigs"].assetDescriptor)
-    icon2 = assetManager.get(definitions.textureDefinitions["icon2"].assetDescriptor)
-    skin = assetManager.get(definitions.skinDefinitions["glassy.glassy-ui"].assetDescriptor)
-    sound = assetManager.get(definitions.soundDefinitions["pinkyfinger__piano-e"].assetDescriptor)
-    music = assetManager.get(definitions.musicDefinitions["setuniman__music-box"].assetDescriptor)
+    icon2 = assetManager.get(definitions.textureDefinitions["/icon2"].assetDescriptor)
+    skin = assetManager.get(definitions.skinDefinitions["/glassy/glassy-ui"].assetDescriptor)
+    sound = assetManager.get(definitions.soundDefinitions["/pinkyfinger__piano-e"].assetDescriptor)
+    music = assetManager.get(definitions.musicDefinitions["/setuniman__music-box"].assetDescriptor)
     music.isLooping = true
 
-    tiledMap = assetManager.get(definitions.tiledMapDefinitions["test"].assetDescriptor)
+    tiledMap = assetManager.get(definitions.tiledMapDefinitions["/test"].assetDescriptor)
     tiledMapRenderer = OrthogonalTiledMapRenderer(tiledMap, 1f / 4f, spriteBatch)
     tiledCamera = OrthographicCamera()
     tiledCamera.setToOrtho(false, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())

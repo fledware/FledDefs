@@ -1,5 +1,6 @@
 package spacer.generate
 
+import driver.helpers.WeightedPick
 import fledware.definitions.Definition
 import fledware.definitions.DefinitionRegistry
 import fledware.definitions.DefinitionsManager

@@ -49,7 +49,7 @@ class AshleyManagerDriver(override val manager: DefinitionsManager) : ManagerDri
     return (entity as Entity).getComponent(type.java as Class<Component>)!!
   }
 
-  override fun entityComponentMaybe(entity: Any, type: KClass<out Any>): Any? {
+  override fun entityComponentOrNull(entity: Any, type: KClass<out Any>): Any? {
     return (entity as Entity).getComponent(type.java as Class<Component>)
   }
 

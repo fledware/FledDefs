@@ -59,7 +59,7 @@ class FledManagerDriver(override val manager: DefinitionsManager) : ManagerDrive
     return (entity as Entity)[type]
   }
 
-  override fun entityComponentMaybe(entity: Any, type: KClass<out Any>): Any? {
+  override fun entityComponentOrNull(entity: Any, type: KClass<out Any>): Any? {
     return (entity as Entity).getOrNull(type)
   }
 

@@ -28,12 +28,12 @@ class DefaultDefinitionsManagerTest {
     val someFileDefRegistry = manager.someFileDefinitions
     assertEquals(2, someFileDefRegistry.definitions.size)
     assertEquals(2, someFileDefRegistry.fromDefinitions.size)
-    val someFileOkOk = someFileDefRegistry["okok"]
+    val someFileOkOk = someFileDefRegistry["/okok"]
     assertEquals(123, someFileOkOk.someInt)
     assertEquals(listOf("string", "hello"), someFileOkOk.strings)
     assertEquals(true, someFileOkOk.blah)
     assertEquals(mapOf("first" to "ok", "new" to "blah", "number" to 234), someFileOkOk.meta)
-    val someFileDepthOther = someFileDefRegistry["depth.other"]
+    val someFileDepthOther = someFileDefRegistry["/depth/other"]
     assertEquals(838383, someFileDepthOther.someInt)
     assertEquals(listOf(), someFileDepthOther.strings)
     assertEquals(false, someFileDepthOther.blah)
@@ -50,12 +50,12 @@ class DefaultDefinitionsManagerTest {
     assertEquals(2, someFileDefRegistry.definitions.size)
     assertEquals(2, someFileDefRegistry.fromDefinitions.size)
     someFileDefRegistry.definitions.keys.forEach { println(it) }
-    val someFileOkOk = someFileDefRegistry["okok"]
+    val someFileOkOk = someFileDefRegistry["/okok"]
     assertEquals(123, someFileOkOk.someInt)
     assertEquals(listOf("string", "hello"), someFileOkOk.strings)
     assertEquals(true, someFileOkOk.blah)
     assertEquals(mapOf("first" to "ok", "new" to "blah", "number" to 234), someFileOkOk.meta)
-    val someFileDepthOther = someFileDefRegistry["depth.other"]
+    val someFileDepthOther = someFileDefRegistry["/depth/other"]
     assertEquals(838383, someFileDepthOther.someInt)
     assertEquals(listOf(), someFileDepthOther.strings)
     assertEquals(true, someFileDepthOther.blah)

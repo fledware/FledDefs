@@ -2,7 +2,7 @@ package fledware.definitions.ex
 
 import fledware.definitions.Definition
 import fledware.definitions.DefinitionRegistry
-import fledware.utilities.getMaybe
+import fledware.utilities.getOrNull
 import fledware.utilities.globToRegex
 import java.util.concurrent.ConcurrentHashMap
 
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 inline fun <D : Definition> DefinitionRegistry<D>.walk(startName: String, block: (definition: D) -> String?) {
   var nameAt: String? = startName
-  while(nameAt != null) {
+  while (nameAt != null) {
     val definition = this[nameAt]
     nameAt = block(definition)
   }
@@ -47,10 +47,10 @@ fun <D : Definition> DefinitionRegistry<D>.filter(glob: String) = filter(glob) {
 inline fun <D : Definition> DefinitionRegistry<D>.filter(
     cacheKey: String,
     block: DefinitionRegistry<D>.() -> List<D>
-) : List<D> {
+): List<D> {
   // we use the context put here to ensure concurrency safety. the worst
   // that would happen is losing a couple caches.
-  val filterCache = manager.contexts.getMaybe()
+  val filterCache = manager.contexts.getOrNull()
       ?: DefinitionFilterCache().also { manager.contexts.put(it) }
   // we do a list of map-maps so we don't create objects when doing a lookup
   val lifecycleCache = filterCache.cache.computeIfAbsent(lifecycle.name) { ConcurrentHashMap() }

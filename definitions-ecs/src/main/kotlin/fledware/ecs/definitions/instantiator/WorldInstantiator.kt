@@ -16,31 +16,50 @@ abstract class WorldInstantiator<E : Any, C : Any, S : Any>(
     protected val manager: DefinitionsManager
 ) : DefinitionInstantiator<WorldDefinition> {
 
-  val systems = mutableMapOf<String, SystemInstantiator<S>>()
-  val componentInstantiators = mutableMapOf<String, ComponentInstantiator<C>>()
-  val componentValues = mutableMapOf<String, MutableMap<String, Any?>>()
+  val systems: Map<String, SystemInstantiator<S>> = buildMap {
+    manager.worldDefinitions.walk(definition.defName) {
+      definition.systems.forEach { systemName ->
+        this.computeIfAbsent(systemName) { systemInstantiator(manager, systemName) }
+      }
+      definition.extends
+    }
+  }
+
+  val componentInstantiators: Map<String, ComponentInstantiator<C>>
+  val defaultComponentValues: Map<String, Map<String, Any?>>
   val entityInstantiators = mutableMapOf<String, EntityInstantiator<E, C>>()
   val entities = mutableListOf<EntityInstance>()
   val decorateFunction = definition.decorateFunction?.let { manager.functionDefinitions[it] }
   val initFunction = definition.initFunction?.let { manager.functionDefinitions[it] }
 
+
+  init {
+    val defaultComponentValues: Map<String, Map<String, Any?>> = buildMap {
+      manager.worldDefinitions.walk(definition.defName) {
+        it.components.forEach { (name, args) ->
+          this[name] = args + this.getOrDefault(name, emptyMap())
+        }
+        it.extends
+      }
+    }
+    componentInstantiators = buildMap {
+      defaultComponentValues.keys.forEach { componentName ->
+        this[componentName] = componentInstantiator(manager, componentName)
+      }
+    }
+    this.defaultComponentValues = defaultComponentValues.mapValues { (name, values) ->
+      val component = componentInstantiators[name]!!
+      component.ensureParameterTypes(values)
+    }
+  }
+
   init {
     manager.worldDefinitions.walk(definition.defName) {
-      it.systems.forEach { systemName ->
-        systems.computeIfAbsent(systemName) { systemInstantiator(manager, systemName) }
-      }
-      it.components.forEach { (name, args) ->
-        componentValues.computeIfAbsent(name) { mutableMapOf() }.putAll(args)
-      }
       it.entities.forEach { entity ->
         entityInstantiators.computeIfAbsent(entity.type) { entityInstantiator(manager, entity.type) }
         entities.add(entity)
       }
       it.extends
-    }
-
-    componentValues.keys.forEach { componentName ->
-      componentInstantiators[componentName] = componentInstantiator(manager, componentName)
     }
   }
 

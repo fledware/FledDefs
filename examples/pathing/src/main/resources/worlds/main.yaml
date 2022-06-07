@@ -1,0 +1,14 @@
+components:
+  2d-graphics: {}
+  grid-map-graphics:
+    cellSize: 10
+  grid-map-info:
+    weights:
+      10: /grid-points/water
+      90: /grid-points/grass
+  pathing-info: {}
+decorateFunction: fill-grid-world
+systems:
+  - graphics
+  - input
+  - pathing

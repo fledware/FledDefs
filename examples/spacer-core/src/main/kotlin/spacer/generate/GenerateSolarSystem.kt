@@ -1,6 +1,7 @@
 package spacer.generate
 
 import com.badlogic.gdx.math.MathUtils
+import driver.helpers.weightedPick
 import spacer.solarsystem.PointOrbit
 import spacer.solarsystem.PointSize
 import spacer.solarsystem.isRoot

@@ -6,9 +6,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Circle
 import driver.helpers.GraphicsSystem
 import driver.helpers.InputSystem
+import driver.helpers.TwoDGraphics
 import driver.helpers.drawGrid
-import spacer.solarsystem.SolarSystemLocation
-import spacer.util.TwoDGraphics
 import fledware.ecs.World
 import fledware.ecs.WorldData
 import fledware.ecs.componentIndexOf
@@ -16,6 +15,7 @@ import fledware.ecs.definitions.EcsSystem
 import fledware.ecs.forEach
 import fledware.ecs.get
 import fledware.utilities.get
+import spacer.solarsystem.SolarSystemLocation
 
 @Suppress("unused")
 @EcsSystem("hyperspace-graphics")

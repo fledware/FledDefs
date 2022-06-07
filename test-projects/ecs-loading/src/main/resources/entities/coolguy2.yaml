@@ -1,0 +1,5 @@
+extends: /coolguy
+components:
+  movement:
+    deltaX: 1
+    deltaY: 1

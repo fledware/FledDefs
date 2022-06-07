@@ -28,7 +28,7 @@ fun ObjectUpdater.getValue(target: Any, path: String): Any {
   return check[0]
 }
 
-fun ObjectUpdater.getValueMaybe(target: Any, path: String): Any? {
+fun ObjectUpdater.getValueOrNull(target: Any, path: String): Any? {
   val check = getValuesAt(target, parsePath(path))
   if (check.size > 1)
     throw IllegalArgumentException("more than one value found (${check.size}): $path")
