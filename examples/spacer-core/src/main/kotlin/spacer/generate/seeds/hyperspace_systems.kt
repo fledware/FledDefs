@@ -2,8 +2,6 @@ package spacer.generate.seeds
 
 import com.badlogic.gdx.math.MathUtils
 import driver.helpers.focus
-import spacer.generate.SolarSystemGenerateResult
-import spacer.solarsystem.SolarSystemLocation
 import fledware.definitions.DefinitionsManager
 import fledware.definitions.builtin.Function
 import fledware.definitions.builtin.configDefinition
@@ -11,7 +9,9 @@ import fledware.definitions.builtin.functionDefinitions
 import fledware.ecs.Engine
 import fledware.ecs.definitions.fled.createDefinedWorldAndFlush
 import fledware.utilities.get
-import fledware.utilities.getMaybe
+import fledware.utilities.getOrNull
+import spacer.generate.SolarSystemGenerateResult
+import spacer.solarsystem.SolarSystemLocation
 
 
 @Function("initialize-game-data")
@@ -38,7 +38,7 @@ fun seedWithClusterOfSystems(manager: DefinitionsManager) {
         ?: throw IllegalArgumentException("not SolarSystemGenerateResult: $seedResult")
     val world = engine.createDefinedWorldAndFlush("solar-system-$it", systemWorld)
     world.data.importEntities(result.entities)
-    world.data.contexts.getMaybe<SolarSystemLocation>()?.also { location ->
+    world.data.contexts.getOrNull<SolarSystemLocation>()?.also { location ->
       location.x = MathUtils.random(-400f, 400f)
       location.y = MathUtils.random(-400f, 400f)
     }

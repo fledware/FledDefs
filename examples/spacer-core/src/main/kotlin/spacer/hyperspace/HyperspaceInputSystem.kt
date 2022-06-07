@@ -4,14 +4,14 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.MathUtils
 import driver.helpers.InputSystem
+import driver.helpers.TwoDGraphics
 import driver.helpers.focus
 import driver.helpers.isKeyJustPressed
 import driver.helpers.isKeyPressed
-import spacer.solarsystem.SolarSystemLocation
-import spacer.util.TwoDGraphics
 import fledware.ecs.definitions.EcsSystem
 import fledware.ecs.get
 import fledware.utilities.get
+import spacer.solarsystem.SolarSystemLocation
 
 @Suppress("unused")
 @EcsSystem("hyperspace-input")

@@ -68,9 +68,9 @@ class SetOperationTest : MutationTest() {
   @ParameterizedTest
   @MethodSource("getData")
   fun canSetValueAtRoot(mutation: MutationLambda) {
-    assertEquals("hello", updater.getValueMaybe(target, "//str"))
+    assertEquals("hello", updater.getValueOrNull(target, "//str"))
     assertEquals(1, mutation(updater, target, "//str", "set", "goodbye"))
-    assertEquals("goodbye", updater.getValueMaybe(target, "//str"))
+    assertEquals("goodbye", updater.getValueOrNull(target, "//str"))
   }
 
   @ParameterizedTest
@@ -108,18 +108,18 @@ class SetOperationTest : MutationTest() {
   @ParameterizedTest
   @MethodSource("getData")
   fun canSetListToEmpty(mutation: MutationLambda) {
-    assertEquals(listOf(345, "ok", "la"), updater.getValueMaybe(target, "//lists"))
+    assertEquals(listOf(345, "ok", "la"), updater.getValueOrNull(target, "//lists"))
     assertEquals(1, mutation(updater, target, "//lists", "set", mutableListOf<Any>()))
-    assertEquals(listOf<Any>(), updater.getValueMaybe(target, "//lists"))
+    assertEquals(listOf<Any>(), updater.getValueOrNull(target, "//lists"))
   }
 
   @ParameterizedTest
   @MethodSource("getData")
   fun canSetAMapToAList(mutation: MutationLambda) {
-    assertEquals(listOf(345, "ok", "la"), updater.getValueMaybe(target, "//lists"))
+    assertEquals(listOf(345, "ok", "la"), updater.getValueOrNull(target, "//lists"))
     assertEquals(1, mutation(updater, target, "//lists/:last", "set", mapOf("hello" to "world")))
     assertEquals(listOf(345, "ok", mapOf("hello" to "world")),
-                 updater.getValueMaybe(target, "//lists"))
+                 updater.getValueOrNull(target, "//lists"))
   }
 }
 
@@ -142,7 +142,7 @@ class SetIfAbsentOperationTest : MutationTest() {
   @ParameterizedTest
   @MethodSource("getData")
   fun setValueIfAbsentDoesSetValue(mutation: MutationLambda) {
-    assertEquals(null, updater.getValueMaybe(target, "//map/another2"))
+    assertEquals(null, updater.getValueOrNull(target, "//map/another2"))
     assertEquals(1, mutation(updater, target, "//map/another2", "setIfAbsent", "hello"))
     assertEquals("hello", updater.getValue(target, "//map/another2"))
   }
@@ -159,33 +159,33 @@ class UnsetOperationTest : MutationTest() {
   @ParameterizedTest
   @MethodSource("getData")
   fun canUnsetRootValue(mutation: MutationLambda) {
-    assertEquals(234, updater.getValueMaybe(target, "//num"))
+    assertEquals(234, updater.getValueOrNull(target, "//num"))
     assertEquals(1, mutation(updater, target, "//num", "unset", null))
-    assertEquals(null, updater.getValueMaybe(target, "//num"))
+    assertEquals(null, updater.getValueOrNull(target, "//num"))
   }
 
   @ParameterizedTest
   @MethodSource("getData")
   fun canClearValueInMap(mutation: MutationLambda) {
-    assertEquals(mapOf("haha" to "oh-no"), updater.getValueMaybe(target, "//map/another"))
+    assertEquals(mapOf("haha" to "oh-no"), updater.getValueOrNull(target, "//map/another"))
     assertEquals(1, mutation(updater, target, "//map/another", "unset", null))
-    assertEquals(null, updater.getValueMaybe(target, "//map/another"))
+    assertEquals(null, updater.getValueOrNull(target, "//map/another"))
   }
 
   @ParameterizedTest
   @MethodSource("getData")
   fun canClearAllValueInDeepMap(mutation: MutationLambda) {
-    assertEquals(mapOf("haha" to "oh-no"), updater.getValueMaybe(target, "//map/another"))
+    assertEquals(mapOf("haha" to "oh-no"), updater.getValueOrNull(target, "//map/another"))
     assertEquals(1, mutation(updater, target, "//map/another/:each", "unset", null))
-    assertEquals(mapOf<String, Any>(), updater.getValueMaybe(target, "//map/another"))
+    assertEquals(mapOf<String, Any>(), updater.getValueOrNull(target, "//map/another"))
   }
 
   @ParameterizedTest
   @MethodSource("getData")
   fun canClearAllValuesInList(mutation: MutationLambda) {
-    assertEquals(listOf(345, "ok", "la"), updater.getValueMaybe(target, "//lists"))
+    assertEquals(listOf(345, "ok", "la"), updater.getValueOrNull(target, "//lists"))
     assertEquals(3, mutation(updater, target, "//lists/:eachr", "unset", null))
-    assertEquals(listOf<Any>(), updater.getValueMaybe(target, "//lists"))
+    assertEquals(listOf<Any>(), updater.getValueOrNull(target, "//lists"))
   }
 }
 

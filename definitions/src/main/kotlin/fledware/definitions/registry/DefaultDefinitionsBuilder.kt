@@ -110,10 +110,10 @@ open class DefaultDefinitionsBuilder(
   }
 
   override fun get(lifecycleName: String): RawDefinitionProcessor<out Any> {
-    return getMaybe(lifecycleName) ?: throw IllegalStateException("no aggregator for type: $lifecycleName")
+    return getOrNull(lifecycleName) ?: throw IllegalStateException("no aggregator for type: $lifecycleName")
   }
 
-  override fun getMaybe(lifecycleName: String): RawDefinitionProcessor<out Any>? {
+  override fun getOrNull(lifecycleName: String): RawDefinitionProcessor<out Any>? {
     return processors[lifecycleName]
   }
 

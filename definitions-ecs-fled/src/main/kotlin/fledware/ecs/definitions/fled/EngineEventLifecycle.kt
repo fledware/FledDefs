@@ -27,7 +27,7 @@ val DefinitionsManager.engineEventDefinitions: DefinitionRegistry<BasicFunctionD
   get() = registry(engineEventLifecycleName) as DefinitionRegistry<BasicFunctionDefinition>
 
 @Suppress("UNCHECKED_CAST")
-val DefinitionsManager.engineEventDefinitionsMaybe: DefinitionRegistry<BasicFunctionDefinition>?
+val DefinitionsManager.engineEventDefinitionsOrNull: DefinitionRegistry<BasicFunctionDefinition>?
   get() = registries[engineEventLifecycleName] as? DefinitionRegistry<BasicFunctionDefinition>
 
 @Suppress("UNCHECKED_CAST")

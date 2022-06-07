@@ -164,4 +164,4 @@ fun RawDefinitionReader.findEntryOrNull(entryWithoutExtension: String): String? 
 }
 
 fun String.removePrefixAndExtension(prefix: String) =
-    this.removePrefix(prefix).substringBeforeLast('.').replace("/", ".")
+    this.removePrefix(prefix).substringBeforeLast('.')

@@ -9,8 +9,11 @@ import fledware.definitions.builtin.apply
 import fledware.definitions.builtin.functionDefinitions
 import fledware.definitions.ex.BuildManagerCommand
 import fledware.definitions.ex.LoadCommand
-import fledware.definitions.ex.loadListFor
 import fledware.definitions.libgdx.LoadAssetsCommand
+import fledware.definitions.loadlist.loadListFor
+import fledware.definitions.loadlist.loadListManager
+import fledware.definitions.loadlist.maven.MavenLoadListProcessor
+import fledware.definitions.loadlist.mods.ModLoadListProcessor
 import fledware.ecs.Engine
 import fledware.ecs.definitions.fled.withDefinitionsManager
 import fledware.ecs.ex.withEntityFlags
@@ -26,7 +29,10 @@ fun DefinitionsBuilder.createLoadCommands(loadList: File, vararg engineContexts:
   logger.info("load list: $loadList")
   // gather definitions
   loadCommands += addDefaultDefinitionsLoadCommand()
-  loadCommands.addAll(this.loadListFor(loadList, false))
+
+  val loadListManager = this.loadListManager(MavenLoadListProcessor(), ModLoadListProcessor())
+  loadListManager.process(loadList)
+  loadCommands.addAll(loadListManager.commands)
 
   // build the manager
   loadCommands += BuildManagerCommand()
@@ -55,7 +61,7 @@ fun addDefaultDefinitionsLoadCommand() = LoadCommand("AddDefaultDefinitions", 1)
 
 /**
  * this needs to be added to definitions manually because
- * this jar should not be gathered on.
+ * this jar is not gathered on (not to say you can't).
  */
 @Function("initialize-ecs-engine")
 fun defaultInitializeEcsEngine(manager: DefinitionsManager) {

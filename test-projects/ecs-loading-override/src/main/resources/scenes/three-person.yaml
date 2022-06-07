@@ -1,0 +1,8 @@
+entities:
+  - type: person
+    name: other-person
+    components:
+      placement:
+        x: 5
+        y: 5
+        size: 1

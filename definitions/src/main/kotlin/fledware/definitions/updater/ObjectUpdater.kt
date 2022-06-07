@@ -58,7 +58,7 @@ open class ObjectUpdater(
   fun getOperation(directive: Directive): OperationDirective {
     return operations[directive.directive] ?: throw IllegalArgumentException(
         "OperationDirective not found ($directive): " +
-            "are you using the same ObjectUpdaterConfig for parsing and updating?")
+            "are you using the same ObjectUpdater for parsing and updating?")
   }
 
   fun getSelect(directive: Directive): SelectDirective {
@@ -66,13 +66,13 @@ open class ObjectUpdater(
       return selectDefault
     return selects[directive.directive] ?: throw IllegalArgumentException(
         "SelectDirective not found ($directive): " +
-            "are you using the same ObjectUpdaterConfig for parsing and updating?")
+            "are you using the same ObjectUpdater for parsing and updating?")
   }
 
   fun getPredicate(directive: Directive): PredicateDirective {
     return predicates[directive.directive] ?: throw IllegalArgumentException(
         "PredicateDirective not found ($directive): " +
-            "are you using the same ObjectUpdaterConfig for parsing and updating?")
+            "are you using the same ObjectUpdater for parsing and updating?")
   }
 
   fun start(target: Any) = target.toBaseType()
@@ -159,6 +159,19 @@ open class ObjectUpdater(
             thisValue == null -> {
               result++
               thisAs[key] = thatValue.deepCopy()
+            }
+            // we want to handle numbers carefully so the type doesn't change
+            thisValue is Number -> {
+              result++
+              thisAs[key] = when (thisValue) {
+                is Byte -> (thatValue as Number).toByte()
+                is Short -> (thatValue as Number).toShort()
+                is Int -> (thatValue as Number).toInt()
+                is Long -> (thatValue as Number).toLong()
+                is Float -> (thatValue as Number).toFloat()
+                is Double -> (thatValue as Number).toDouble()
+                else -> throw IllegalStateException("unable to figure number type: $thisValue -> $thatValue")
+              }
             }
             // if the value being applied is not a collection, set the value
             thatValue.isImmutableType() -> {

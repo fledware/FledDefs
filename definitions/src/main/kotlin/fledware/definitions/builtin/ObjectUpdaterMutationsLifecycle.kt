@@ -71,7 +71,7 @@ class ObjectUpdaterMutations(gatherGlob: String)
       val command = builder.objectUpdater.parseCommand(it.command)
 
       // TODO: there probably needs to be a better way to filter.
-      // Especially if the definitions become very large..
+      // Especially if the definitions become very large...
       // Maybe find an in memory database?
       val keys = lifecycle.rawDefinitions.keys.filter { defName -> glob.matches(defName) }
       logger.info { "command: $it on $keys" }

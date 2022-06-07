@@ -1,8 +1,8 @@
 cluster:
-  world: hyperspace-empty
+  world: /hyperspace-empty
   system_count: 30
   system_seed: generate-solar-system
-  system_world: solar-system-empty
+  system_world: /solar-system-empty
 system:
-  world: solar-system-empty
+  world: /solar-system-empty
   seed: generate-solar-system

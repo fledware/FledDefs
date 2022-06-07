@@ -16,9 +16,6 @@ abstract class EntityInstantiator<E : Any, C : Any>(
     protected val manager: DefinitionsManager
 ) : DefinitionInstantiator<EntityDefinition> {
 
-  protected val defaultComponentValues = mutableMapOf<String, MutableMap<String, Any?>>()
-  protected val componentInstantiators = mutableMapOf<String, ComponentInstantiator<C>>()
-
   @Suppress("UNCHECKED_CAST")
   protected open fun componentInstantiator(manager: DefinitionsManager, type: String) =
       manager.instantiator(componentLifecycleName, type) as ComponentInstantiator<C>
@@ -26,15 +23,28 @@ abstract class EntityInstantiator<E : Any, C : Any>(
   protected abstract fun actualCreate(input: Map<String, Map<String, Any?>>): E
   protected abstract fun getComponent(entity: E, component: KClass<out Any>): Any
 
+
+  val defaultComponentValues: Map<String, Map<String, Any?>>
+
+  val componentInstantiators: Map<String, ComponentInstantiator<C>>
+
   init {
-    manager.entityDefinitions.walk(definition.defName) { definition ->
-      definition.components.forEach { (name, args) ->
-        defaultComponentValues.computeIfAbsent(name) { mutableMapOf() }.putAll(args)
+    val defaultComponentValues: Map<String, Map<String, Any?>> = buildMap {
+      manager.entityDefinitions.walk(definition.defName) { definition ->
+        definition.components.forEach { (name, args) ->
+          this[name] = args + this.getOrDefault(name, emptyMap())
+        }
+        definition.extends
       }
-      definition.extends
     }
-    defaultComponentValues.keys.forEach { componentName ->
-      componentInstantiators[componentName] = componentInstantiator(manager, componentName)
+    componentInstantiators = buildMap {
+      defaultComponentValues.keys.forEach { componentName ->
+        this[componentName] = componentInstantiator(manager, componentName)
+      }
+    }
+    this.defaultComponentValues = defaultComponentValues.mapValues { (name, values) ->
+      val component = componentInstantiators[name]!!
+      component.ensureParameterTypes(values)
     }
   }
 

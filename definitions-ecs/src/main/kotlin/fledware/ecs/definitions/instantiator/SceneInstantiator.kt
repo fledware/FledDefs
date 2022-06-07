@@ -14,24 +14,25 @@ abstract class SceneInstantiator<E : Any, C : Any, S : Any>(
     protected val manager: DefinitionsManager
 ) : DefinitionInstantiator<SceneDefinition> {
 
-  protected val entityInstantiators = mutableMapOf<String, EntityInstantiator<E, C>>()
-  protected val entities = mutableListOf<EntityInstance>()
+  protected val entityInstantiators: Map<String, EntityInstantiator<E, C>>
 
-  init {
+  protected val entities: List<EntityInstance> = buildList {
+    val entityInstantiators = mutableMapOf<String, EntityInstantiator<E, C>>()
     manager.sceneDefinitions.walk(definition.defName) {
       it.entities.forEach { entity ->
         entityInstantiators.computeIfAbsent(entity.type) { entityInstantiator(manager, entity.type) }
-        entities.add(entity)
+        this.add(entity)
       }
       it.extends
     }
+    this@SceneInstantiator.entityInstantiators = entityInstantiators
   }
 
   @Suppress("UNCHECKED_CAST")
   protected open fun entityInstantiator(manager: DefinitionsManager, type: String) =
       manager.instantiator(entityLifecycleName, type) as EntityInstantiator<E, C>
 
-  protected abstract fun setNameMaybe(entity: E, name: String)
+  protected abstract fun setName(entity: E, name: String)
   protected abstract fun factory(entities: List<E>): S
 
   open fun create(): S {
@@ -39,7 +40,7 @@ abstract class SceneInstantiator<E : Any, C : Any, S : Any>(
       val instantiator = entityInstantiators[instance.type]
           ?: throw UnknownDefinitionException(entityLifecycleName, instance.type)
       val entity = instantiator.createWithNames(instance.components)
-      instance.name?.also { setNameMaybe(entity, it) }
+      instance.name?.also { setName(entity, it) }
       entity
     }
     return factory(entities)

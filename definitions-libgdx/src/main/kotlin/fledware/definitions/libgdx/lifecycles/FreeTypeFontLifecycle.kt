@@ -22,6 +22,7 @@ import fledware.definitions.libgdx.descriptor
 import fledware.definitions.libgdx.fileHandle
 import fledware.definitions.processor.RawDefinitionAggregator
 import fledware.definitions.reader.RawDefinitionReader
+import fledware.definitions.reader.removePrefixAndExtension
 import fledware.definitions.registry.SimpleDefinitionRegistry
 import fledware.utilities.globToRegex
 
@@ -170,12 +171,12 @@ class FreeTypeFontDefinitionProcessor
     val resource = info as? ResourceSelectionInfo ?: return false
     when {
       ttfRegex.matches(resource.entry) -> {
-        val fontName = resource.entry.removePrefix("fonts/").substringBeforeLast('.').replace("/", ".")
+        val fontName = resource.entry.removePrefixAndExtension("fonts")
         fontFileLookups[fontName] = reader.fileHandle(resource.entry)
       }
       ttfParamsRegex.matches(resource.entry) -> {
-        val fontName = resource.entry.removePrefix("fonts/").substringBeforeLast(".ttf.params.").replace("/", ".")
-        val serializer = serialization.figureSerializerMaybe(resource.entry) ?: return false
+        val fontName = resource.entry.removePrefixAndExtension("fonts").substringBeforeLast(".ttf.params")
+        val serializer = serialization.figureSerializerOrNull(resource.entry) ?: return false
         val fonts = serializer.readValue(reader.read(resource.entry), typeRef)
         fonts.forEach { (name, params) ->
           apply(name, resource.from, FreeTypeFontRawDefinition(fontName, params))

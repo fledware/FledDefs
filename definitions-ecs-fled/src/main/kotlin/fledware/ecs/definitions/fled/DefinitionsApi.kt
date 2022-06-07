@@ -24,7 +24,7 @@ import fledware.ecs.definitions.worldLifecycleName
 import fledware.ecs.ex.importScene
 import fledware.ecs.util.MapperIndex
 import fledware.utilities.get
-import fledware.utilities.getMaybe
+import fledware.utilities.getOrNull
 
 
 // ==================================================================
@@ -61,7 +61,7 @@ val WorldData.definitions: DefinitionsManager
  * Example of this is in the ecs-loading test project.
  */
 inline fun <reified T : Any> EngineData.definedComponentIndexOf(): MapperIndex<T> {
-  val componentType = definitions.componentDefinitions.typeIndex.getMaybe<T>()
+  val componentType = definitions.componentDefinitions.typeIndex.getOrNull<T>()
       ?: throw IllegalArgumentException("no type found that extends: ${T::class}")
   return componentMapper.indexOf(componentType)
 }

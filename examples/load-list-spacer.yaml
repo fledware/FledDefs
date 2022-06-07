@@ -1,16 +1,16 @@
-orderedLoad:
+mods:
   # basic helpers
-  - type: load
+  - type: local-gather
     target: libgdx-helpers/build/libs/libgdx-helpers-0.1.0-SNAPSHOT.jar
 
   # load the core of the game
-  - type: gather
+  - type: local-gather
     target: spacer-core/build/libs/spacer-core-0.1.0-SNAPSHOT.jar
 
   # load mods for the game
-  - type: gather
+  - type: local-gather
     target: spacer-mod-betterinput/build/libs/spacer-mod-betterinput-0.1.0-SNAPSHOT.jar
-  - type: gather
+  - type: local-gather
     target: spacer-mod-info/build/libs/spacer-mod-info-0.1.0-SNAPSHOT.jar
-  - type: gather
+  - type: local-gather
     target: spacer-mod-hyperspace-renderer/build/libs/spacer-mod-hyperspace-renderer-0.1.0-SNAPSHOT.jar

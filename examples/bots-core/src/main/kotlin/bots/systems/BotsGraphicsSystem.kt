@@ -1,14 +1,16 @@
 package bots.systems
 
 import bots.map.GridPoint
-import bots.map.MapGrid
+import bots.map.GridMap
+import bots.map.GridMapGraphics
+import bots.map.GridPointGraphics
 import bots.map.Placement
-import bots.util.TwoDGraphics
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import driver.helpers.GraphicsSystem
+import driver.helpers.TwoDGraphics
 import driver.helpers.drawGrid
 import fledware.ecs.EntityGroup
 import fledware.ecs.World
@@ -18,6 +20,7 @@ import fledware.ecs.definitions.EcsSystem
 import fledware.ecs.forEach
 import fledware.utilities.get
 
+@Suppress("unused")
 @EcsSystem("graphics")
 class BotsGraphicsSystem : GraphicsSystem() {
 
@@ -26,10 +29,11 @@ class BotsGraphicsSystem : GraphicsSystem() {
   private val camera by lazy { data.contexts.get<TwoDGraphics>().camera }
   private val viewport by lazy { data.contexts.get<TwoDGraphics>().viewport }
   private val gridPointIndex by lazy { data.componentIndexOf<GridPoint>() }
+  private val gridPointGraphicsIndex by lazy { data.componentIndexOf<GridPointGraphics>() }
   private val placementIndex by lazy { data.componentIndexOf<Placement>() }
 
-  private val gridCellSize = 10f
-  private val grid by lazy { data.contexts.get<MapGrid>() }
+  private val gridMap by lazy { data.contexts.get<GridMap>() }
+  private val gridMapGraphics by lazy { data.contexts.get<GridMapGraphics>() }
   private lateinit var gridPoints: EntityGroup
 
   override fun onCreate(world: World, data: WorldData) {
@@ -37,9 +41,10 @@ class BotsGraphicsSystem : GraphicsSystem() {
 
     viewport.update(Gdx.graphics.width, Gdx.graphics.height)
     camera.position.set(50f, 50f, 0f)
-    order = 50
     gridPoints = data.createEntityGroup { entity ->
-      gridPointIndex in entity && placementIndex in entity
+      gridPointIndex in entity &&
+          gridPointGraphicsIndex in entity &&
+          placementIndex in entity
     }
   }
 
@@ -56,13 +61,16 @@ class BotsGraphicsSystem : GraphicsSystem() {
     shapes.begin(ShapeRenderer.ShapeType.Filled)
     gridPoints.forEach { entity ->
       val placement = entity[placementIndex]
-      shapes.rect(placement.x * gridCellSize,
-                  placement.y * gridCellSize,
-                  gridCellSize,
-                  gridCellSize)
+      val graphics = entity[gridPointGraphicsIndex]
+      shapes.color = graphics.colorCache
+      shapes.rect(placement.x * gridMapGraphics.cellSizeF,
+                  placement.y * gridMapGraphics.cellSizeF,
+                  gridMapGraphics.cellSizeF,
+                  gridMapGraphics.cellSizeF)
+      shapes.color = Color.WHITE
     }
     shapes.end()
 
-    shapes.drawGrid(viewport, gridCellSize.toInt(), Color.BLACK)
+    shapes.drawGrid(viewport, gridMapGraphics.cellSize, Color.BLACK)
   }
 }

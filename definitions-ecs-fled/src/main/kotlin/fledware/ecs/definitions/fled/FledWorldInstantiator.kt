@@ -25,7 +25,7 @@ class FledWorldInstantiator(definition: WorldDefinition,
   fun decorateWorldWithNames(builder: WorldBuilder,
                              componentInput: Map<String, Map<String, Any?>>) {
     val inputs = mutableMapOf<String, MutableMap<String, Any?>>()
-    componentValues.forEach { inputs[it.key] = it.value.toMutableMap() }
+    defaultComponentValues.forEach { inputs[it.key] = it.value.toMutableMap() }
     componentInput.forEach { (name, values) ->
       inputs.computeIfAbsent(name) { mutableMapOf() }.putAll(values)
     }
@@ -35,7 +35,7 @@ class FledWorldInstantiator(definition: WorldDefinition,
   fun decorateWorldWithArgs(builder: WorldBuilder,
                             componentInput: List<ComponentArgument>) {
     val inputs = mutableMapOf<String, MutableMap<String, Any?>>()
-    componentValues.forEach { inputs[it.key] = it.value.toMutableMap() }
+    defaultComponentValues.forEach { inputs[it.key] = it.value.toMutableMap() }
     componentInput.forEach {
       val component = inputs.computeIfAbsent(it.componentType) { mutableMapOf() }
       component[it.componentField] = it.value
@@ -44,7 +44,7 @@ class FledWorldInstantiator(definition: WorldDefinition,
   }
 
   fun decorateWorld(builder: WorldBuilder) {
-    actualDecorateWorld(builder, componentValues)
+    actualDecorateWorld(builder, defaultComponentValues)
   }
 
   private fun actualDecorateWorld(builder: WorldBuilder,
@@ -53,7 +53,7 @@ class FledWorldInstantiator(definition: WorldDefinition,
     components.forEach { (type, values) ->
       val instantiator = componentInstantiators[type]
           ?: throw IllegalStateException("unknown component definition: $type")
-      builder.components.put(instantiator.createWithNames(values))
+      builder.contexts.put(instantiator.createWithNames(values))
     }
     entities.forEach { instance ->
       val instantiator = entityInstantiators[instance.type]

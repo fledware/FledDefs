@@ -21,7 +21,7 @@ class AshleySceneInstantiator(
     }
   }
 
-  override fun setNameMaybe(entity: Entity, name: String) = Unit
+  override fun setName(entity: Entity, name: String) = Unit
   override fun factory(entities: List<Entity>) = AshleyScene(entities)
 
   fun decorate(engine: Engine) {

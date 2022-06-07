@@ -1,0 +1,7 @@
+extends: /grid-point
+components:
+  grid-point:
+    passable: true
+    speed: 0.5
+  grid-point-graphics:
+    color: brown

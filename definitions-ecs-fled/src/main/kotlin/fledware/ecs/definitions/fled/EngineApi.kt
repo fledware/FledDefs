@@ -16,7 +16,7 @@ data class DefinitionsManagerWrapper(val manager: DefinitionsManager)
     manager.contexts.put(engine)
     manager.contexts.put(engine.data)
 
-    val engineEvents = manager.engineEventDefinitionsMaybe
+    val engineEvents = manager.engineEventDefinitionsOrNull
     @Suppress("IfThenToSafeAccess")
     if (engineEvents != null) {
       engineEvents.definitions.values.forEach { function ->

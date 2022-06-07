@@ -8,9 +8,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Circle
 import driver.helpers.GraphicsSystem
 import driver.helpers.InputSystem
+import driver.helpers.TwoDGraphics
 import driver.helpers.drawGrid
-import spacer.solarsystem.SolarSystemLocation
-import spacer.util.TwoDGraphics
 import fledware.definitions.libgdx.lifecycles.textureAtlasDefinitions
 import fledware.definitions.libgdx.lifecycles.textureDefinitions
 import fledware.ecs.World
@@ -21,6 +20,7 @@ import fledware.ecs.definitions.fled.definitions
 import fledware.ecs.forEach
 import fledware.ecs.get
 import fledware.utilities.get
+import spacer.solarsystem.SolarSystemLocation
 
 @Suppress("unused")
 @EcsSystem("hyperspace-graphics")
@@ -29,7 +29,7 @@ class HyperspaceGraphicsSystem : GraphicsSystem() {
   private val hyperspaceSystemGraphicsIndex by lazy { data.componentIndexOf<HyperspaceSystemGraphics>() }
   private val textureRegions by lazy { definitions.textureAtlasDefinitions.textureRegions.filterKeys { it.startsWith("stars") } }
   private val assetManager by lazy { definitions.contexts.get<AssetManager>() }
-  private val background by lazy { assetManager.get(definitions.textureDefinitions["hyperspace.background"].assetDescriptor) }
+  private val background by lazy { assetManager.get(definitions.textureDefinitions["/hyperspace/background"].assetDescriptor) }
   private val backgroundColor = Color(Color.WHITE).also { it.a = 0.25f }
 
   private val shapeRenderer by lazy { engine.data.contexts.get<ShapeRenderer>() }

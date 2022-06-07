@@ -1,6 +1,5 @@
 package spacer.hyperspace
 
-import spacer.solarsystem.SolarSystemLocation
 import fledware.ecs.AbstractSystem
 import fledware.ecs.World
 import fledware.ecs.WorldData
@@ -8,7 +7,8 @@ import fledware.ecs.componentIndexOf
 import fledware.ecs.definitions.EcsSystem
 import fledware.ecs.definitions.fled.createDefinedEntity
 import fledware.ecs.definitions.instantiator.ComponentArgument
-import fledware.utilities.getMaybe
+import fledware.utilities.getOrNull
+import spacer.solarsystem.SolarSystemLocation
 
 @Suppress("unused")
 @EcsSystem("solar-system-locations")
@@ -26,8 +26,8 @@ class SolarSystemLocationSystem : AbstractSystem() {
   }
 
   private fun onWorldCreated(world: World) {
-    val location = world.data.contexts.getMaybe<SolarSystemLocation>() ?: return
-    data.createDefinedEntity(world.name, "points.system", listOf(
+    val location = world.data.contexts.getOrNull<SolarSystemLocation>() ?: return
+    data.createDefinedEntity(world.name, "/points/system", listOf(
         ComponentArgument("system-location", "x", location.x),
         ComponentArgument("system-location", "y", location.y)
     ))

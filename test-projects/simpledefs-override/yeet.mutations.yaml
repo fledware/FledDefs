@@ -1,6 +1,6 @@
 lifecycle: somefile
 commands:
-  - definitions: ok*
+  - definitions: /ok*
     command: //strings!append(lala)
-  - definitions: ok*
+  - definitions: /ok*
     command: //meta/mutated!set(you)

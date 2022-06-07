@@ -52,7 +52,7 @@ interface DefinitionsManager {
    * This call is cached, so multiple calls to this will always result
    * in the same return.
    */
-  fun instantiatorMaybe(lifecycleName: String, definitionName: String)
+  fun instantiatorOrNull(lifecycleName: String, definitionName: String)
       : DefinitionInstantiator<out Definition>?
   /**
    *

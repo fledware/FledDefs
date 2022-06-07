@@ -2,15 +2,15 @@ systems:
   - movement
   - damage
 entities:
-  - type: map
+  - type: /map
     name: map
-  - type: person
+  - type: /person
     components:
       placement:
         x: 1
         y: 1
         size: 1
-  - type: person
+  - type: /person
     components:
       placement:
         x: 8
