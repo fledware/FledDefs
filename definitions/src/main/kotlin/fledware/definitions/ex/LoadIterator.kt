@@ -124,10 +124,15 @@ class LoadIterator(val commands: List<LoadCommand>,
   var commandIndex: Int = 0
     private set
   /**
-   * the path that is currently being loaded
+   * the path that is currently being loaded.
    */
-  val commandAt: LoadCommand
-    get() = commands[commandIndex]
+  val commandAtOrNull: LoadCommand?
+    get() {
+      val index = commandIndex
+      if (index !in commands.indices)
+        return null
+      return commands[index]
+    }
   /**
    *
    */
@@ -195,7 +200,7 @@ class LoadIterator(val commands: List<LoadCommand>,
   fun update() {
     if (!loaderThread.running || exception != null)
       return
-    val current = commandAt
+    val current = commandAtOrNull
     if (current is BlockingLoadCommand && commandAtInvoked)
       current.update()
   }
@@ -214,7 +219,7 @@ class LoadIterator(val commands: List<LoadCommand>,
         loadTime = logger.infoMeasure("gather iteration") {
           while (running && commandIndex < commands.size) {
             ensureCorrectClassLoader()
-            val command = commandAt
+            val command = commands[commandIndex]
             measureTimeMillis {
               consumeCommand(command)
             }.also { logger.info("$it ms to complete: $command") }

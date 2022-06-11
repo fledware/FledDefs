@@ -20,7 +20,7 @@ class AshleyWorldInstantiator(definition: WorldDefinition,
     }
   }
 
-  // engines in ashley don't have global components
+  // engines in ashley don't have global contexts
   override fun componentInstantiator(manager: DefinitionsManager, type: String) = TODO()
 
   fun decorateEngine(engine: Engine) {
@@ -33,6 +33,6 @@ class AshleyWorldInstantiator(definition: WorldDefinition,
       val entity = instantiator.createWithNames(instance.components)
       engine.addEntity(entity)
     }
-    decorateFunction?.callWith(engine)
+    decoratorFunctions.forEach { it.callWith(engine) }
   }
 }

@@ -7,11 +7,11 @@ import fledware.ecs.get
 import org.slf4j.LoggerFactory
 
 
-abstract class GraphicsSystem(enabled: Boolean = true, order: Int = 0)
+abstract class GraphicsSystem(enabled: Boolean = false, order: Int = 100)
   : AbstractSystem(enabled, order)
 
 
-abstract class InputSystem(enabled: Boolean = true, order: Int = 0)
+abstract class InputSystem(enabled: Boolean = false, order: Int = -100)
   : AbstractSystem(enabled, order) {
   val mousePosition = Vector2()
 }
