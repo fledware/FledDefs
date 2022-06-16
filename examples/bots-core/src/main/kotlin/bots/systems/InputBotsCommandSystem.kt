@@ -35,9 +35,8 @@ class InputBotsCommandSystem : AbstractSystem() {
   override fun update(delta: Float) = Unit
 
   private fun onRightClick(worldMousePos: Vector2) {
-    // magic
-    val targetX = ((worldMousePos.x - graphicsInfo.cellSizeHalfF) / graphicsInfo.cellSizeF).roundToInt() + 1
-    val targetY = ((worldMousePos.y - graphicsInfo.cellSizeHalfF) / graphicsInfo.cellSizeF).roundToInt() + 1
+    val targetX = (worldMousePos.x / graphicsInfo.cellSizeF).toInt()
+    val targetY = (worldMousePos.y / graphicsInfo.cellSizeF).toInt()
     selectedGroup.forEach { entity ->
       val placement = entity.getOrNull(placementIndex) ?: return@forEach
       val movement = entity.getOrNull(movementIndex) ?: return@forEach

@@ -1,0 +1,7 @@
+maven-libraries:
+  - com.github.xaguzman:pathfinding:0.2.6
+
+mods:
+  # specific implementation of the pathing algorithm
+  - type: local-gather
+    target: pathing-xaguzman/build/libs/pathing-xaguzman-0.1.0-SNAPSHOT.jar

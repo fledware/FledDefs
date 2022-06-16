@@ -10,7 +10,6 @@ import fledware.definitions.builtin.functionDefinitions
 import fledware.definitions.ex.BuildManagerCommand
 import fledware.definitions.ex.LoadCommand
 import fledware.definitions.libgdx.LoadAssetsCommand
-import fledware.definitions.loadlist.loadListFor
 import fledware.definitions.loadlist.loadListManager
 import fledware.definitions.loadlist.maven.MavenLoadListProcessor
 import fledware.definitions.loadlist.mods.ModLoadListProcessor
@@ -24,14 +23,14 @@ import java.io.File
 
 private val logger = LoggerFactory.getLogger("driver.LoadList")
 
-fun DefinitionsBuilder.createLoadCommands(loadList: File, vararg engineContexts: Any): List<LoadCommand> {
+fun DefinitionsBuilder.createLoadCommands(loadLists: List<File>, vararg engineContexts: Any): List<LoadCommand> {
   val loadCommands = mutableListOf<LoadCommand>()
-  logger.info("load list: $loadList")
+  logger.info("load lists: $loadLists")
   // gather definitions
   loadCommands += addDefaultDefinitionsLoadCommand()
 
   val loadListManager = this.loadListManager(MavenLoadListProcessor(), ModLoadListProcessor())
-  loadListManager.process(loadList)
+  loadLists.forEach { loadListManager.process(it) }
   loadCommands.addAll(loadListManager.commands)
 
   // build the manager

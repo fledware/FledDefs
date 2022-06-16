@@ -69,8 +69,8 @@ open class InputSelectionSystem : AbstractSystem() {
     selectableGroup.entities.find { entity ->
       val placement = entity[placementIndex]
       val distance = worldMousePos.dst(
-          placement.x * gridMapGraphics.cellSizeF - gridMapGraphics.cellSizeHalfF,
-          placement.y * gridMapGraphics.cellSizeF - gridMapGraphics.cellSizeHalfF)
+          gridMapGraphics.shiftPoint(placement.x),
+          gridMapGraphics.shiftPoint(placement.y))
       distance <= (placement.size * gridMapGraphics.cellSizeHalfF)
     }?.also { entity ->
       entity += highlightedFlagIndex
@@ -84,8 +84,8 @@ open class InputSelectionSystem : AbstractSystem() {
     for (entity in selectableGroup.entities) {
       val placement = entity[placementIndex]
       val hit = selectionRect.contains(
-          placement.x * gridMapGraphics.cellSizeF - gridMapGraphics.cellSizeHalfF,
-          placement.y * gridMapGraphics.cellSizeF - gridMapGraphics.cellSizeHalfF
+          gridMapGraphics.shiftPoint(placement.x),
+          gridMapGraphics.shiftPoint(placement.y)
       )
       if (hit) entity += highlightedFlagIndex
     }

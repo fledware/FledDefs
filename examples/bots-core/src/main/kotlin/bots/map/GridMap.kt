@@ -63,6 +63,6 @@ data class GridMapGraphics(val cellSize: Int) {
   val cellSizeThirdF = cellSize.toFloat() / 3f
   val cellSizeFourthF = cellSize.toFloat() / 4f
 
-  fun shiftPoint(point: Float) = point * cellSizeF - cellSizeHalfF
-  fun shiftPoint(point: Int) = point * cellSizeF - cellSizeHalfF
+  fun shiftPoint(point: Float) = point * cellSizeF + cellSizeHalfF
+  fun shiftPoint(point: Int) = point * cellSizeF + cellSizeHalfF
 }

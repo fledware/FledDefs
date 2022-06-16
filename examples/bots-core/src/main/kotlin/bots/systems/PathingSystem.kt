@@ -8,7 +8,6 @@ import fledware.ecs.WorldData
 import fledware.ecs.definitions.EcsSystem
 import fledware.ecs.get
 import fledware.ecs.getOrNull
-import fledware.utilities.get
 import org.xguzm.pathfinding.grid.GridCell
 import org.xguzm.pathfinding.grid.NavigationGrid
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder

@@ -25,9 +25,9 @@ import fledware.ecs.definitions.fled.fledWorldDefinitionLifecycle
 import java.io.File
 
 fun main(args: Array<String>) {
-  if (args.size != 1)
-    throw IllegalArgumentException("exactly one arg required (path to load list)")
-  val loadList = File(args[0]).canonicalFile
+  if (args.isEmpty())
+    throw IllegalArgumentException("one or more load lists required")
+  val loadLists = args.map { File(it).canonicalFile }
 
   val lifecycles = listOf(
       // built in lifecycles
@@ -57,5 +57,5 @@ fun main(args: Array<String>) {
   )
   val configuration = Lwjgl3ApplicationConfiguration()
   configuration.setWindowedMode(640 * 2, 480 * 2)
-  Lwjgl3Application(LibgdxDriver(lifecycles, loadList), configuration)
+  Lwjgl3Application(LibgdxDriver(lifecycles, loadLists), configuration)
 }

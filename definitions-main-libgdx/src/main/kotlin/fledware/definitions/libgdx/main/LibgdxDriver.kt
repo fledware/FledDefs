@@ -18,7 +18,7 @@ import fledware.utilities.get
 import org.slf4j.LoggerFactory
 import java.io.File
 
-class LibgdxDriver(val lifecycles: List<Lifecycle>, val loadList: File) : Game() {
+class LibgdxDriver(val lifecycles: List<Lifecycle>, val loadLists: List<File>) : Game() {
   private val logger = LoggerFactory.getLogger(javaClass)!!
   lateinit var manager: DefinitionsManager
   lateinit var shapeRenderer: ShapeRenderer
@@ -44,7 +44,7 @@ class LibgdxDriver(val lifecycles: List<Lifecycle>, val loadList: File) : Game()
     spriteBatch = SpriteBatch()
     shapeRenderer = ShapeRenderer()
     assetManager = builder.contexts.get()
-    val commands = builder.createLoadCommands(loadList, spriteBatch, shapeRenderer, assetManager)
+    val commands = builder.createLoadCommands(loadLists, spriteBatch, shapeRenderer, assetManager)
     screen = LoadingScreen(
         builder.gatherAll(commands),
         spriteBatch

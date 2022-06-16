@@ -31,7 +31,8 @@ data class GridMapInfo(val sizeX: Int,
 }
 
 @EcsComponent("pathing-info")
-data class PathingInfo(var startX: Int = -1,
+data class PathingInfo(var version: Int = 0,
+                       var startX: Int = -1,
                        var startY: Int = -1,
                        var targetX: Int = -1,
                        var targetY: Int = -1,

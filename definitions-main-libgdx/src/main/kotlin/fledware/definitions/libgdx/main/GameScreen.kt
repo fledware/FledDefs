@@ -9,7 +9,7 @@ import fledware.ecs.Engine
  *
  * In this case, the rendering is also taken care of by the
  * systems within the engine, but that doesn't have to be
- * the pattern. A renderer could be created outside of the
+ * the pattern. A renderer could be created outside the
  * update cycle, all you would need to do is figure out which
  * world is being rendered, and iterate on the entities here.
  *

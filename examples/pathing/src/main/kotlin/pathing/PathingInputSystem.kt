@@ -38,6 +38,7 @@ class PathingInputSystem : InputSystem() {
     mouse.onLeftClick += {
       pathingInfo.startX = (it.x / graphicsInfo.cellSizeF).toInt()
       pathingInfo.startY = (it.y / graphicsInfo.cellSizeF).toInt()
+      pathingInfo.version++
     }
   }
 
@@ -48,8 +49,14 @@ class PathingInputSystem : InputSystem() {
 
   override fun update(delta: Float) {
     mousePosition.set(mouse.worldMousePos)
+    val oldTargetX = pathingInfo.targetX
+    val oldTargetY = pathingInfo.targetY
     pathingInfo.targetX = if (mousePosition.x < 0) -1 else (mousePosition.x / graphicsInfo.cellSizeF).toInt()
     pathingInfo.targetY = if (mousePosition.y < 0) -1 else (mousePosition.y / graphicsInfo.cellSizeF).toInt()
+    if (pathingInfo.targetX != oldTargetX ||
+        pathingInfo.targetY != oldTargetY) {
+      pathingInfo.version++
+    }
 
     val multiplier = if (isShiftPressed) 2f else 1f
     if (isKeyPressed(Keys.A))
