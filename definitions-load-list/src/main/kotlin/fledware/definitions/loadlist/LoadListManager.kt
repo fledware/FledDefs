@@ -5,6 +5,9 @@ import fledware.definitions.ex.LoadCommand
 import java.io.File
 
 
+/**
+ *
+ */
 interface LoadListManager {
   val builder: DefinitionsBuilder
   val processors: List<LoadListProcessor>
@@ -14,9 +17,15 @@ interface LoadListManager {
   fun process(loadListFile: File)
 }
 
+/**
+ * Finds a processor based on the type
+ */
 inline fun <reified T : LoadListProcessor> LoadListManager.findProcessor(): T? =
     processors.find { T::class.isInstance(it) } as? T
 
+/**
+ *
+ */
 open class DefaultLoadListManager(override val builder: DefinitionsBuilder,
                                   override val processors: List<LoadListProcessor>)
   : LoadListManager {

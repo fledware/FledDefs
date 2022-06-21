@@ -7,6 +7,9 @@ import fledware.definitions.ex.LoadCommand
 import java.io.File
 import kotlin.reflect.KClass
 
+/**
+ * The context that represents a single load list file
+ */
 interface LoadListContext {
   val builder: DefinitionsBuilder
   val loadListFile: File
