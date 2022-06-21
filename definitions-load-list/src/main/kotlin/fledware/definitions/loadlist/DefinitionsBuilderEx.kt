@@ -24,5 +24,7 @@ fun DefinitionsBuilder.loadListFor(loadListFile: File)
  * creates a [LoadListManager] with the given processors
  */
 fun DefinitionsBuilder.loadListManager(vararg processors: LoadListProcessor): LoadListManager {
-  return DefaultLoadListManager(this, processors.toList()).also { it.init() }
+  val manager = DefaultLoadListManager(this, processors.toList())
+  manager.init()
+  return manager
 }
