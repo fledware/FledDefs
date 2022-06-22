@@ -9,16 +9,11 @@ import kotlin.test.assertEquals
 class BasicLoadingTest {
   @Test
   fun loadingTest() = manager(
-      lifecycles = listOf(componentLifecycle(), entityLifecycle(), sceneLifecycle(),
-                          systemLifecycle(), worldLifecycle()),
+      lifecycles = listOf(entityLifecycle(), sceneLifecycle(), worldLifecycle()),
       "ecs-loading".testJarPath.absolutePath
   ) { manager ->
-    assertEquals(setOf("placement", "movement", "health", "map-dimensions"),
-                 manager.componentDefinitions.definitions.keys)
     assertEquals(setOf("/map", "/person", "/coolguy", "/coolguy2"),
                  manager.entityDefinitions.definitions.keys)
-    assertEquals(setOf(),
-                 manager.systemDefinitions.definitions.keys)
     assertEquals(setOf("/two-person"),
                  manager.sceneDefinitions.definitions.keys)
     assertEquals(setOf("/empty-scene", "/main"),
@@ -27,17 +22,12 @@ class BasicLoadingTest {
 
   @Test
   fun loadingOverrideTest() = manager(
-      lifecycles = listOf(componentLifecycle(), entityLifecycle(), sceneLifecycle(),
-                          systemLifecycle(), worldLifecycle()),
+      lifecycles = listOf(entityLifecycle(), sceneLifecycle(), worldLifecycle()),
       "ecs-loading".testJarPath.absolutePath,
       "ecs-loading-override".testJarPath.absolutePath
   ) { manager ->
-    assertEquals(setOf("placement", "movement", "health", "map-dimensions"),
-                 manager.componentDefinitions.definitions.keys)
     assertEquals(setOf("/map", "/person", "/coolguy", "/coolguy2"),
                  manager.entityDefinitions.definitions.keys)
-    assertEquals(setOf(),
-                 manager.systemDefinitions.definitions.keys)
     assertEquals(setOf("/two-person", "/three-person"),
                  manager.sceneDefinitions.definitions.keys)
     assertEquals(setOf("/empty-scene", "/main"),
