@@ -9,8 +9,22 @@ import fledware.definitions.UnknownDefinitionException
 import fledware.ecs.definitions.SceneDefinition
 import fledware.ecs.definitions.entityLifecycleName
 import fledware.ecs.definitions.instantiator.SceneInstantiator
+import fledware.ecs.definitions.sceneLifecycle
+import fledware.ecs.definitions.sceneLifecycleName
 
 data class AshleyScene(val entities: List<Entity>)
+
+/**
+ * Gets or creates the [AshleySceneInstantiator] for [type].
+ */
+fun DefinitionsManager.sceneInstantiator(type: String): AshleySceneInstantiator {
+  return instantiator(sceneLifecycleName, type) as AshleySceneInstantiator
+}
+
+/**
+ * creates a scene lifecycle with [AshleySceneInstantiator]
+ */
+fun ashleySceneDefinitionLifecycle() = sceneLifecycle(AshleySceneInstantiator.instantiated())
 
 class AshleySceneInstantiator(
     definition: SceneDefinition, manager: DefinitionsManager)

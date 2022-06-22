@@ -13,16 +13,16 @@ data class Placement(var x: Float,
 @EcsComponent("movement")
 data class Movement(
     val speed: Float,
-    var path: IntArray? = null,
-    var pathTargetX: Int = 0,
-    var pathTargetY: Int = 0,
+    var path: FloatArray? = null,
+    var pathTargetX: Float = 0f,
+    var pathTargetY: Float = 0f,
     var pathIndexAt: Int = 0,
     var pathIndexPercent: Float = 0f
 ) {
-  fun resetWithPath(newPath: IntArray?) {
+  fun resetWithPath(newPath: FloatArray?) {
     path = newPath
-    pathTargetX = 0
-    pathTargetY = 0
+    pathTargetX = 0f
+    pathTargetY = 0f
     pathIndexAt = 0
     pathIndexPercent = 0f
     if (newPath != null) {
@@ -65,4 +65,5 @@ data class GridMapGraphics(val cellSize: Int) {
 
   fun shiftPoint(point: Float) = point * cellSizeF + cellSizeHalfF
   fun shiftPoint(point: Int) = point * cellSizeF + cellSizeHalfF
+  fun unshiftPoint(point: Float) = (point - cellSizeHalfF) / cellSizeF
 }

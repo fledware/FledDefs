@@ -10,6 +10,7 @@ import fledware.definitions.DefinitionsManager
 import fledware.definitions.Lifecycle
 import fledware.definitions.builtin.errorOnPackageVersionWarning
 import fledware.definitions.ex.gatherAll
+import fledware.definitions.libgdx.lifecycles.gdxScreenInstantiator
 import fledware.definitions.libgdx.setupLibGdxFilesWrapper
 import fledware.definitions.libgdx.withAssetManager
 import fledware.definitions.registry.DefaultDefinitionsBuilder
@@ -62,7 +63,7 @@ class LibgdxDriver(val lifecycles: List<Lifecycle>, val loadLists: List<File>) :
           ?: throw IllegalStateException("manager not created")
       engine = manager.contexts.get()
       loadingScreen.dispose()
-      screen = GameScreen(engine)
+      screen = manager.gdxScreenInstantiator("main").create()
     }
   }
 

@@ -15,6 +15,7 @@ import fledware.definitions.libgdx.lifecycles.SoundLifecycle
 import fledware.definitions.libgdx.lifecycles.TextureAtlasLifecycle
 import fledware.definitions.libgdx.lifecycles.TextureLifecycle
 import fledware.definitions.libgdx.lifecycles.TiledMapLifecycle
+import fledware.definitions.libgdx.lifecycles.screenLifecycle
 import fledware.definitions.libgdx.main.LibgdxDriver
 import fledware.ecs.definitions.fled.engineEventLifecycle
 import fledware.ecs.definitions.fled.fledComponentDefinitionLifecycle
@@ -49,6 +50,7 @@ fun main(args: Array<String>) {
       BitmapFontLifecycle(),
       FreeTypeFontLifecycle(),
       MusicLifecycle(),
+      screenLifecycle(),
       SkinLifecycle(),
       SoundLifecycle(),
       TextureAtlasLifecycle(),

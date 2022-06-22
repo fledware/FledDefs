@@ -33,18 +33,26 @@ class PathingSystem : AbstractSystem(order = -90) {
     setupNavigationGrid()
   }
 
-  fun findPathOrNull(fromX: Int, fromY: Int, toX: Int, toY: Int): IntArray? {
-    val check = finder.findPath(fromX, fromY, toX, toY, navigation) ?: return null
+  fun findPathOrNull(fromX: Float, fromY: Float, toX: Float, toY: Float): FloatArray? {
+    val check = finder.findPath(
+        fromX.toInt(),
+        fromY.toInt(),
+        toX.toInt(),
+        toY.toInt(),
+        navigation
+    ) ?: return null
     if (check.isEmpty()) return null
     println(check)
-    val result = IntArray(check.size * 2 + 2)
+    val result = FloatArray(check.size * 2 + 2)
     result[0] = fromX
     result[1] = fromY
     check.forEachIndexed { index, gridCell ->
       gridCell!!
-      result[index * 2 + 2] = gridCell.x
-      result[index * 2 + 3] = gridCell.y
+      result[index * 2 + 2] = gridCell.x.toFloat()
+      result[index * 2 + 3] = gridCell.y.toFloat()
     }
+    result[result.lastIndex - 1] = toX
+    result[result.lastIndex - 0] = toY
     return result
   }
 

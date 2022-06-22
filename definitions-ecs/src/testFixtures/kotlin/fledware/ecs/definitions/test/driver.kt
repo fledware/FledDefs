@@ -1,7 +1,8 @@
 package fledware.ecs.definitions.test
 
 import fledware.definitions.DefinitionsManager
-import fledware.ecs.definitions.componentDefinitions
+import fledware.definitions.lifecycle.BasicClassDefinition
+import fledware.ecs.definitions.componentLifecycleName
 import fledware.ecs.definitions.instantiator.EntityInstantiator
 import fledware.ecs.definitions.instantiator.SceneInstantiator
 import kotlin.reflect.KClass
@@ -15,7 +16,12 @@ interface ManagerDriver {
   val entities: List<Any>
   val systems: List<Any>
 
-  fun componentClass(name: String) = manager.componentDefinitions[name].klass
+  fun componentClass(name: String): KClass<out Any> {
+    val definition = manager
+        .registry(componentLifecycleName)
+        .definitions[name] as BasicClassDefinition<*>
+    return definition.klass
+  }
 
   fun entityInstantiator(type: String): EntityInstantiator<Any, Any>
   fun entityComponent(entity: Any, type: KClass<out Any>): Any

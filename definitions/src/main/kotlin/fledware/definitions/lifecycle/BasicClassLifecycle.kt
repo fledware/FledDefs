@@ -4,6 +4,7 @@ import fledware.definitions.AnnotatedClassSelectionInfo
 import fledware.definitions.Definition
 import fledware.definitions.DefinitionLifecycle
 import fledware.definitions.DefinitionsBuilder
+import fledware.definitions.IncompleteDefinitionException
 import fledware.definitions.InstantiatedLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.ProcessorIterationGroup
@@ -17,6 +18,7 @@ import fledware.definitions.registry.SimpleDefinitionRegistry
 import fledware.utilities.ConcurrentHierarchyMap
 import fledware.utilities.HierarchyMap
 import kotlin.reflect.KClass
+import kotlin.reflect.full.isSuperclassOf
 import kotlin.reflect.safeCast
 
 // ==================================================================
@@ -25,9 +27,9 @@ import kotlin.reflect.safeCast
 //
 // ==================================================================
 
-data class BasicClassDefinition(val klass: KClass<out Any>,
-                                val annotation: Annotation? = null,
-                                override val defName: String = "")
+data class BasicClassDefinition<T : Any>(val klass: KClass<out T>,
+                                         val annotation: Annotation? = null,
+                                         override val defName: String = "")
   : Definition
 
 
@@ -37,20 +39,19 @@ data class BasicClassDefinition(val klass: KClass<out Any>,
 //
 // ==================================================================
 
-/**
- * The standard way to handle generating the definition name for class processors.
- */
-typealias BasicClassDefName = (from: RawDefinitionFrom, raw: BasicClassDefinition) -> String
-
-class BasicClassProcessor(val annotation: KClass<out Annotation>,
-                          val defName: BasicClassDefName)
-  : RawDefinitionAggregator<BasicClassDefinition, BasicClassDefinition>() {
+class BasicClassProcessor<T : Any>(val annotation: KClass<out Annotation>,
+                                   val baseType: KClass<out T>,
+                                   val defName: BasicClassDefName)
+  : RawDefinitionAggregator<BasicClassDefinition<T>, BasicClassDefinition<T>>() {
   override fun process(reader: RawDefinitionReader, info: SelectionInfo): Boolean {
     if (info !is AnnotatedClassSelectionInfo) return false
     val annotation = annotation.safeCast(info.annotation) ?: return false
     @Suppress("UNCHECKED_CAST")
-    val klass = info.klass as? KClass<Any>
-        ?: throw IllegalArgumentException("class must extend Any?")
+    val klass = info.klass as? KClass<out T>
+        ?: throw IllegalStateException("doesn't extend any??? jvm or compile error")
+    if (!baseType.isSuperclassOf(info.klass))
+      throw IncompleteDefinitionException(
+          baseType, info.entry, "class must extend ${baseType.qualifiedName}")
     val definition = BasicClassDefinition(klass, annotation)
     val name = defName(info.from, definition)
     apply(name, info.from, definition)
@@ -58,11 +59,11 @@ class BasicClassProcessor(val annotation: KClass<out Annotation>,
   }
 
   override fun mutate(name: String, from: RawDefinitionFrom,
-                      block: (original: BasicClassDefinition) -> BasicClassDefinition) {
+                      block: (original: BasicClassDefinition<T>) -> BasicClassDefinition<T>) {
     throw IllegalStateException("not allowed to mutate classes")
   }
 
-  override fun result(name: String, final: BasicClassDefinition): BasicClassDefinition {
+  override fun result(name: String, final: BasicClassDefinition<T>): BasicClassDefinition<T> {
     return BasicClassDefinition(final.klass, final.annotation, name)
   }
 }
@@ -76,8 +77,8 @@ class BasicClassProcessor(val annotation: KClass<out Annotation>,
 class BasicClassHandler(
     val annotation: KClass<out Annotation>,
     iterationGroup: ProcessorIterationGroup = ProcessorIterationGroup.BUILDER,
-    val handle: (builder: DefinitionsBuilder, raw: BasicClassDefinition) -> Unit
-) : AbstractRawDefinitionState<BasicClassDefinition>(iterationGroup) {
+    val handle: (builder: DefinitionsBuilder, raw: BasicClassDefinition<Any>) -> Unit
+) : AbstractRawDefinitionState<BasicClassDefinition<Any>>(iterationGroup) {
 
   override fun process(reader: RawDefinitionReader, info: SelectionInfo): Boolean {
     if (info !is AnnotatedClassSelectionInfo) return false
@@ -90,10 +91,10 @@ class BasicClassHandler(
     return true
   }
 
-  override fun apply(name: String, from: RawDefinitionFrom, raw: BasicClassDefinition) = handle(builder, raw)
+  override fun apply(name: String, from: RawDefinitionFrom, raw: BasicClassDefinition<Any>) = handle(builder, raw)
 
   override fun mutate(name: String, from: RawDefinitionFrom,
-                      block: (original: BasicClassDefinition) -> BasicClassDefinition) {
+                      block: (original: BasicClassDefinition<Any>) -> BasicClassDefinition<Any>) {
     throw IllegalStateException("not allowed to mutate classes")
   }
 
@@ -108,11 +109,11 @@ class BasicClassHandler(
 //
 // ==================================================================
 
-class ClassDefinitionRegistry(
-    definitions: Map<String, BasicClassDefinition>,
-    orderedDefinitions: List<BasicClassDefinition>,
+class ClassDefinitionRegistry<T : Any>(
+    definitions: Map<String, BasicClassDefinition<T>>,
+    orderedDefinitions: List<BasicClassDefinition<T>>,
     fromDefinitions: Map<String, List<RawDefinitionFrom>>
-) : SimpleDefinitionRegistry<BasicClassDefinition>(definitions, orderedDefinitions, fromDefinitions) {
+) : SimpleDefinitionRegistry<BasicClassDefinition<T>>(definitions, orderedDefinitions, fromDefinitions) {
   val typeIndex: HierarchyMap<Any>
 
   init {
@@ -129,16 +130,22 @@ class ClassDefinitionRegistry(
 //
 // ==================================================================
 
-class BasicClassLifecycle(override val name: String,
-                          override val instantiated: InstantiatedLifecycle,
-                          val annotation: KClass<out Annotation>,
-                          val defName: BasicClassDefName)
+/**
+ * The standard way to handle generating the definition name for class processors.
+ */
+typealias BasicClassDefName = (from: RawDefinitionFrom, raw: BasicClassDefinition<*>) -> String
+
+class BasicClassLifecycle<T : Any>(override val name: String,
+                                   override val instantiated: InstantiatedLifecycle,
+                                   val annotation: KClass<out Annotation>,
+                                   val baseType: KClass<T>,
+                                   val defName: BasicClassDefName)
   : Lifecycle {
-  override val rawDefinition = RawDefinitionLifecycle<BasicClassDefinition> {
-    BasicClassProcessor(annotation, defName)
+  override val rawDefinition = RawDefinitionLifecycle<BasicClassDefinition<T>> {
+    BasicClassProcessor(annotation, baseType, defName)
   }
 
-  override val definition = DefinitionLifecycle<BasicClassDefinition> { definitions, ordered, froms ->
+  override val definition = DefinitionLifecycle<BasicClassDefinition<T>> { definitions, ordered, froms ->
     ClassDefinitionRegistry(definitions, ordered, froms)
   }
 }
@@ -150,4 +157,14 @@ inline fun <reified A : Annotation> classLifecycle(
     name: String,
     instantiated: InstantiatedLifecycle = InstantiatedLifecycle(),
     noinline defName: BasicClassDefName = { from, _ -> from.entry }
-) = BasicClassLifecycle(name, instantiated, A::class, defName)
+) = BasicClassLifecycle(name, instantiated, A::class, Any::class, defName)
+
+/**
+ * Creates a lifecycle that finds classes with the given annotation.
+ * It will also ensure that the classes extend [T].
+ */
+inline fun <reified A : Annotation, reified T : Any> classLifecycleOf(
+    name: String,
+    instantiated: InstantiatedLifecycle = InstantiatedLifecycle(),
+    noinline defName: BasicClassDefName = { from, _ -> from.entry }
+) = BasicClassLifecycle(name, instantiated, A::class, T::class, defName)

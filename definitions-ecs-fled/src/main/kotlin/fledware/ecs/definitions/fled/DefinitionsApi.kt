@@ -9,18 +9,7 @@ import fledware.ecs.EntityFactory
 import fledware.ecs.World
 import fledware.ecs.WorldData
 import fledware.ecs.createWorldAndFlush
-import fledware.ecs.definitions.componentDefinitions
-import fledware.ecs.definitions.componentLifecycle
-import fledware.ecs.definitions.componentLifecycleName
-import fledware.ecs.definitions.entityLifecycle
-import fledware.ecs.definitions.entityLifecycleName
 import fledware.ecs.definitions.instantiator.ComponentArgument
-import fledware.ecs.definitions.sceneLifecycle
-import fledware.ecs.definitions.sceneLifecycleName
-import fledware.ecs.definitions.systemLifecycle
-import fledware.ecs.definitions.systemLifecycleName
-import fledware.ecs.definitions.worldLifecycle
-import fledware.ecs.definitions.worldLifecycleName
 import fledware.ecs.ex.importScene
 import fledware.ecs.util.MapperIndex
 import fledware.utilities.get
@@ -79,50 +68,6 @@ inline fun <reified T : Any> EngineData.definedComponentIndexOf(): MapperIndex<T
  */
 inline fun <reified T : Any> WorldData.definedComponentIndexOf(): MapperIndex<T> {
   return engine.data.definedComponentIndexOf()
-}
-
-
-// ==================================================================
-//
-// lifecycles with fled instantiators
-//
-// ==================================================================
-
-fun fledComponentDefinitionLifecycle() = componentLifecycle(FledComponentInstantiator.instantiated())
-
-fun fledEntityDefinitionLifecycle() = entityLifecycle(FledEntityInstantiator.instantiated())
-
-fun fledSceneDefinitionLifecycle() = sceneLifecycle(FledSceneInstantiator.instantiated())
-
-fun fledSystemDefinitionLifecycle() = systemLifecycle(FledSystemInstantiator.instantiated())
-
-fun fledWorldDefinitionLifecycle() = worldLifecycle(FledWorldInstantiator.instantiated())
-
-
-// ==================================================================
-//
-// instantiator getters on DefinitionsManager
-//
-// ==================================================================
-
-fun DefinitionsManager.componentInstantiator(type: String): FledComponentInstantiator {
-  return instantiator(componentLifecycleName, type) as FledComponentInstantiator
-}
-
-fun DefinitionsManager.entityInstantiator(type: String): FledEntityInstantiator {
-  return instantiator(entityLifecycleName, type) as FledEntityInstantiator
-}
-
-fun DefinitionsManager.sceneInstantiator(type: String): FledSceneInstantiator {
-  return instantiator(sceneLifecycleName, type) as FledSceneInstantiator
-}
-
-fun DefinitionsManager.systemInstantiator(type: String): FledSystemInstantiator {
-  return instantiator(systemLifecycleName, type) as FledSystemInstantiator
-}
-
-fun DefinitionsManager.worldInstantiator(type: String): FledWorldInstantiator {
-  return instantiator(worldLifecycleName, type) as FledWorldInstantiator
 }
 
 // ==================================================================

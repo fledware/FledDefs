@@ -1,6 +1,7 @@
 package fledware.definitions.libgdx.main
 
 import com.badlogic.gdx.ScreenAdapter
+import fledware.definitions.libgdx.lifecycles.GdxScreen
 import fledware.ecs.Engine
 
 /**
@@ -17,6 +18,7 @@ import fledware.ecs.Engine
  * this if a multithreaded [Engine.updateStrategy] is used. This is
  * because the rendering needs to happen in the main thread.
  */
+@GdxScreen("main")
 class GameScreen(val engine: Engine) : ScreenAdapter() {
 
   override fun render(delta: Float) {

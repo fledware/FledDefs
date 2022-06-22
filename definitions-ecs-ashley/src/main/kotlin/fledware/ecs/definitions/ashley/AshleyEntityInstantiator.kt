@@ -6,9 +6,24 @@ import com.badlogic.ashley.core.Entity
 import fledware.definitions.DefinitionsManager
 import fledware.definitions.InstantiatedLifecycle
 import fledware.ecs.definitions.EntityDefinition
+import fledware.ecs.definitions.entityLifecycle
+import fledware.ecs.definitions.entityLifecycleName
 import fledware.ecs.definitions.instantiator.EntityInstantiator
 import fledware.utilities.get
 import kotlin.reflect.KClass
+
+
+/**
+ * Gets or creates the [AshleyEntityInstantiator] for [type].
+ */
+fun DefinitionsManager.entityInstantiator(type: String): AshleyEntityInstantiator {
+  return instantiator(entityLifecycleName, type) as AshleyEntityInstantiator
+}
+
+/**
+ * creates an entity lifecycle with [AshleyEntityInstantiator]
+ */
+fun ashleyEntityDefinitionLifecycle() = entityLifecycle(AshleyEntityInstantiator.instantiated())
 
 class AshleyEntityInstantiator(definition: EntityDefinition,
                                manager: DefinitionsManager)

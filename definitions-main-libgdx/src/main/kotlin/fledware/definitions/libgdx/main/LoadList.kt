@@ -10,6 +10,7 @@ import fledware.definitions.builtin.functionDefinitions
 import fledware.definitions.ex.BuildManagerCommand
 import fledware.definitions.ex.LoadCommand
 import fledware.definitions.libgdx.LoadAssetsCommand
+import fledware.definitions.libgdx.lifecycles.addGdxScreen
 import fledware.definitions.loadlist.loadListManager
 import fledware.definitions.loadlist.maven.MavenLoadListProcessor
 import fledware.definitions.loadlist.mods.ModLoadListProcessor
@@ -56,6 +57,7 @@ fun DefinitionsBuilder.createLoadCommands(loadLists: List<File>, vararg engineCo
  */
 fun addDefaultDefinitionsLoadCommand() = LoadCommand("AddDefaultDefinitions", 1) { context ->
   context.builder.functionDefinitions.apply(::defaultInitializeEcsEngine)
+  context.builder.addGdxScreen(GameScreen::class)
 }
 
 /**

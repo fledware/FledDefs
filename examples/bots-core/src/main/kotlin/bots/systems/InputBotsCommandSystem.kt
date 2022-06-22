@@ -13,7 +13,6 @@ import fledware.ecs.definitions.EcsSystem
 import fledware.ecs.forEach
 import fledware.ecs.get
 import fledware.utilities.get
-import kotlin.math.roundToInt
 
 @Suppress("unused")
 @EcsSystem("input-bots-command")
@@ -35,13 +34,13 @@ class InputBotsCommandSystem : AbstractSystem() {
   override fun update(delta: Float) = Unit
 
   private fun onRightClick(worldMousePos: Vector2) {
-    val targetX = (worldMousePos.x / graphicsInfo.cellSizeF).toInt()
-    val targetY = (worldMousePos.y / graphicsInfo.cellSizeF).toInt()
+    val targetX = graphicsInfo.unshiftPoint(worldMousePos.x)
+    val targetY = graphicsInfo.unshiftPoint(worldMousePos.y)
     selectedGroup.forEach { entity ->
       val placement = entity.getOrNull(placementIndex) ?: return@forEach
       val movement = entity.getOrNull(movementIndex) ?: return@forEach
-      val path = pathingSystem.findPathOrNull(placement.x.roundToInt(),
-                                              placement.y.roundToInt(),
+      val path = pathingSystem.findPathOrNull(placement.x,
+                                              placement.y,
                                               targetX,
                                               targetY)
       println("click at: $placement -> $worldMousePos ($targetX, $targetY) -> ${path?.toList()}")

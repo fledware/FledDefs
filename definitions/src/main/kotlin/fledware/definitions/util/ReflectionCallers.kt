@@ -29,6 +29,29 @@ fun KClass<*>.isSynthetic(): Boolean {
   return this.simpleName == null
 }
 
+/**
+ * Helper for setting a parameter to a map for input to a reflective
+ * call to a method.
+ *
+ * There are specific cases where we need to handle setting a param
+ * in the way kotlin expect.
+ */
+fun MutableMap<KParameter, Any?>.setParam(parameter: KParameter, value: Any?) {
+  when {
+    // the value is not null, just apply it to the map
+    value != null -> this[parameter] = value
+    // if the value is optional, we want to do nothing to let the
+    // kotlin language just do its thing
+    parameter.isOptional -> Unit
+    // the value can be null, but it still needs to be set
+    parameter.type.isMarkedNullable -> this[parameter] = null
+    // if those don't work, then the param is invalid.
+    // let the call still happen and the error handling will give
+    // a good error message
+    else -> Unit
+  }
+}
+
 // ==================================================================
 //
 // safe property getters/setters

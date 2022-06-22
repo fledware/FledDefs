@@ -10,7 +10,22 @@ import fledware.ecs.definitions.WorldDefinition
 import fledware.ecs.definitions.entityLifecycleName
 import fledware.ecs.definitions.instantiator.ComponentArgument
 import fledware.ecs.definitions.instantiator.WorldInstantiator
+import fledware.ecs.definitions.worldLifecycle
+import fledware.ecs.definitions.worldLifecycleName
 import fledware.ecs.ex.initWith
+
+
+/**
+ * Gets or creates the [FledWorldInstantiator] for [type].
+ */
+fun DefinitionsManager.worldInstantiator(type: String): FledWorldInstantiator {
+  return instantiator(worldLifecycleName, type) as FledWorldInstantiator
+}
+
+/**
+ * Creates a new lifecycle for [WorldDefinition] with [FledWorldInstantiator].
+ */
+fun fledWorldDefinitionLifecycle() = worldLifecycle(FledWorldInstantiator.instantiated())
 
 @Suppress("MemberVisibilityCanBePrivate")
 class FledWorldInstantiator(definition: WorldDefinition,
