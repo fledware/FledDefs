@@ -8,9 +8,6 @@ import fledware.ecs.WorldData
 import fledware.ecs.componentIndexOf
 import fledware.ecs.definitions.EcsSystem
 import fledware.ecs.definitions.fled.definedComponentIndexOf
-import fledware.ecs.definitions.test.Health
-import fledware.ecs.definitions.test.MapDimensions
-import fledware.ecs.definitions.test.Movement
 import fledware.ecs.definitions.test.Placement
 
 val WorldData.map get() = entitiesNamed["map"] ?: throw IllegalStateException("map not found")
