@@ -10,6 +10,20 @@ import fledware.definitions.UnknownDefinitionException
 import fledware.ecs.definitions.WorldDefinition
 import fledware.ecs.definitions.entityLifecycleName
 import fledware.ecs.definitions.instantiator.WorldInstantiator
+import fledware.ecs.definitions.worldLifecycle
+import fledware.ecs.definitions.worldLifecycleName
+
+/**
+ * Creates a new lifecycle for [WorldDefinition] with [AshleyWorldInstantiator].
+ */
+fun ashleyWorldDefinitionLifecycle() = worldLifecycle(AshleyWorldInstantiator.instantiated())
+
+/**
+ * Gets or creates the [AshleyWorldInstantiator] for [type].
+ */
+fun DefinitionsManager.worldInstantiator(type: String): AshleyWorldInstantiator {
+  return instantiator(worldLifecycleName, type) as AshleyWorldInstantiator
+}
 
 class AshleyWorldInstantiator(definition: WorldDefinition,
                               manager: DefinitionsManager)
@@ -20,7 +34,7 @@ class AshleyWorldInstantiator(definition: WorldDefinition,
     }
   }
 
-  // engines in ashley don't have global components
+  // engines in ashley don't have global contexts
   override fun componentInstantiator(manager: DefinitionsManager, type: String) = TODO()
 
   fun decorateEngine(engine: Engine) {
@@ -33,6 +47,6 @@ class AshleyWorldInstantiator(definition: WorldDefinition,
       val entity = instantiator.createWithNames(instance.components)
       engine.addEntity(entity)
     }
-    decorateFunction?.callWith(engine)
+    decoratorFunctions.forEach { it.callWith(engine) }
   }
 }

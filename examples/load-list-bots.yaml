@@ -1,3 +1,6 @@
+maven-libraries:
+  - com.github.xaguzman:pathfinding:0.2.6
+
 mods:
   # basic helpers
   - type: local-gather

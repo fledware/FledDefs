@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Colors
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import fledware.ecs.definitions.EcsComponent
@@ -52,5 +54,24 @@ class TwoDGraphics(minWorldWidth: Float = 500f,
 
   init {
     camera.position.set(0f, 0f, 0f)
+  }
+}
+
+fun Rectangle.set(position: Vector2, size: Vector2) {
+  this.set(position.x,
+           position.y,
+           -size.x,
+           -size.y)
+  this.normalize()
+}
+
+fun Rectangle.normalize() {
+  if (width < 0) {
+    width = -width
+    x -= width
+  }
+  if (height < 0) {
+    height = -height
+    y -= height
   }
 }

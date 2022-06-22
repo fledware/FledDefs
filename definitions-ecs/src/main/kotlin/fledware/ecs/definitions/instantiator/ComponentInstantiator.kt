@@ -6,5 +6,5 @@ import kotlin.reflect.KClass
 
 
 @Suppress("UNCHECKED_CAST")
-abstract class ComponentInstantiator<C : Any>(definition: BasicClassDefinition)
-  : ReflectInstantiator<BasicClassDefinition, C>(definition, definition.klass as KClass<C>)
+abstract class ComponentInstantiator<C : Any>(definition: BasicClassDefinition<C>)
+  : ReflectInstantiator<BasicClassDefinition<C>, C>(definition, definition.klass as KClass<C>)

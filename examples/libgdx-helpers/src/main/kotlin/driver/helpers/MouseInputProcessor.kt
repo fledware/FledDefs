@@ -16,6 +16,14 @@ class MouseInputProcessor(val viewport: Viewport)
   val onRightDrag = mutableListOf<(worldMousePos: Vector2, dragDelta: Vector2) -> Unit>()
   val onDrag = mutableListOf<(worldMousePos: Vector2, dragDelta: Vector2) -> Unit>()
 
+  val onLeftDown = mutableListOf<(worldMousePos: Vector2) -> Unit>()
+  val onRightDown = mutableListOf<(worldMousePos: Vector2) -> Unit>()
+  val onDown = mutableListOf<(worldMousePos: Vector2) -> Unit>()
+
+  val onLeftUp = mutableListOf<(worldMousePos: Vector2) -> Unit>()
+  val onRightUp = mutableListOf<(worldMousePos: Vector2) -> Unit>()
+  val onUp = mutableListOf<(worldMousePos: Vector2) -> Unit>()
+
   val onScroll = mutableListOf<(amount: Float) -> Unit>()
 
   val worldMousePos = Vector2()
@@ -36,7 +44,6 @@ class MouseInputProcessor(val viewport: Viewport)
     mouseCancelled = false
     isDragging = false
   }
-
 
   override fun keyDown(keycode: Int): Boolean {
     return false
@@ -66,6 +73,13 @@ class MouseInputProcessor(val viewport: Viewport)
     worldMousePos.set(screenX.toFloat(), screenY.toFloat())
     viewport.unproject(worldMousePos)
     isDragging = false
+
+    when {
+      rightDown -> onRightDown.forEach { it(worldMousePos) }
+      leftDown -> onLeftDown.forEach { it(worldMousePos) }
+    }
+    onDown.forEach { it(worldMousePos) }
+
     return true
   }
 
@@ -95,6 +109,13 @@ class MouseInputProcessor(val viewport: Viewport)
       }
     }
     isDragging = false
+
+    when {
+      Input.Buttons.LEFT == button -> onLeftUp.forEach { it(worldMousePos) }
+      Input.Buttons.RIGHT == button -> onRightUp.forEach { it(worldMousePos) }
+    }
+    onUp.forEach { it(worldMousePos) }
+
     return true
   }
 

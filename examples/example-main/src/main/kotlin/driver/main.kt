@@ -15,6 +15,7 @@ import fledware.definitions.libgdx.lifecycles.SoundLifecycle
 import fledware.definitions.libgdx.lifecycles.TextureAtlasLifecycle
 import fledware.definitions.libgdx.lifecycles.TextureLifecycle
 import fledware.definitions.libgdx.lifecycles.TiledMapLifecycle
+import fledware.definitions.libgdx.lifecycles.screenLifecycle
 import fledware.definitions.libgdx.main.LibgdxDriver
 import fledware.ecs.definitions.fled.engineEventLifecycle
 import fledware.ecs.definitions.fled.fledComponentDefinitionLifecycle
@@ -25,9 +26,9 @@ import fledware.ecs.definitions.fled.fledWorldDefinitionLifecycle
 import java.io.File
 
 fun main(args: Array<String>) {
-  if (args.size != 1)
-    throw IllegalArgumentException("exactly one arg required (path to load list)")
-  val loadList = File(args[0]).canonicalFile
+  if (args.isEmpty())
+    throw IllegalArgumentException("one or more load lists required")
+  val loadLists = args.map { File(it).canonicalFile }
 
   val lifecycles = listOf(
       // built in lifecycles
@@ -49,6 +50,7 @@ fun main(args: Array<String>) {
       BitmapFontLifecycle(),
       FreeTypeFontLifecycle(),
       MusicLifecycle(),
+      screenLifecycle(),
       SkinLifecycle(),
       SoundLifecycle(),
       TextureAtlasLifecycle(),
@@ -57,5 +59,5 @@ fun main(args: Array<String>) {
   )
   val configuration = Lwjgl3ApplicationConfiguration()
   configuration.setWindowedMode(640 * 2, 480 * 2)
-  Lwjgl3Application(LibgdxDriver(lifecycles, loadList), configuration)
+  Lwjgl3Application(LibgdxDriver(lifecycles, loadLists), configuration)
 }

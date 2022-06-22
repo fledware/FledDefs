@@ -21,13 +21,14 @@ task runSpacer(type: JavaExec) {
   dependsOn(":examples:spacer-mod-info:build")
 }
 
-task runPathing(type: JavaExec) {
+task runPathingXaguzman(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = 'driver.MainKt'
-  args = [ "../load-list-pathing.yaml" ]
+  args = [ "../load-list-pathing.yaml", "../load-list-pathing-xaguzman.yaml" ]
 
   dependsOn(":examples:libgdx-helpers:build")
   dependsOn(":examples:pathing:build")
+  dependsOn(":examples:pathing-xaguzman:build")
 }
 
 task runBots(type: JavaExec) {

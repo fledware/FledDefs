@@ -117,7 +117,7 @@ class LoadingScreen(val loadIterator: LoadIterator,
       }
       !loadIterator.isFinished -> {
         loadIterator.start()
-        loadingWhat.txt = loadIterator.commandAt.name
+        loadingWhat.txt = loadIterator.commandAtOrNull?.name ?: ""
         progress.value = loadIterator.percentFinished
         loadIterator.update()
       }

@@ -1,8 +1,6 @@
 extends: /grid-point
 components:
   grid-point:
-    airPassable: true
-    airSpeed: 1.0
-    landPassable: false
+    passable: false
   grid-point-graphics:
     color: blue

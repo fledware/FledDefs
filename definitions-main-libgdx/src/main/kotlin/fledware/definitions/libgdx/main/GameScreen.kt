@@ -1,6 +1,7 @@
 package fledware.definitions.libgdx.main
 
 import com.badlogic.gdx.ScreenAdapter
+import fledware.definitions.libgdx.lifecycles.GdxScreen
 import fledware.ecs.Engine
 
 /**
@@ -9,7 +10,7 @@ import fledware.ecs.Engine
  *
  * In this case, the rendering is also taken care of by the
  * systems within the engine, but that doesn't have to be
- * the pattern. A renderer could be created outside of the
+ * the pattern. A renderer could be created outside the
  * update cycle, all you would need to do is figure out which
  * world is being rendered, and iterate on the entities here.
  *
@@ -17,6 +18,7 @@ import fledware.ecs.Engine
  * this if a multithreaded [Engine.updateStrategy] is used. This is
  * because the rendering needs to happen in the main thread.
  */
+@GdxScreen("main")
 class GameScreen(val engine: Engine) : ScreenAdapter() {
 
   override fun render(delta: Float) {

@@ -1,4 +1,4 @@
-components:
+contexts:
   2d-graphics: {}
 systems:
   - solar-system-locations

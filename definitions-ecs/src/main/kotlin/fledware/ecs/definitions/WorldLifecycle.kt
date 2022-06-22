@@ -13,18 +13,18 @@ data class WorldDefinition(
     override val defName: String,
     val extends: String?,
     val initFunction: String?,
-    val decorateFunction: String?,
+    val decoratorFunctions: List<String> = emptyList(),
     val systems: List<String> = emptyList(),
-    val components: Map<String, Map<String, Any>> = emptyMap(),
+    val contexts: Map<String, Map<String, Any>> = emptyMap(),
     val entities: List<EntityInstance> = emptyList()
 ) : Definition
 
 data class WorldRawDefinition(
     val extends: String?,
     val initFunction: String?,
-    val decorateFunction: String?,
+    val decoratorFunctions: List<String>?,
     val systems: Set<String>?,
-    val components: Map<String, Map<String, Any>>?,
+    val contexts: Map<String, Map<String, Any>>?,
     val entities: List<RawEntityInstance>?
 )
 

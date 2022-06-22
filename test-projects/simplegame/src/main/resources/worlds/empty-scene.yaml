@@ -1,4 +1,4 @@
 systems:
   - movement
-components:
+contexts:
   custom-scene-data: {}

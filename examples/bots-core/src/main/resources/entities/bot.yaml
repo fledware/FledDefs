@@ -1,0 +1,9 @@
+components:
+  placement:
+    size: 1
+  movement:
+    speed: 2
+  selectable:
+    group: bots
+  bot-graphics:
+    color: white

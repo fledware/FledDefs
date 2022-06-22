@@ -2,63 +2,9 @@ package fledware.ecs.definitions.ashley
 
 import com.badlogic.ashley.core.Engine
 import fledware.definitions.DefinitionsManager
-import fledware.ecs.definitions.componentLifecycle
-import fledware.ecs.definitions.componentLifecycleName
-import fledware.ecs.definitions.entityLifecycle
-import fledware.ecs.definitions.entityLifecycleName
 import fledware.ecs.definitions.instantiator.ComponentArgument
-import fledware.ecs.definitions.sceneLifecycle
-import fledware.ecs.definitions.sceneLifecycleName
-import fledware.ecs.definitions.systemLifecycle
-import fledware.ecs.definitions.systemLifecycleName
-import fledware.ecs.definitions.worldLifecycle
-import fledware.ecs.definitions.worldLifecycleName
 import fledware.utilities.get
 
-
-// ==================================================================
-//
-// lifecycles with ashley instantiators
-//
-// ==================================================================
-
-fun ashleyComponentDefinitionLifecycle() = componentLifecycle(AshleyComponentInstantiator.instantiated())
-
-fun ashleyEntityDefinitionLifecycle() = entityLifecycle(AshleyEntityInstantiator.instantiated())
-
-fun ashleySceneDefinitionLifecycle() = sceneLifecycle(AshleySceneInstantiator.instantiated())
-
-fun ashleySystemDefinitionLifecycle() = systemLifecycle(AshleySystemInstantiator.instantiated())
-
-fun ashleyWorldDefinitionLifecycle() = worldLifecycle(AshleyWorldInstantiator.instantiated())
-
-
-// ==================================================================
-//
-// instantiator getters on DefinitionsManager
-//
-// ==================================================================
-
-
-fun DefinitionsManager.componentInstantiator(type: String): AshleyComponentInstantiator {
-  return instantiator(componentLifecycleName, type) as AshleyComponentInstantiator
-}
-
-fun DefinitionsManager.entityInstantiator(type: String): AshleyEntityInstantiator {
-  return instantiator(entityLifecycleName, type) as AshleyEntityInstantiator
-}
-
-fun DefinitionsManager.sceneInstantiator(type: String): AshleySceneInstantiator {
-  return instantiator(sceneLifecycleName, type) as AshleySceneInstantiator
-}
-
-fun DefinitionsManager.systemInstantiator(type: String): AshleySystemInstantiator {
-  return instantiator(systemLifecycleName, type) as AshleySystemInstantiator
-}
-
-fun DefinitionsManager.worldInstantiator(type: String): AshleyWorldInstantiator {
-  return instantiator(worldLifecycleName, type) as AshleyWorldInstantiator
-}
 
 // ==================================================================
 //

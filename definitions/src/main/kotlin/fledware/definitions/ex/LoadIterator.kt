@@ -4,7 +4,6 @@ import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
 import fledware.utilities.infoMeasure
 import org.slf4j.LoggerFactory
-import java.util.concurrent.CountDownLatch
 import kotlin.system.measureTimeMillis
 
 
@@ -25,47 +24,6 @@ data class LoadCommandState(val builderOrNull: DefinitionsBuilder?,
     get() = builderOrNull ?: throw IllegalStateException("builder not available")
   val manager: DefinitionsManager
     get() = managerOrNull ?: throw IllegalStateException("manager not available")
-}
-
-/**
- *
- */
-interface LoadCommand {
-  val name: String
-  val weight: Int
-  operator fun invoke(context: LoadCommandState)
-}
-
-/**
- * A [LoadCommand] that will block the loading thread until
- * [finished] is released. It is the responsibility of the
- * command to open the latch when work is finished.
- *
- * The worker thread wills still call [invoke], but after the
- * method returns, the worker thread will wait on [finished].
- */
-interface BlockingLoadCommand : LoadCommand {
-  val finished: CountDownLatch
-  fun update()
-}
-
-/**
- * Creates a [LoadCommand] with the given input.
- */
-@Suppress("FunctionName")
-fun LoadCommand(name: String, weight: Int,
-                block: LoadCommand.(context: LoadCommandState) -> Unit) =
-    BasicLoadCommand(name, weight, block)
-
-/**
- * A basic implementation of a [LoadCommand]
- */
-data class BasicLoadCommand(override val name: String,
-                            override val weight: Int,
-                            val block: LoadCommand.(state: LoadCommandState) -> Unit) : LoadCommand {
-  override fun invoke(context: LoadCommandState) {
-    block(context)
-  }
 }
 
 /**
@@ -124,10 +82,15 @@ class LoadIterator(val commands: List<LoadCommand>,
   var commandIndex: Int = 0
     private set
   /**
-   * the path that is currently being loaded
+   * the path that is currently being loaded.
    */
-  val commandAt: LoadCommand
-    get() = commands[commandIndex]
+  val commandAtOrNull: LoadCommand?
+    get() {
+      val index = commandIndex
+      if (index !in commands.indices)
+        return null
+      return commands[index]
+    }
   /**
    *
    */
@@ -138,7 +101,7 @@ class LoadIterator(val commands: List<LoadCommand>,
    *
    */
   val isFinished: Boolean
-    get() = commandIndex == commands.size || exception != null
+    get() = (commandIndex == commands.size || exception != null) && !loaderThread.isAlive
   /**
    * the percent of weighted loading commands that are finished
    */
@@ -161,7 +124,7 @@ class LoadIterator(val commands: List<LoadCommand>,
    * starts the [loaderThread]
    */
   fun start() {
-    if (loaderThread.isAlive)
+    if (loaderThread.isAlive || isFinished)
       return
     loaderThread.start()
   }
@@ -195,7 +158,7 @@ class LoadIterator(val commands: List<LoadCommand>,
   fun update() {
     if (!loaderThread.running || exception != null)
       return
-    val current = commandAt
+    val current = commandAtOrNull
     if (current is BlockingLoadCommand && commandAtInvoked)
       current.update()
   }
@@ -214,7 +177,7 @@ class LoadIterator(val commands: List<LoadCommand>,
         loadTime = logger.infoMeasure("gather iteration") {
           while (running && commandIndex < commands.size) {
             ensureCorrectClassLoader()
-            val command = commandAt
+            val command = commands[commandIndex]
             measureTimeMillis {
               consumeCommand(command)
             }.also { logger.info("$it ms to complete: $command") }
@@ -231,6 +194,7 @@ class LoadIterator(val commands: List<LoadCommand>,
         logger.error("error while iterating", ex)
         exception = ex
       }
+      running = false
     }
 
     private fun ensureCorrectClassLoader() {

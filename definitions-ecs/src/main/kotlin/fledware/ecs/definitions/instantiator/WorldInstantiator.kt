@@ -25,18 +25,16 @@ abstract class WorldInstantiator<E : Any, C : Any, S : Any>(
     }
   }
 
-  val componentInstantiators: Map<String, ComponentInstantiator<C>>
-  val defaultComponentValues: Map<String, Map<String, Any?>>
-  val entityInstantiators = mutableMapOf<String, EntityInstantiator<E, C>>()
-  val entities = mutableListOf<EntityInstance>()
-  val decorateFunction = definition.decorateFunction?.let { manager.functionDefinitions[it] }
+  val decoratorFunctions = definition.decoratorFunctions.map { manager.functionDefinitions[it] }
   val initFunction = definition.initFunction?.let { manager.functionDefinitions[it] }
 
 
+  val componentInstantiators: Map<String, ComponentInstantiator<C>>
+  val defaultContextValues: Map<String, Map<String, Any?>>
   init {
     val defaultComponentValues: Map<String, Map<String, Any?>> = buildMap {
       manager.worldDefinitions.walk(definition.defName) {
-        it.components.forEach { (name, args) ->
+        it.contexts.forEach { (name, args) ->
           this[name] = args + this.getOrDefault(name, emptyMap())
         }
         it.extends
@@ -47,12 +45,14 @@ abstract class WorldInstantiator<E : Any, C : Any, S : Any>(
         this[componentName] = componentInstantiator(manager, componentName)
       }
     }
-    this.defaultComponentValues = defaultComponentValues.mapValues { (name, values) ->
+    this.defaultContextValues = defaultComponentValues.mapValues { (name, values) ->
       val component = componentInstantiators[name]!!
       component.ensureParameterTypes(values)
     }
   }
 
+  val entityInstantiators = mutableMapOf<String, EntityInstantiator<E, C>>()
+  val entities = mutableListOf<EntityInstance>()
   init {
     manager.worldDefinitions.walk(definition.defName) {
       it.entities.forEach { entity ->

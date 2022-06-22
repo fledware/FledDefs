@@ -1,6 +1,7 @@
 dependencies {
   // this needs to be loaded by the driver. It is not included automatically
   api project(":examples:libgdx-helpers")
+  api "com.github.xaguzman:pathfinding:0.2.6"
 
   // this is already included in the driver, but we need to include
   // it here as well to access it because we're not depending on the
