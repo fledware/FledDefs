@@ -10,7 +10,7 @@ buildscript {
     semver4jVersion="3.1.0"
     log4jVersion="2.18.0"
     gdxVersion="1.11.0"
-    mavenResolverVersion="1.8.1"
+    mavenResolverVersion="1.8.2"
     eclipseCollectionsVersion="11.0.0"
     fledUtilsVersion="0.1.5-SNAPSHOT"
     fledEcsVersion="0.1.6-SNAPSHOT"
