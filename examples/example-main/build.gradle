@@ -4,10 +4,15 @@ dependencies {
   api project(":definitions-main-libgdx")
 }
 
+import org.gradle.internal.os.OperatingSystem
+
 task runSpacer(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = 'driver.MainKt'
-  args = [ "../load-list-spacer.yaml" ]
+  args = ["../load-list-spacer.yaml"]
+  if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
+    jvmArgs += "-XstartOnFirstThread"
+  }
 
   // we don't want to add any of the game code into the classpath
   // of the driver, but we still need to make sure the dependent
@@ -24,7 +29,10 @@ task runSpacer(type: JavaExec) {
 task runPathingXaguzman(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = 'driver.MainKt'
-  args = [ "../load-list-pathing.yaml", "../load-list-pathing-xaguzman.yaml" ]
+  args = ["../load-list-pathing.yaml", "../load-list-pathing-xaguzman.yaml"]
+  if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
+    jvmArgs += "-XstartOnFirstThread"
+  }
 
   dependsOn(":examples:libgdx-helpers:build")
   dependsOn(":examples:pathing:build")
@@ -34,7 +42,10 @@ task runPathingXaguzman(type: JavaExec) {
 task runBots(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = 'driver.MainKt'
-  args = [ "../load-list-bots.yaml" ]
+  args = ["../load-list-bots.yaml"]
+  if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
+    jvmArgs += "-XstartOnFirstThread"
+  }
 
   dependsOn(":examples:libgdx-helpers:build")
   dependsOn(":examples:bots-core:build")
