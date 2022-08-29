@@ -13,7 +13,7 @@ buildscript {
     mavenResolverVersion="1.8.2"
     eclipseCollectionsVersion="11.1.0"
     fledUtilsVersion="0.1.6"
-    fledEcsVersion="0.1.6-SNAPSHOT"
+    fledEcsVersion="0.1.7-SNAPSHOT"
   }
 
   repositories {
