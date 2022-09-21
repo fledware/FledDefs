@@ -5,7 +5,7 @@ buildscript {
     coroutineVersion="1.6.4"
     ktxVersion="1.11.0-rc1"
     jacksonVersion="2.13.3"
-    junitVersion="5.9.0"
+    junitVersion="5.9.1"
     slf4jVersion="1.7.36"
     semver4jVersion="3.1.0"
     log4jVersion="2.18.0"
