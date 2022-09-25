@@ -6,7 +6,7 @@ import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsBuilderEvents
 import fledware.definitions.DefinitionsBuilderWarning
 import fledware.definitions.GatherWarningException
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.PackageDetails
 import fledware.definitions.ProcessorIterationGroup
@@ -95,5 +95,5 @@ open class PackageDetailsLifecycle : Lifecycle {
 
   override val definition = DefinitionLifecycle()
 
-  override val instantiated = InstantiatedLifecycle()
+  override val instantiated = DefinitionInstantiationLifecycle()
 }

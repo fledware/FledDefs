@@ -3,7 +3,7 @@ package fledware.ecs.definitions.ashley
 import com.badlogic.ashley.core.EntitySystem
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.lifecycle.BasicClassDefinition
 import fledware.definitions.lifecycle.BasicClassProcessor
 import fledware.definitions.lifecycle.ClassDefinitionRegistry
@@ -40,7 +40,7 @@ fun ashleySystemDefinitionLifecycle() = systemLifecycleOf<EntitySystem>(AshleySy
 class AshleySystemInstantiator(definition: BasicClassDefinition<EntitySystem>)
   : SystemInstantiator<EntitySystem>(definition) {
   companion object {
-    fun instantiated() = InstantiatedLifecycle<BasicClassDefinition<EntitySystem>> {
+    fun instantiated() = DefinitionInstantiationLifecycle<BasicClassDefinition<EntitySystem>> {
       AshleySystemInstantiator(it)
     }
   }

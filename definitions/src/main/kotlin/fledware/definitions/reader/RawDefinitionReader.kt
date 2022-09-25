@@ -60,6 +60,12 @@ interface RawDefinitionReader {
   fun loadClass(entry: String): Class<*>
 }
 
+/**
+ * Basic implementation for [RawDefinitionReader].
+ *
+ * This implementation will check each class that is loaded to ensure
+ * there is no name collisions.
+ */
 abstract class AbstractRawDefinitionReader(
     override val definitionsClassLoader: ClassLoader,
     override val serialization: SerializationFormats,

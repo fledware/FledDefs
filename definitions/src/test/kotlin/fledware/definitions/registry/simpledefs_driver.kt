@@ -1,21 +1,17 @@
 package fledware.definitions.registry
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import fledware.definitions.AnnotatedClassSelectionInfo
 import fledware.definitions.DefinitionLifecycle
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.RawDefinitionLifecycle
-import fledware.definitions.ResourceSelectionInfo
 import fledware.definitions.SelectionInfo
 import fledware.definitions.lifecycle.directoryResourceWithRawLifecycle
 import fledware.definitions.processor.ObjectUpdaterRawAggregator
 import fledware.definitions.processor.RawDefinitionAggregator
 import fledware.definitions.reader.RawDefinitionReader
-import fledware.definitions.reader.removePrefixAndExtension
-import fledware.utilities.globToRegex
 import somegame.defssetup.SomeClass
 import somegame.defssetup.SomeClassDefinition
 import somegame.defssetup.SomeClassRawDefinition
@@ -53,7 +49,7 @@ object SomeClassLifecycle : Lifecycle {
     SimpleDefinitionRegistry(definitions, ordered, froms)
   }
 
-  override val instantiated = InstantiatedLifecycle()
+  override val instantiated = DefinitionInstantiationLifecycle()
 }
 
 @Suppress("UNCHECKED_CAST")

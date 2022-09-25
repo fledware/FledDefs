@@ -1,7 +1,7 @@
 package fledware.definitions.lifecycle
 
 import fledware.definitions.Definition
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.SimpleDefinitionLifecycle
 import fledware.definitions.SimpleRawDefinitionLifecycle
@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
  */
 open class BasicResourceLifecycle<D : Definition>(
     override val name: String,
-    override val instantiated: InstantiatedLifecycle,
+    override val instantiated: DefinitionInstantiationLifecycle,
     val definitionType: KClass<D>,
     val gatherGlob: String,
     val gatherNameTransform: (entry: String) -> String
@@ -41,7 +41,7 @@ open class BasicResourceLifecycle<D : Definition>(
  */
 open class BasicResourceWithRawLifecycle<R : Any, D : Definition>(
     override val name: String,
-    override val instantiated: InstantiatedLifecycle,
+    override val instantiated: DefinitionInstantiationLifecycle,
     rawDefinitionType: KClass<R>,
     definitionType: KClass<D>,
     val gatherGlob: String,
@@ -71,7 +71,7 @@ open class BasicResourceWithRawLifecycle<R : Any, D : Definition>(
  */
 inline fun <reified R : Any, reified D : Definition> rootResourceWithRawLifecycle(
     name: String,
-    instantiated: InstantiatedLifecycle = InstantiatedLifecycle()
+    instantiated: DefinitionInstantiationLifecycle = DefinitionInstantiationLifecycle()
 ) = BasicResourceWithRawLifecycle(name, instantiated, R::class, D::class, "*.$name.*") {
   it.substringBeforeLast('.').removeSuffix(".$name")
 }
@@ -88,7 +88,7 @@ inline fun <reified R : Any, reified D : Definition> rootResourceWithRawLifecycl
 inline fun <reified R : Any, reified D : Definition> directoryResourceWithRawLifecycle(
     directory: String,
     name: String,
-    instantiated: InstantiatedLifecycle = InstantiatedLifecycle()
+    instantiated: DefinitionInstantiationLifecycle = DefinitionInstantiationLifecycle()
 ) = BasicResourceWithRawLifecycle(name, instantiated, R::class, D::class, "$directory/**.*") {
   it.removePrefixAndExtension(directory)
 }
@@ -106,7 +106,7 @@ inline fun <reified R : Any, reified D : Definition> directoryResourceWithRawLif
  */
 inline fun <reified D : Definition> rootResourceLifecycle(
     name: String,
-    instantiated: InstantiatedLifecycle = InstantiatedLifecycle()
+    instantiated: DefinitionInstantiationLifecycle = DefinitionInstantiationLifecycle()
 ) = BasicResourceLifecycle(name, instantiated, D::class, "*.$name.*") {
   it.substringBeforeLast('.').removeSuffix(".$name")
 }
@@ -126,7 +126,7 @@ inline fun <reified D : Definition> rootResourceLifecycle(
 inline fun <reified D : Definition> directoryResourceLifecycle(
     directory: String,
     name: String,
-    instantiated: InstantiatedLifecycle = InstantiatedLifecycle()
+    instantiated: DefinitionInstantiationLifecycle = DefinitionInstantiationLifecycle()
 ) = BasicResourceLifecycle(name, instantiated, D::class, "$directory/**.*") {
   it.removePrefixAndExtension(directory)
 }

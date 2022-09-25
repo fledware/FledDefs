@@ -5,7 +5,7 @@ import fledware.definitions.Definition
 import fledware.definitions.DefinitionLifecycle
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.RawDefinitionFrom
 import fledware.definitions.RawDefinitionLifecycle
@@ -107,5 +107,5 @@ open class ConfigLifecycle : Lifecycle {
     ConfigDefinitionRegistry(definitions, ordered, froms)
   }
 
-  override val instantiated = InstantiatedLifecycle()
+  override val instantiated = DefinitionInstantiationLifecycle()
 }

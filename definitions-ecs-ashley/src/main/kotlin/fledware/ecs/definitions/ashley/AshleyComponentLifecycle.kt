@@ -3,7 +3,7 @@ package fledware.ecs.definitions.ashley
 import com.badlogic.ashley.core.Component
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.lifecycle.BasicClassDefinition
 import fledware.definitions.lifecycle.BasicClassProcessor
 import fledware.definitions.lifecycle.ClassDefinitionRegistry
@@ -40,7 +40,7 @@ fun ashleyComponentDefinitionLifecycle() = componentLifecycleOf<Component>(Ashle
 class AshleyComponentInstantiator(definition: BasicClassDefinition<Component>)
   : ComponentInstantiator<Component>(definition) {
   companion object {
-    fun instantiated() = InstantiatedLifecycle<BasicClassDefinition<Component>> {
+    fun instantiated() = DefinitionInstantiationLifecycle<BasicClassDefinition<Component>> {
       AshleyComponentInstantiator(it)
     }
   }

@@ -7,7 +7,7 @@ open class DefinitionsBuilderOptions(
     /**
      * Whether gathering concurrently is ever allowed.
      *
-     * Set this to false to force gathering to always happen on a single thread.
+     * Setting this to false will force gathering to always happen on a single thread.
      */
     val concurrentGatherAllowed: Boolean = true,
     /**

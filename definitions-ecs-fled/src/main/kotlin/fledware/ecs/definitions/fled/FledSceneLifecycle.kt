@@ -1,7 +1,7 @@
 package fledware.ecs.definitions.fled
 
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.ecs.Entity
 import fledware.ecs.definitions.SceneDefinition
 import fledware.ecs.definitions.instantiator.SceneInstantiator
@@ -27,7 +27,7 @@ class FledSceneInstantiator(definition: SceneDefinition,
                             manager: DefinitionsManager)
   : SceneInstantiator<Entity, Any, Scene>(definition, manager) {
   companion object {
-    fun instantiated() = InstantiatedLifecycle<SceneDefinition> {
+    fun instantiated() = DefinitionInstantiationLifecycle<SceneDefinition> {
       FledSceneInstantiator(it, this)
     }
   }

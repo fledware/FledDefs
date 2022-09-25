@@ -1,7 +1,7 @@
 package fledware.ecs.definitions.fled
 
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.UnknownDefinitionException
 import fledware.ecs.Entity
 import fledware.ecs.System
@@ -32,7 +32,7 @@ class FledWorldInstantiator(definition: WorldDefinition,
                             manager: DefinitionsManager)
   : WorldInstantiator<Entity, Any, System>(definition, manager) {
   companion object {
-    fun instantiated() = InstantiatedLifecycle<WorldDefinition> {
+    fun instantiated() = DefinitionInstantiationLifecycle<WorldDefinition> {
       FledWorldInstantiator(it, this)
     }
   }
@@ -79,7 +79,7 @@ class FledWorldInstantiator(definition: WorldDefinition,
     }
     decoratorFunctions.forEach { it.callWith(builder) }
     initFunction?.also {
-      builder.initWith { world, data -> it.callWith(world, data) }
+      builder.initWith { it.callWith(world, data) }
     }
   }
 }

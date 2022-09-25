@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.UnknownDefinitionException
 import fledware.ecs.definitions.SceneDefinition
 import fledware.ecs.definitions.entityLifecycleName
@@ -30,7 +30,7 @@ class AshleySceneInstantiator(
     definition: SceneDefinition, manager: DefinitionsManager)
   : SceneInstantiator<Entity, Component, AshleyScene>(definition, manager) {
   companion object {
-    fun instantiated() = InstantiatedLifecycle<SceneDefinition> {
+    fun instantiated() = DefinitionInstantiationLifecycle<SceneDefinition> {
       AshleySceneInstantiator(it, this)
     }
   }

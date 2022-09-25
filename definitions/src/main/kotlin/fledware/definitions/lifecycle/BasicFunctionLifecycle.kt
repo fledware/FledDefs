@@ -5,7 +5,7 @@ import fledware.definitions.Definition
 import fledware.definitions.DefinitionLifecycle
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.IncompleteDefinitionException
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.ProcessorIterationGroup
 import fledware.definitions.RawDefinitionFrom
@@ -176,7 +176,7 @@ open class BasicFunctionLifecycle(override val name: String,
     SimpleDefinitionRegistry(definitions, ordered, froms)
   }
 
-  override val instantiated = InstantiatedLifecycle()
+  override val instantiated = DefinitionInstantiationLifecycle()
 }
 
 /**
