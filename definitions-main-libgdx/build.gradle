@@ -18,7 +18,7 @@ dependencies {
   api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
   api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 
-  runtimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
+  runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion"
   runtimeOnly "org.apache.logging.log4j:log4j-api:$log4jVersion"
   runtimeOnly "org.apache.logging.log4j:log4j-core:$log4jVersion"
 }

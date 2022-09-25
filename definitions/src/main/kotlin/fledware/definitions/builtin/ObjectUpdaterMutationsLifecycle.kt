@@ -2,7 +2,7 @@ package fledware.definitions.builtin
 
 import fledware.definitions.DefinitionLifecycle
 import fledware.definitions.DefinitionsBuilder
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.RawDefinitionFrom
 import fledware.definitions.RawDefinitionLifecycle
@@ -109,5 +109,5 @@ class ObjectUpdaterMutationsLifecycle : Lifecycle {
 
   override val definition = DefinitionLifecycle()
 
-  override val instantiated = InstantiatedLifecycle()
+  override val instantiated = DefinitionInstantiationLifecycle()
 }

@@ -5,7 +5,7 @@ import fledware.definitions.Definition
 import fledware.definitions.DefinitionLifecycle
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.IncompleteDefinitionException
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.ProcessorIterationGroup
 import fledware.definitions.RawDefinitionFrom
@@ -136,7 +136,7 @@ class ClassDefinitionRegistry<T : Any>(
 typealias BasicClassDefName = (from: RawDefinitionFrom, raw: BasicClassDefinition<*>) -> String
 
 class BasicClassLifecycle<T : Any>(override val name: String,
-                                   override val instantiated: InstantiatedLifecycle,
+                                   override val instantiated: DefinitionInstantiationLifecycle,
                                    val annotation: KClass<out Annotation>,
                                    val baseType: KClass<T>,
                                    val defName: BasicClassDefName)
@@ -155,7 +155,7 @@ class BasicClassLifecycle<T : Any>(override val name: String,
  */
 inline fun <reified A : Annotation> classLifecycle(
     name: String,
-    instantiated: InstantiatedLifecycle = InstantiatedLifecycle(),
+    instantiated: DefinitionInstantiationLifecycle = DefinitionInstantiationLifecycle(),
     noinline defName: BasicClassDefName = { from, _ -> from.entry }
 ) = BasicClassLifecycle(name, instantiated, A::class, Any::class, defName)
 
@@ -165,6 +165,6 @@ inline fun <reified A : Annotation> classLifecycle(
  */
 inline fun <reified A : Annotation, reified T : Any> classLifecycleOf(
     name: String,
-    instantiated: InstantiatedLifecycle = InstantiatedLifecycle(),
+    instantiated: DefinitionInstantiationLifecycle = DefinitionInstantiationLifecycle(),
     noinline defName: BasicClassDefName = { from, _ -> from.entry }
 ) = BasicClassLifecycle(name, instantiated, A::class, T::class, defName)

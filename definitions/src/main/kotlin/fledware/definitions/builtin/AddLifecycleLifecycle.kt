@@ -4,7 +4,7 @@ import fledware.definitions.AnnotatedClassSelectionInfo
 import fledware.definitions.AnnotatedFunctionSelectionInfo
 import fledware.definitions.DefinitionLifecycle
 import fledware.definitions.IncompleteDefinitionException
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.ProcessorIterationGroup
 import fledware.definitions.RawDefinitionFrom
@@ -108,5 +108,5 @@ open class AddLifecycleLifecycle : Lifecycle {
 
   override val definition = DefinitionLifecycle()
 
-  override val instantiated = InstantiatedLifecycle()
+  override val instantiated = DefinitionInstantiationLifecycle()
 }

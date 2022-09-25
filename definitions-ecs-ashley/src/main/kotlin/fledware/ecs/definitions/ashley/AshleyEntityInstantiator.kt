@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.ecs.definitions.EntityDefinition
 import fledware.ecs.definitions.entityLifecycle
 import fledware.ecs.definitions.entityLifecycleName
@@ -29,7 +29,7 @@ class AshleyEntityInstantiator(definition: EntityDefinition,
                                manager: DefinitionsManager)
   : EntityInstantiator<Entity, Component>(definition, manager) {
   companion object {
-    fun instantiated() = InstantiatedLifecycle<EntityDefinition> {
+    fun instantiated() = DefinitionInstantiationLifecycle<EntityDefinition> {
       AshleyEntityInstantiator(it, this)
     }
   }

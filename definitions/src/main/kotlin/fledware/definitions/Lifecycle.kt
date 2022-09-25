@@ -20,7 +20,7 @@ interface Lifecycle {
   val name: String
   val rawDefinition: RawDefinitionLifecycle
   val definition: DefinitionLifecycle
-  val instantiated: InstantiatedLifecycle
+  val instantiated: DefinitionInstantiationLifecycle
 }
 
 /**
@@ -86,29 +86,29 @@ fun DefinitionLifecycle() = SimpleDefinitionLifecycle.empty()
 /**
  *
  */
-interface InstantiatedLifecycle {
+interface DefinitionInstantiationLifecycle {
   val definitionType: KClass<out Definition>
   fun factory(manager: DefinitionsManager, definition: Definition):
       DefinitionInstantiator<out Definition>?
 }
 
-data class SimpleInstantiatedLifecycle<D : Definition>(
+data class SimpleDefinitionInstantiationLifecycle<D : Definition>(
     override val definitionType: KClass<D>,
     val factoryBlock: DefinitionsManager.(definition: D) -> DefinitionInstantiator<D>?)
-  : InstantiatedLifecycle {
+  : DefinitionInstantiationLifecycle {
   @Suppress("UNCHECKED_CAST")
   override fun factory(manager: DefinitionsManager, definition: Definition) =
       factoryBlock(manager, definition as D)
 
   companion object {
-    fun empty() = SimpleInstantiatedLifecycle(Definition::class) { null }
+    fun empty() = SimpleDefinitionInstantiationLifecycle(Definition::class) { null }
   }
 }
 
-inline fun <reified D : Definition> InstantiatedLifecycle(
+inline fun <reified D : Definition> DefinitionInstantiationLifecycle(
     noinline factoryBlock: DefinitionsManager.(definition: D) -> DefinitionInstantiator<D>
-): SimpleInstantiatedLifecycle<D> {
-  return SimpleInstantiatedLifecycle(D::class, factoryBlock)
+): SimpleDefinitionInstantiationLifecycle<D> {
+  return SimpleDefinitionInstantiationLifecycle(D::class, factoryBlock)
 }
 
-fun InstantiatedLifecycle() = SimpleInstantiatedLifecycle.empty()
+fun DefinitionInstantiationLifecycle() = SimpleDefinitionInstantiationLifecycle.empty()

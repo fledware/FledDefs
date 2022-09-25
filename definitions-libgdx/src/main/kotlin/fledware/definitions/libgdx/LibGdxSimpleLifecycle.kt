@@ -2,7 +2,7 @@ package fledware.definitions.libgdx
 
 import fledware.definitions.Definition
 import fledware.definitions.DefinitionLifecycle
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.RawDefinitionLifecycle
 import fledware.definitions.ResourceSelectionInfo
@@ -16,7 +16,6 @@ import fledware.definitions.registry.SimpleDefinitionRegistry
 import fledware.utilities.globToRegex
 import kotlin.reflect.KClass
 
-@Suppress("LeakingThis")
 abstract class LibGdxSimpleLifecycle<R : Any, P : Any, D : Definition> : Lifecycle {
 
   abstract val directory: String
@@ -44,7 +43,7 @@ abstract class LibGdxSimpleLifecycle<R : Any, P : Any, D : Definition> : Lifecyc
     }
   }
 
-  override val instantiated = InstantiatedLifecycle()
+  override val instantiated = DefinitionInstantiationLifecycle()
 
   protected inner class Processor : RawDefinitionAggregator<R, D>() {
     override fun process(reader: RawDefinitionReader, info: SelectionInfo): Boolean {

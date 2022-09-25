@@ -1,10 +1,6 @@
 package fledware.ecs.definitions
 
-import fledware.definitions.DefinitionsBuilder
-import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
-import fledware.definitions.lifecycle.BasicClassProcessor
-import fledware.definitions.lifecycle.ClassDefinitionRegistry
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.lifecycle.classLifecycleOf
 
 /**
@@ -21,6 +17,6 @@ const val componentLifecycleName = "component"
 /**
  * Creates a lifecycle for components
  */
-inline fun <reified T: Any> componentLifecycleOf(instantiated: InstantiatedLifecycle = InstantiatedLifecycle()) =
+inline fun <reified T: Any> componentLifecycleOf(instantiated: DefinitionInstantiationLifecycle = DefinitionInstantiationLifecycle()) =
     classLifecycleOf<EcsComponent, T>(componentLifecycleName, instantiated)
     { _, raw -> (raw.annotation as EcsComponent).name }

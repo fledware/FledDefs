@@ -1,6 +1,6 @@
 package fledware.ecs.definitions
 
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.lifecycle.classLifecycleOf
 
 
@@ -18,6 +18,6 @@ const val systemLifecycleName = "system"
 /**
  * Creates a lifecycle for systems
  */
-inline fun <reified T: Any> systemLifecycleOf(instantiated: InstantiatedLifecycle = InstantiatedLifecycle()) =
+inline fun <reified T: Any> systemLifecycleOf(instantiated: DefinitionInstantiationLifecycle = DefinitionInstantiationLifecycle()) =
     classLifecycleOf<EcsSystem, T>(systemLifecycleName, instantiated)
     { _, raw -> (raw.annotation as EcsSystem).name }

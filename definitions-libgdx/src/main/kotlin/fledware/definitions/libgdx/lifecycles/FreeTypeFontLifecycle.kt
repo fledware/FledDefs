@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import fledware.definitions.DefinitionLifecycle
 import fledware.definitions.DefinitionsManager
 import fledware.definitions.IncompleteDefinitionException
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.Lifecycle
 import fledware.definitions.RawDefinitionLifecycle
 import fledware.definitions.ResourceSelectionInfo
@@ -246,5 +246,5 @@ class FreeTypeFontLifecycle : Lifecycle {
     SimpleDefinitionRegistry(definitions, ordered, froms)
   }
 
-  override val instantiated = InstantiatedLifecycle()
+  override val instantiated = DefinitionInstantiationLifecycle()
 }

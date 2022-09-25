@@ -1,4 +1,4 @@
-rootProject.name = 'fleddefs'
+rootProject.name = 'FledDefs'
 
 // released code
 include 'definitions'

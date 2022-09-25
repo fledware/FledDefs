@@ -6,7 +6,7 @@ import fledware.definitions.tests.builder
 import java.io.File
 
 fun resourceAsFile(resource: String) =
-    File(LoadListManager::class.java.getResource(resource).file)
+    File(LoadListManager::class.java.getResource(resource)!!.file)
 
 fun loadListManager(block: (manager: LoadListManager) -> Unit) = builder { builder ->
   val manager = builder.loadListManager(MavenLoadListProcessor(), ModLoadListProcessor())

@@ -3,21 +3,12 @@ package fledware.definitions
 import fledware.definitions.reader.RawDefinitionReader
 import fledware.definitions.util.mutableConcurrentSet
 import java.io.File
-import java.security.Permission
 import java.util.concurrent.ConcurrentHashMap
 
 /**
  * events that can be listened on during the build process
  */
 interface DefinitionsBuilderEvents {
-  /**
-   * Called whenever a permission is attempted to be added.
-   *
-   * Permitted is false if the [fledware.definitions.builtin.PermissionsLifecycle]
-   * rejects the permission for any reason. Although, the lifecycle can still
-   * throw an exception if it wants instead.
-   */
-  val onPermitAttempted: MutableCollection<(from: RawDefinitionFrom, permission: Permission, permitted: Boolean) -> Unit>
   /**
    * Called whenever the ClassLoader is updated.
    */
@@ -64,7 +55,6 @@ interface DefinitionsBuilderEvents {
  * during the iteration process (like fire once events).
  */
 open class DefaultDefinitionsBuilderEvents : DefinitionsBuilderEvents {
-  override val onPermitAttempted = mutableConcurrentSet<(from: RawDefinitionFrom, permission: Permission, permitted: Boolean) -> Unit>()
   override val onAppendClasspath = mutableConcurrentSet<(file: File) -> Unit>()
   override val onAppendLifecycle = mutableConcurrentSet<(lifecycle: Lifecycle) -> Unit>()
   override val onAppendWarning = mutableConcurrentSet<(warning: DefinitionsBuilderWarning) -> Unit>()

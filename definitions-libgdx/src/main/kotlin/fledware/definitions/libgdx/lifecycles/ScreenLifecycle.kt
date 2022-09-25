@@ -3,7 +3,7 @@ package fledware.definitions.libgdx.lifecycles
 import com.badlogic.gdx.Screen
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.RawDefinitionFrom
 import fledware.definitions.RawDefinitionFromParent
 import fledware.definitions.instantiator.ContextInstantiator
@@ -42,20 +42,26 @@ const val screenLifecycleName = "gdx-screen"
  * Creates a lifecycle for gdx-screens
  */
 fun screenLifecycle() =
-    classLifecycleOf<GdxScreen, Screen>(screenLifecycleName, InstantiatedLifecycle<BasicClassDefinition<Screen>> {
+    classLifecycleOf<GdxScreen, Screen>(screenLifecycleName, DefinitionInstantiationLifecycle<BasicClassDefinition<Screen>> {
       @Suppress("UNCHECKED_CAST")
       val screenKClass = it.klass as KClass<Screen>
       ContextInstantiator(it, screenKClass, contexts)
     })
     { _, raw -> (raw.annotation as GdxScreen).name }
 
-
+/**
+ *
+ */
 fun DefinitionsManager.gdxScreenInstantiator(type: String): ContextInstantiator<BasicClassDefinition<Screen>, Screen> {
   @Suppress("UNCHECKED_CAST")
   return instantiator(screenLifecycleName, type) as ContextInstantiator<BasicClassDefinition<Screen>, Screen>
 }
 
-
+/**
+ * Convenience method for manually adding a gdx screen.
+ *
+ * The class must still be annotated with [GdxScreen]
+ */
 fun DefinitionsBuilder.addGdxScreen(klass: KClass<out Screen>,
                                     from: RawDefinitionFrom? = null) {
   val annotation = klass.annotations.first { it is GdxScreen } as GdxScreen

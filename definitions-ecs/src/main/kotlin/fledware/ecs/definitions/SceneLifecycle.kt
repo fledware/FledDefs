@@ -3,7 +3,7 @@ package fledware.ecs.definitions
 import fledware.definitions.Definition
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.lifecycle.directoryResourceWithRawLifecycle
 import fledware.definitions.processor.ObjectUpdaterRawAggregator
 import fledware.definitions.registry.SimpleDefinitionRegistry
@@ -47,6 +47,6 @@ const val sceneLifecycleName = "scene"
 /**
  *
  */
-fun sceneLifecycle(instantiated: InstantiatedLifecycle = InstantiatedLifecycle()) =
+fun sceneLifecycle(instantiated: DefinitionInstantiationLifecycle = DefinitionInstantiationLifecycle()) =
     directoryResourceWithRawLifecycle<SceneRawDefinition, SceneDefinition>(
         "scenes", sceneLifecycleName, instantiated)

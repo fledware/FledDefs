@@ -3,7 +3,7 @@ package fledware.ecs.definitions
 import fledware.definitions.Definition
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.lifecycle.directoryResourceWithRawLifecycle
 import fledware.definitions.processor.ObjectUpdaterRawAggregator
 import fledware.definitions.registry.SimpleDefinitionRegistry
@@ -52,7 +52,7 @@ const val entityLifecycleName = "entity"
 /**
  *
  */
-fun entityLifecycle(instantiated: InstantiatedLifecycle = InstantiatedLifecycle()) =
+fun entityLifecycle(instantiated: DefinitionInstantiationLifecycle = DefinitionInstantiationLifecycle()) =
     directoryResourceWithRawLifecycle<EntityRawDefinition, EntityDefinition>(
         "entities", entityLifecycleName, instantiated)
 

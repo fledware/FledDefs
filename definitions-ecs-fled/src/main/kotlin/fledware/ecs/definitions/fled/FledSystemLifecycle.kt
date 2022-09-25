@@ -2,7 +2,7 @@ package fledware.ecs.definitions.fled
 
 import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.InstantiatedLifecycle
+import fledware.definitions.DefinitionInstantiationLifecycle
 import fledware.definitions.lifecycle.BasicClassDefinition
 import fledware.definitions.lifecycle.BasicClassProcessor
 import fledware.definitions.lifecycle.ClassDefinitionRegistry
@@ -41,7 +41,7 @@ fun fledSystemDefinitionLifecycle() = systemLifecycleOf<System>(FledSystemInstan
 class FledSystemInstantiator(definition: BasicClassDefinition<System>)
   : SystemInstantiator<System>(definition) {
   companion object {
-    fun instantiated() = InstantiatedLifecycle<BasicClassDefinition<System>> {
+    fun instantiated() = DefinitionInstantiationLifecycle<BasicClassDefinition<System>> {
       FledSystemInstantiator(it)
     }
   }
