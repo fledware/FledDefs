@@ -1,0 +1,22 @@
+dependencies {
+  api "io.fledware:fledutils:$fledUtilsVersion"
+  api "com.vdurmont:semver4j:$semver4jVersion"
+
+  api "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
+  api "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion"
+  api("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion") {
+    exclude module: "org.jetbrains.kotlin", group: "kotlin-reflect"
+    exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"
+  }
+
+  testImplementation project(":test-projects:definitions-api-tests:simple-annotations")
+}
+
+test {
+  // this cannot be depended on directly because the app class loader
+  // will load this class, making it able to run on all permissions
+  // and wouldn't be a true gather.
+  it.dependsOn(":test-projects:definitions-api-tests:add-object-updater-directive:build")
+  it.dependsOn(":test-projects:definitions-api-tests:simple-functions-1:build")
+  it.dependsOn(":test-projects:definitions-api-tests:simple-functions-2:build")
+}

@@ -5,7 +5,6 @@ import fledware.definitions.GatherIterationType
 import fledware.definitions.RawDefinitionFrom
 import fledware.definitions.util.SerializationFormats
 import fledware.utilities.debug
-import fledware.utilities.info
 import org.slf4j.LoggerFactory
 import java.io.File
 

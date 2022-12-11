@@ -2,6 +2,8 @@ rootProject.name = 'FledDefs'
 
 // released code
 include 'definitions'
+include 'definitions-api'
+include 'definitions-bytebuddy'
 include 'definitions-ecs'
 include 'definitions-ecs-ashley'
 include 'definitions-ecs-fled'
@@ -23,6 +25,10 @@ include 'examples:spacer-mod-hyperspace-renderer'
 include 'examples:spacer-mod-info'
 
 // test projects
+include 'test-projects:definitions-api-tests:add-object-updater-directive'
+include 'test-projects:definitions-api-tests:simple-annotations'
+include 'test-projects:definitions-api-tests:simple-functions-1'
+include 'test-projects:definitions-api-tests:simple-functions-2'
 include 'test-projects:ecs-loading'
 include 'test-projects:ecs-loading-ashley'
 include 'test-projects:ecs-loading-fled'

@@ -1,0 +1,4 @@
+someString: hello world!
+someBoolean: true
+someFloat: 1.2
+someDouble: 2.3

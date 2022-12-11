@@ -91,7 +91,8 @@ class BasicClassHandler(
     return true
   }
 
-  override fun apply(name: String, from: RawDefinitionFrom, raw: BasicClassDefinition<Any>) = handle(builder, raw)
+  override fun apply(name: String, from: RawDefinitionFrom,
+                     raw: BasicClassDefinition<Any>) = handle(builder, raw)
 
   override fun mutate(name: String, from: RawDefinitionFrom,
                       block: (original: BasicClassDefinition<Any>) -> BasicClassDefinition<Any>) {

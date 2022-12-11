@@ -4,6 +4,8 @@
 */out
 test-projects/*/build
 test-projects/*/out
+test-projects/*/*/build
+test-projects/*/*/out
 examples/*/build
 examples/*/out
 examples/local-repo/*

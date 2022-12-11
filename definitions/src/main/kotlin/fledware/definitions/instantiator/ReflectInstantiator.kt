@@ -7,7 +7,6 @@ import fledware.definitions.util.safeMutateWith
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KParameter
-import kotlin.reflect.cast
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
@@ -29,7 +28,7 @@ open class ReflectInstantiator<D : Definition, I : Any>(final override val defin
   : DefinitionInstantiator<D> {
 
   protected val constructor = clazz.primaryConstructor
-        ?: throw IllegalStateException("primary constructor not found for: $clazz")
+      ?: throw IllegalStateException("primary constructor not found for: $clazz")
   protected val parameters = constructor.parameters.associateBy { it.name!! }
   protected val properties = clazz.memberProperties.associateBy { it.name }
 

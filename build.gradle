@@ -1,19 +1,20 @@
 
 buildscript {
   ext {
-    kotlinVersion="1.7.10"
+    kotlinVersion="1.7.22"
     coroutineVersion="1.6.4"
     ktxVersion="1.11.0-rc1"
-    jacksonVersion="2.13.4"
+    jacksonVersion="2.14.1"
     junitVersion="5.9.1"
-    slf4jVersion="2.0.2"
+    slf4jVersion="2.0.5"
     semver4jVersion="3.1.0"
     log4jVersion="2.19.0"
     gdxVersion="1.11.0"
-    mavenResolverVersion="1.8.2"
+    mavenResolverVersion="1.9.1"
+    mockitoKotlinVersion="4.1.0"
     eclipseCollectionsVersion="11.1.0"
-    fledUtilsVersion="0.1.8"
-    fledEcsVersion="0.1.8"
+    fledUtilsVersion="0.1.9-SNAPSHOT"
+    fledEcsVersion="0.1.9-SNAPSHOT"
   }
 
   repositories {
@@ -49,7 +50,7 @@ allprojects {
 
 subprojects {
   version = new File('version.txt').text
-  ext.appName = 'fledecs'
+  ext.appName = 'fleddefs'
 
   dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
