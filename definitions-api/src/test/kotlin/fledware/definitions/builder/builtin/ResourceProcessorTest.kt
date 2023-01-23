@@ -1,6 +1,7 @@
 package fledware.definitions.builder.builtin
 
 import fledware.definitions.builder.std.defaultBuilder
+import fledware.definitions.builder.withModPackage
 import fledware.definitions.exceptions.IncompleteDefinitionException
 import fledware.definitions.tests.testDirectoryPath
 import org.junit.jupiter.params.ParameterizedTest
@@ -10,6 +11,7 @@ import java.util.stream.Stream
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 
 class ResourceProcessorTest {
   companion object {

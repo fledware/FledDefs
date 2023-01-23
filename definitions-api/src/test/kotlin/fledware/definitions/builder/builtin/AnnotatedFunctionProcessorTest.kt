@@ -1,6 +1,7 @@
 package fledware.definitions.builder.builtin
 
 import fledware.definitions.builder.std.defaultBuilder
+import fledware.definitions.builder.withModPackage
 import fledware.definitions.tests.testJarPath
 import kotlin.test.Test
 import kotlin.test.assertEquals

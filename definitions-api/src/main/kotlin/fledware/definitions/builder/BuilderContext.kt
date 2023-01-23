@@ -1,11 +1,11 @@
 package fledware.definitions.builder
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.readValue
 import fledware.definitions.ModPackageDetails
-import fledware.definitions.builder.updater.ObjectUpdater
+import fledware.definitions.builder.mod.ModPackageDetailsParser
+import fledware.definitions.builder.mod.ModPackageEntryFactory
+import fledware.definitions.builder.mod.ModPackageFactory
+import fledware.definitions.builder.mod.ModPackageReaderFactory
 import fledware.definitions.util.ClassLoaderWrapper
-import fledware.definitions.util.SerializationFormats
 import fledware.utilities.MutableTypedMap
 
 interface BuilderContext {
@@ -34,22 +34,37 @@ interface BuilderContext {
   /**
    *
    */
-  val rawModSpecs: List<String>
-
-  /**
-   *
-   */
   val events: DefinitionsBuilderEvents
 
   /**
    *
    */
-  val processors: Map<String, ModPackageProcessor>
+  val modPackageFactories: Map<String, ModPackageFactory>
 
   /**
    *
    */
-  val factories: Map<String, ModPackageFactory>
+  val modPackageEntryReaders: Map<Int, ModPackageEntryFactory>
+
+  /**
+   *
+   */
+  val modPackageDetailsParser: ModPackageDetailsParser
+
+  /**
+   *
+   */
+  val modPackageReaderFactory: ModPackageReaderFactory
+
+  /**
+   *
+   */
+  val modProcessors: Map<String, ModProcessor>
+
+  /**
+   *
+   */
+  val serializers: Map<String, BuilderSerializer>
 
   /**
    *
@@ -59,99 +74,9 @@ interface BuilderContext {
   /**
    *
    */
-  val entryReaders: Map<Int, ModPackageEntryReader>
-
-  /**
-   *
-   */
-  val detailsParser: ModPackageDetailsParser
-
-  /**
-   *
-   */
-  val modReaderFactory: ModPackageReaderFactory
-
-  /**
-   *
-   */
-  val serialization: SerializationFormats
-
-  /**
-   *
-   */
-  val updater: ObjectUpdater
-
-  /**
-   *
-   */
-  val currentModPackageReader: ModPackageReader?
-
-  /**
-   *
-   */
-  fun addBuilderContextHandler(handler: BuilderContextHandler)
+  fun addHandler(handler: DefinitionsBuilderHandler)
 }
 
-
-/**
- * reads an entry to the [T] type.
- */
-inline fun <reified T : Any> BuilderContext.readEntry(entry: String): T {
-  val currentModPackageReader = currentModPackageReader
-      ?: throw IllegalStateException("currentModPackageReader is null")
-  val inputStream = currentModPackageReader.read(entry)
-  return serialization.figureSerializer(entry).readValue(inputStream)
-}
-
-/**
- * reads an entry to the [T] type.
- */
-fun <T : Any> BuilderContext.readEntry(entry: String, klass: Class<T>): T {
-  val currentModPackageReader = currentModPackageReader
-      ?: throw IllegalStateException("currentModPackageReader is null")
-  val inputStream = currentModPackageReader.read(entry)
-  return serialization.figureSerializer(entry).readValue(inputStream, klass)
-}
-
-/**
- * reads an entry to the [T] type.
- */
-fun <T : Any> BuilderContext.readEntry(entry: String, typeRef: TypeReference<T>): T {
-  val currentModPackageReader = currentModPackageReader
-      ?: throw IllegalStateException("currentModPackageReader is null")
-  val inputStream = currentModPackageReader.read(entry)
-  return serialization.figureSerializer(entry).readValue(inputStream, typeRef)
-}
-
-/**
- * Finds an entry that starts with [entryWithoutExtension], and checks for
- * each known format from [BuilderContext.serialization].
- *
- * This will return the full entry with the extension included.
- */
-fun BuilderContext.findEntry(entryWithoutExtension: String): String {
-  val currentModPackageReader = currentModPackageReader
-      ?: throw IllegalStateException("currentModPackageReader is null")
-  val entriesLookup = currentModPackageReader.modPackage.entriesLookup
-  return serialization.formats.keys.firstNotNullOf { format ->
-    val paramEntryCheck = "$entryWithoutExtension.$format"
-    if (entriesLookup.contains(paramEntryCheck)) paramEntryCheck else null
-  }
-}
-
-/**
- * Finds an entry that starts with [entryWithoutExtension], and checks for
- * each known format from [BuilderContext.serialization].
- *
- * This will return the full entry with the extension included, or null if
- * no entry with any known format is found.
- */
-fun BuilderContext.findEntryOrNull(entryWithoutExtension: String): String? {
-  val currentModPackageReader = currentModPackageReader
-      ?: throw IllegalStateException("currentModPackageReader is null")
-  val entriesLookup = currentModPackageReader.modPackage.entriesLookup
-  return serialization.formats.keys.firstNotNullOfOrNull { format ->
-    val paramEntryCheck = "$entryWithoutExtension.$format"
-    if (entriesLookup.contains(paramEntryCheck)) paramEntryCheck else null
-  }
+fun BuilderContext.findRegistry(name: String): DefinitionRegistryBuilder<Any, Any> {
+  return registries[name] ?: throw IllegalStateException("unable to find target registry: $name")
 }

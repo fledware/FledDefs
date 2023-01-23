@@ -1,7 +1,7 @@
 
 buildscript {
   ext {
-    kotlinVersion="1.7.22"
+    kotlinVersion="1.8.0"
     coroutineVersion="1.6.4"
     ktxVersion="1.11.0-rc1"
     jacksonVersion="2.14.1"
@@ -15,6 +15,7 @@ buildscript {
     eclipseCollectionsVersion="11.1.0"
     fledUtilsVersion="0.1.9-SNAPSHOT"
     fledEcsVersion="0.1.9-SNAPSHOT"
+    fledObjectUpdaterVersion="0.1.9-SNAPSHOT"
   }
 
   repositories {

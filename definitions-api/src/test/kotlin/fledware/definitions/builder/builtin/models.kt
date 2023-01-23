@@ -7,6 +7,13 @@ import definitions_api.tests.SomeFunctionAnnotation
 import fledware.definitions.DefinitionRegistry
 import fledware.definitions.DefinitionsManager
 import fledware.definitions.builder.DefinitionsBuilder
+import fledware.definitions.builder.processors.withAnnotatedClassDefinition
+import fledware.definitions.builder.processors.withAnnotatedClassDefinitionOf
+import fledware.definitions.builder.processors.withAnnotatedRootFunction
+import fledware.definitions.builder.processors.withDirectoryResource
+import fledware.definitions.builder.processors.withDirectoryResourceOf
+import fledware.definitions.builder.registries.AnnotatedClassDefinition
+import fledware.definitions.builder.registries.AnnotatedFunctionDefinition
 import fledware.definitions.util.firstOfType
 
 

@@ -1,10 +1,10 @@
 package defintions_api.tests
 
-import fledware.definitions.builder.builtin.ex.AddObjectUpdaterDirective
-import fledware.definitions.builder.updater.Directive
-import fledware.definitions.builder.updater.OperationDirective
-import fledware.definitions.builder.updater.PredicateDirective
-import fledware.definitions.builder.updater.SelectDirective
+import fledware.definitions.builder.ex.AddObjectUpdaterDirective
+import fledware.objectupdater.Directive
+import fledware.objectupdater.OperationDirective
+import fledware.objectupdater.PredicateDirective
+import fledware.objectupdater.SelectDirective
 
 
 @AddObjectUpdaterDirective

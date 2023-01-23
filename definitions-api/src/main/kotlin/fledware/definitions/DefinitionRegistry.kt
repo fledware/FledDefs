@@ -1,5 +1,6 @@
 package fledware.definitions
 
+import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.exceptions.UnknownDefinitionException
 
 /**
@@ -19,7 +20,7 @@ interface DefinitionRegistry<D : Any> {
   /**
    * A list of where all the raw definitions came from.
    */
-  val definitionsFrom: Map<String, List<SimpleModPackageEntry>>
+  val definitionsFrom: Map<String, List<ModPackageEntry>>
 
   /**
    * Gets a definition by name, or throws UnknownDefinitionException

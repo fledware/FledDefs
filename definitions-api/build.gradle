@@ -1,9 +1,10 @@
 dependencies {
   api "io.fledware:fledutils:$fledUtilsVersion"
+  api "io.fledware:fledobjectupdater:$fledObjectUpdaterVersion"
   api "com.vdurmont:semver4j:$semver4jVersion"
 
   api "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
-  api "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion"
+  api "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:$jacksonVersion"
   api("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion") {
     exclude module: "org.jetbrains.kotlin", group: "kotlin-reflect"
     exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"

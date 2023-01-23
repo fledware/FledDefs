@@ -2,62 +2,51 @@ package fledware.definitions.builder.std
 
 import fledware.definitions.ModPackageDetails
 import fledware.definitions.builder.BuilderContext
-import fledware.definitions.builder.BuilderContextHandler
+import fledware.definitions.builder.DefinitionsBuilderHandler
+import fledware.definitions.builder.BuilderSerializer
 import fledware.definitions.builder.DefinitionRegistryBuilder
-import fledware.definitions.builder.ModPackageDetailsParser
-import fledware.definitions.builder.ModPackageEntryReader
-import fledware.definitions.builder.ModPackageFactory
-import fledware.definitions.builder.ModPackageProcessor
-import fledware.definitions.builder.ModPackageReader
-import fledware.definitions.builder.ModPackageReaderFactory
-import fledware.definitions.builder.updater.ObjectUpdater
+import fledware.definitions.builder.ModProcessor
+import fledware.definitions.builder.mod.ModPackageDetailsParser
+import fledware.definitions.builder.mod.ModPackageEntryFactory
+import fledware.definitions.builder.mod.ModPackageFactory
+import fledware.definitions.builder.mod.ModPackageReaderFactory
 import fledware.definitions.util.ClassLoaderWrapper
-import fledware.definitions.util.SerializationFormats
 import fledware.utilities.ConcurrentTypedMap
 
-open class DefaultBuilderContext(
-    initialContexts: List<Any>,
-    initialHandlers: List<BuilderContextHandler>,
-    override val rawModSpecs: List<String>,
-    override val updater: ObjectUpdater
-) : BuilderContext {
+open class DefaultBuilderContext : BuilderContext {
   override val contexts = ConcurrentTypedMap()
   override val managerContexts = ConcurrentTypedMap()
   override val classLoaderWrapper = ClassLoaderWrapper()
   override val packages = mutableListOf<ModPackageDetails>()
   override val events = DefaultDefinitionsBuilderEvents()
-  override val processors = mutableMapOf<String, ModPackageProcessor>()
-  override val factories = mutableMapOf<String, ModPackageFactory>()
+
+  override lateinit var modPackageReaderFactory: ModPackageReaderFactory
+  override lateinit var modPackageDetailsParser: ModPackageDetailsParser
+
+  override val modPackageFactories = mutableMapOf<String, ModPackageFactory>()
+  override val modPackageEntryReaders = mutableMapOf<Int, ModPackageEntryFactory>()
+  override val modProcessors = mutableMapOf<String, ModProcessor>()
+  override val serializers = mutableMapOf<String, BuilderSerializer>()
   override val registries = mutableMapOf<String, DefinitionRegistryBuilder<Any, Any>>()
-  override val entryReaders = mutableMapOf<Int, ModPackageEntryReader>()
-  override lateinit var modReaderFactory: ModPackageReaderFactory
-  override lateinit var detailsParser: ModPackageDetailsParser
 
-  // todo: make this modifiable during the builder init
-  override val serialization = SerializationFormats()
-
-
-  override var currentModPackageReader: ModPackageReader? = null
-
-  init {
-    initialContexts.forEach { contexts.add(it) }
-    initialHandlers.forEach { addBuilderContextHandler(it) }
-  }
-
-  override fun addBuilderContextHandler(handler: BuilderContextHandler) {
+  override fun addHandler(handler: DefinitionsBuilderHandler) {
     if (handler is ModPackageDetailsParser)
-      detailsParser = handler
-    if (handler is ModPackageFactory)
-      factories[handler.type] = handler
-    if (handler is ModPackageProcessor)
-      processors[handler.type] = handler
-    if (handler is ModPackageEntryReader)
-      entryReaders[handler.order] = handler
+      modPackageDetailsParser = handler
     if (handler is ModPackageReaderFactory)
-      modReaderFactory = handler
+      modPackageReaderFactory = handler
+
+    if (handler is ModPackageFactory)
+      modPackageFactories[handler.type] = handler
+    if (handler is ModProcessor)
+      modProcessors[handler.name] = handler
+    if (handler is ModPackageEntryFactory)
+      modPackageEntryReaders[handler.order] = handler
+    if (handler is BuilderSerializer)
+      handler.types.forEach { serializers[it] = handler }
     @Suppress("UNCHECKED_CAST")
     if (handler is DefinitionRegistryBuilder<*, *>)
       registries[handler.name] = handler as DefinitionRegistryBuilder<Any, Any>
+
     handler.init(this)
   }
 }

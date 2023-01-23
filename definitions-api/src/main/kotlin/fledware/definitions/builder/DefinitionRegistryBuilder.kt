@@ -1,11 +1,16 @@
 package fledware.definitions.builder
 
 import fledware.definitions.DefinitionRegistryManaged
-import fledware.definitions.ModPackageEntry
-import fledware.definitions.SimpleModPackageEntry
+import fledware.definitions.builder.mod.ModPackageEntry
+import fledware.definitions.builder.mod.SimpleModPackageEntry
 import fledware.definitions.exceptions.UnknownDefinitionException
 
-interface DefinitionRegistryBuilder<R : Any, D : Any> : BuilderContextHandler {
+/**
+ * TODO: the mutators of entries need to be rethought
+ * apply/mutate doesn't make sense for all registries. The best would be to
+ * probably have a single mutate method that takes a block that inputs a R?.
+ */
+interface DefinitionRegistryBuilder<R : Any, D : Any> : DefinitionsBuilderHandler {
   /**
    * the name of this registry type
    */
