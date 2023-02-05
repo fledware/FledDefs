@@ -18,11 +18,6 @@ interface ModProcessor: DefinitionsBuilderHandler {
   val order: Int
 
   /**
-   * the unique name of this processor
-   */
-  val name: String
-
-  /**
    * process the mod
    */
   fun process(modPackageContext: ModPackageContext)

@@ -7,7 +7,7 @@ import java.io.File
 
 
 class DirectoryModPackageFactory : AbstractDefinitionsBuilderHandler(), ModPackageFactory {
-  override val type: String = "directory"
+  override val name: String = "directory"
 
   override fun attemptFactory(spec: String): ModPackage? {
     val check = File(spec)

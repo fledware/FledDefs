@@ -12,7 +12,10 @@ import fledware.definitions.builder.mod.ModPackageReaderFactory
  */
 class DefaultModPackageReaderFactory : AbstractDefinitionsBuilderHandler(),
                                        ModPackageReaderFactory {
+  override val name: String
+    get() = "DefaultModPackageReaderFactory"
+
   override fun factory(modPackage: ModPackage): ModPackageReader {
-    return DefaultModPackageReader(modPackage, context.classLoaderWrapper.currentLoader)
+    return DefaultModPackageReader(modPackage, state.classLoaderWrapper.currentLoader)
   }
 }

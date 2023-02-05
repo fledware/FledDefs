@@ -15,17 +15,16 @@ import fledware.definitions.builder.processors.withDefinitionEntryModProcessor
 import fledware.definitions.builder.serializers.withJsonSerializer
 import fledware.definitions.builder.serializers.withSerializationConverter
 import fledware.definitions.builder.serializers.withYamlSerializer
-import fledware.definitions.builder.withHandler
 
-fun defaultBuilder() = DefaultDefinitionsBuilder()
-    .withHandler(DefaultModPackageReaderFactory())
-    .withHandler(DefaultModPackageDetailsParser())
-    .withHandler(ZipModPackageFactory())
-    .withHandler(JarModPackageFactory())
-    .withHandler(DirectoryModPackageFactory())
-    .withHandler(AnnotatedClassEntryFactory())
-    .withHandler(AnnotatedFunctionEntryFactory())
-    .withHandler(ResourceEntryFactory())
+fun defaultBuilder() = DefaultDefinitionsBuilderFactory()
+    .withModPackageReaderFactory(DefaultModPackageReaderFactory())
+    .withModPackageDetailsParser(DefaultModPackageDetailsParser())
+    .withModPackageFactory(DirectoryModPackageFactory())
+    .withModPackageFactory(ZipModPackageFactory())
+    .withModPackageFactory(JarModPackageFactory())
+    .withModPackageEntryFactory(AnnotatedClassEntryFactory())
+    .withModPackageEntryFactory(AnnotatedFunctionEntryFactory())
+    .withModPackageEntryFactory(ResourceEntryFactory())
     .withBuilderEntryModProcessor()
     .withDefinitionEntryModProcessor()
     .withAddDefinitionsBuilderHandlerProcessor()

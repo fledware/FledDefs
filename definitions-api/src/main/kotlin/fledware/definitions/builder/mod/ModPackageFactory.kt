@@ -4,7 +4,6 @@ import fledware.definitions.builder.DefinitionsBuilderHandler
 import fledware.definitions.exceptions.ModPackageReadException
 
 interface ModPackageFactory : DefinitionsBuilderHandler {
-  val type: String
   fun attemptFactory(spec: String): ModPackage?
 }
 

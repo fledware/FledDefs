@@ -9,6 +9,8 @@ import kotlin.reflect.jvm.kotlinFunction
 
 class AnnotatedFunctionEntryFactory : AbstractDefinitionsBuilderHandler(),
                                       ModPackageEntryFactory {
+  override val name: String = "AnnotatedFunctionEntry"
+
   override val order: Int = 10
 
   override fun attemptRead(modPackage: ModPackage, modReader: ModPackageReader, entry: String): List<ModPackageEntry> {

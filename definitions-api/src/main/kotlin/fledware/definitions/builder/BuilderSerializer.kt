@@ -62,7 +62,7 @@ inline fun <reified T : Any> BuilderSerializer.readAsType(input: String): T {
 /**
  *
  */
-fun BuilderContext.figureSerializer(path: String): BuilderSerializer {
+fun DefinitionsBuilderState.figureSerializer(path: String): BuilderSerializer {
   return figureSerializerOrNull(path)
       ?: throw IllegalArgumentException("unable to find serializer format: $path")
 }
@@ -70,7 +70,7 @@ fun BuilderContext.figureSerializer(path: String): BuilderSerializer {
 /**
  *
  */
-fun BuilderContext.figureSerializerOrNull(path: String): BuilderSerializer? {
+fun DefinitionsBuilderState.figureSerializerOrNull(path: String): BuilderSerializer? {
   val extension = path.substringAfterLast(".")
   return serializers[extension]
 }
@@ -83,7 +83,7 @@ const val serializerConverterFormatName = "converter"
 /**
  * gets the main instance of [BuilderSerializerConverter]
  */
-val BuilderContext.serializerConverter: BuilderSerializerConverter
+val DefinitionsBuilderState.serializerConverter: BuilderSerializerConverter
   get() = serializers[serializerConverterFormatName] as? BuilderSerializerConverter
       ?: throw IllegalStateException("converter is not BuilderSerializerConverter: " +
                                          "${serializers[serializerConverterFormatName]}")
@@ -91,6 +91,6 @@ val BuilderContext.serializerConverter: BuilderSerializerConverter
 /**
  * converts a type to another using the standard [serializerConverter]
  */
-fun <T: Any> BuilderContext.serializationConvert(target: Any, newType: KClass<T>): T {
+fun <T: Any> DefinitionsBuilderState.serializationConvert(target: Any, newType: KClass<T>): T {
   return serializerConverter.convert(target, newType)
 }

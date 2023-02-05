@@ -8,7 +8,7 @@ import java.io.File
 
 
 class ZipModPackageFactory : AbstractDefinitionsBuilderHandler(), ModPackageFactory {
-  override val type: String = "zip"
+  override val name: String = "zip"
 
   override fun attemptFactory(spec: String): ModPackage? {
     val check = File(spec)

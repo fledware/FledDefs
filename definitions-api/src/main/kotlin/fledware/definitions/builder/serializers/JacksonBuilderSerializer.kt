@@ -10,11 +10,10 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.dataformat.smile.databind.SmileMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import fledware.definitions.builder.BuilderContext
 import fledware.definitions.builder.BuilderSerializerConverter
-import fledware.definitions.builder.DefinitionsBuilder
+import fledware.definitions.builder.DefinitionsBuilderFactory
+import fledware.definitions.builder.DefinitionsBuilderState
 import fledware.definitions.builder.serializerConverterFormatName
-import fledware.definitions.builder.withHandler
 import java.io.InputStream
 import kotlin.reflect.KClass
 
@@ -22,10 +21,14 @@ import kotlin.reflect.KClass
 val mapStringAnyTypeReference = object : TypeReference<Map<String, Any>>() {}
 
 open class JacksonBuilderSerializer(
+    override val name: String,
     override val types: List<String>,
     val mapper: ObjectMapper
 ) : BuilderSerializerConverter {
-  override fun init(context: BuilderContext) {
+  override fun init(state: DefinitionsBuilderState) {
+  }
+
+  override fun onRemoved() {
   }
 
   override fun readAsMap(input: InputStream): Map<String, Any> {
@@ -73,8 +76,9 @@ open class JacksonBuilderSerializer(
   }
 }
 
-fun DefinitionsBuilder.withJsonSerializer() =
-    withHandler(JacksonBuilderSerializer(
+fun DefinitionsBuilderFactory.withJsonSerializer() =
+    withSerializer(JacksonBuilderSerializer(
+        name = "json",
         types = listOf("json"),
         JsonMapper.builder()
             .disable(MapperFeature.AUTO_DETECT_IS_GETTERS)
@@ -86,8 +90,9 @@ fun DefinitionsBuilder.withJsonSerializer() =
             .registerKotlinModule()
     ))
 
-fun DefinitionsBuilder.withYamlSerializer() =
-    withHandler(JacksonBuilderSerializer(
+fun DefinitionsBuilderFactory.withYamlSerializer() =
+    withSerializer(JacksonBuilderSerializer(
+        name = "yaml",
         types = listOf("yaml", "yml"),
         YAMLMapper.builder()
             .disable(MapperFeature.AUTO_DETECT_IS_GETTERS)
@@ -98,8 +103,9 @@ fun DefinitionsBuilder.withYamlSerializer() =
             .registerKotlinModule()
     ))
 
-fun DefinitionsBuilder.withSerializationConverter() =
-    withHandler(JacksonBuilderSerializer(
+fun DefinitionsBuilderFactory.withSerializationConverter() =
+    withSerializer(JacksonBuilderSerializer(
+        name = serializerConverterFormatName,
         types = listOf(serializerConverterFormatName),
         SmileMapper.builder()
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)

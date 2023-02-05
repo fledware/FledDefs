@@ -7,6 +7,7 @@ import definitions_api.tests.SomeFunctionAnnotation
 import fledware.definitions.DefinitionRegistry
 import fledware.definitions.DefinitionsManager
 import fledware.definitions.builder.DefinitionsBuilder
+import fledware.definitions.builder.DefinitionsBuilderFactory
 import fledware.definitions.builder.processors.withAnnotatedClassDefinition
 import fledware.definitions.builder.processors.withAnnotatedClassDefinitionOf
 import fledware.definitions.builder.processors.withAnnotatedRootFunction
@@ -39,10 +40,10 @@ data class SimpleFilesOthers(
     val someLong: Long
 )
 
-fun DefinitionsBuilder.withSimpleFilesOthersRaw(directory: String) =
+fun DefinitionsBuilderFactory.withSimpleFilesOthersRaw(directory: String) =
     withDirectoryResourceOf<SimpleFilesOthersRaw, SimpleFilesOthers>(directory, "others")
 
-fun DefinitionsBuilder.withSimpleFilesOthers(directory: String) =
+fun DefinitionsBuilderFactory.withSimpleFilesOthers(directory: String) =
     withDirectoryResource<SimpleFilesOthers>(directory, "others")
 
 @Suppress("UNCHECKED_CAST")
@@ -55,7 +56,7 @@ val DefinitionsManager.others get() =
 //
 // ============================================================================
 
-fun DefinitionsBuilder.withSomeFunctionAnnotation() =
+fun DefinitionsBuilderFactory.withSomeFunctionAnnotation() =
     withAnnotatedRootFunction<SomeFunctionAnnotation>("some-function") {
         it.annotations.firstOfType<SomeFunctionAnnotation>().name
     }
@@ -70,7 +71,7 @@ val DefinitionsManager.someFunction get() =
 //
 // ============================================================================
 
-fun DefinitionsBuilder.withSomeClassAnnotation() =
+fun DefinitionsBuilderFactory.withSomeClassAnnotation() =
     withAnnotatedClassDefinition<SomeClassAnnotation>("some-class") {
         it.annotations.firstOfType<SomeClassAnnotation>().name
     }
@@ -85,7 +86,7 @@ val DefinitionsManager.someClass get() =
 //
 // ============================================================================
 
-fun DefinitionsBuilder.withSomeDeepClassAnnotation() =
+fun DefinitionsBuilderFactory.withSomeDeepClassAnnotation() =
     withAnnotatedClassDefinitionOf<SomeDeepClassAnnotation, SomeDeepClass>("some-deep-class") {
         it.annotations.firstOfType<SomeDeepClassAnnotation>().name
     }

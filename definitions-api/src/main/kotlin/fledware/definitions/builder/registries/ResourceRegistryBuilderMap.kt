@@ -23,7 +23,7 @@ open class ResourceRegistryBuilderMap(
       when (current) {
         null -> raw
         else -> {
-          val updater = context.objectUpdater
+          val updater = state.objectUpdater
           updater.apply(current, raw)
           current
         }

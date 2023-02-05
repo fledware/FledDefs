@@ -7,6 +7,12 @@ import fledware.definitions.manager.DefaultDefinitionRegistry
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
+
+data class AnnotatedClassDefinition<T : Any>(
+    val klass: KClass<out T>,
+    val annotation: Annotation
+)
+
 class AnnotatedClassRegistryBuilder<T : Any>(
     override val name: String,
     private val classBaseType: KClass<T>

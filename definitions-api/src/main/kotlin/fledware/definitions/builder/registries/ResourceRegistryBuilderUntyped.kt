@@ -22,7 +22,7 @@ class ResourceRegistryBuilderUntyped<D : Any>(
       when (current) {
         null -> raw
         else -> {
-          val updater = context.objectUpdater
+          val updater = state.objectUpdater
           updater.apply(current, raw)
           current
         }
@@ -33,7 +33,7 @@ class ResourceRegistryBuilderUntyped<D : Any>(
   override fun build(): DefinitionRegistryManaged<D> {
     val definitions = definitions.mapValues { (definitionName, raw) ->
       try {
-        context.serializationConvert(raw, definitionType)
+        state.serializationConvert(raw, definitionType)
       }
       catch (ex: MismatchedInputException) {
         throw IncompleteDefinitionException(

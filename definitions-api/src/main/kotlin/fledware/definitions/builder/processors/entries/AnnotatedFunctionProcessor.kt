@@ -15,7 +15,7 @@ class AnnotatedFunctionProcessor(
 ) : ModPackageEntryProcessor {
   override fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
     val (entry, annotation) = anyEntry.findAnnotatedFunctionOrNull(annotation) ?: return false
-    val target = modPackageContext.builderContext.findRegistry(targetRegistry)
+    val target = modPackageContext.builderState.findRegistry(targetRegistry)
     val defName = defName(entry)
     target.apply(defName, entry, AnnotatedFunctionDefinition(entry.function, annotation))
     return true

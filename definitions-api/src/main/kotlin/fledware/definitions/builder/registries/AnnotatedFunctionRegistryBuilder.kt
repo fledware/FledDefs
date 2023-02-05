@@ -3,6 +3,15 @@ package fledware.definitions.builder.registries
 import fledware.definitions.DefinitionRegistryManaged
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.manager.DefaultDefinitionRegistry
+import fledware.definitions.util.FunctionWrapper
+import kotlin.reflect.KFunction
+
+data class AnnotatedFunctionDefinition(
+    val function: KFunction<*>,
+    val annotation: Annotation
+) {
+  val functionWrapper by lazy { FunctionWrapper(function) }
+}
 
 class AnnotatedFunctionRegistryBuilder(
     override val name: String

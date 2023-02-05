@@ -17,7 +17,7 @@ class ResourceProcessor(
   override fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
     val entry = anyEntry.findResourceOrNull(gatherRegex) ?: return false
     val result = modPackageContext.readEntry(entry.path, parseType)
-    val target = modPackageContext.builderContext.findRegistry(targetRegistry)
+    val target = modPackageContext.builderState.findRegistry(targetRegistry)
     val name = defName(entry)
     target.apply(name, entry, result)
     return true

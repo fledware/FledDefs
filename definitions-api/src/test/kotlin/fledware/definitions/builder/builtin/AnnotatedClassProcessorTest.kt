@@ -1,7 +1,6 @@
 package fledware.definitions.builder.builtin
 
 import fledware.definitions.builder.std.defaultBuilder
-import fledware.definitions.builder.withModPackage
 import fledware.definitions.exceptions.IncompleteDefinitionException
 import fledware.definitions.tests.testJarPath
 import kotlin.test.Test
@@ -13,6 +12,7 @@ class AnnotatedClassProcessorTest {
   fun testBasicSomeClassAnnotation() {
     val manager = defaultBuilder()
         .withSomeClassAnnotation()
+        .create()
         .withModPackage("definitions-api-tests/simple-functions-1".testJarPath.path)
         .build()
 
@@ -25,6 +25,7 @@ class AnnotatedClassProcessorTest {
   fun testBasicSomeDeepLalaClass() {
     val manager = defaultBuilder()
         .withSomeDeepClassAnnotation()
+        .create()
         .withModPackage("definitions-api-tests/simple-functions-1".testJarPath.path)
         .build()
 
@@ -38,6 +39,7 @@ class AnnotatedClassProcessorTest {
     val exception = assertFailsWith<IncompleteDefinitionException> {
       defaultBuilder()
           .withSomeDeepClassAnnotation()
+          .create()
           .withModPackage("definitions-api-tests/simple-functions-2".testJarPath.path)
           .build()
     }

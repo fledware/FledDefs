@@ -1,7 +1,6 @@
 package fledware.definitions.builder.builtin
 
 import fledware.definitions.builder.std.defaultBuilder
-import fledware.definitions.builder.withModPackage
 import fledware.definitions.exceptions.IncompleteDefinitionException
 import fledware.definitions.tests.testDirectoryPath
 import org.junit.jupiter.params.ParameterizedTest
@@ -11,7 +10,6 @@ import java.util.stream.Stream
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertNotNull
 
 class ResourceProcessorTest {
   companion object {
@@ -20,13 +18,15 @@ class ResourceProcessorTest {
         Arguments.of({
                        defaultBuilder()
                            .withSimpleFilesOthersRaw("others2")
+                           .create()
                            .withModPackage("definitions-api-tests/simple-files-1".testDirectoryPath.path)
                            .build()
                      }),
         Arguments.of({
                        defaultBuilder()
                            .withSimpleFilesOthers("others2")
-                           .withModPackage("definitions-api-tests/simple-files-1".testDirectoryPath.path)
+                           .create()
+                           .withModPackage("definitions-api-tests/simple-files-2".testDirectoryPath.path)
                            .build()
                      })
     ).stream()
@@ -36,6 +36,7 @@ class ResourceProcessorTest {
   fun testLoadingSimpleFiles() {
     val manager = defaultBuilder()
         .withSimpleFilesOthersRaw("others1")
+        .create()
         .withModPackage("definitions-api-tests/simple-files-1".testDirectoryPath.path)
         .build()
 
@@ -54,6 +55,7 @@ class ResourceProcessorTest {
   fun testOverrideSimpleFilesOverride() {
     val manager = defaultBuilder()
         .withSimpleFilesOthersRaw("others2")
+        .create()
         .withModPackage("definitions-api-tests/simple-files-1".testDirectoryPath.path)
         .withModPackage("definitions-api-tests/simple-files-2".testDirectoryPath.path)
         .build()

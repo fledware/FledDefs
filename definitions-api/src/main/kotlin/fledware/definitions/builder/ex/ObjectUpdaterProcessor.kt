@@ -1,8 +1,8 @@
 package fledware.definitions.builder.ex
 
 import com.fasterxml.jackson.core.type.TypeReference
-import fledware.definitions.builder.BuilderContext
-import fledware.definitions.builder.DefinitionsBuilder
+import fledware.definitions.builder.BuilderState
+import fledware.definitions.builder.DefinitionsBuilderFactory
 import fledware.definitions.builder.findRegistry
 import fledware.definitions.builder.mod.ModPackageContext
 import fledware.definitions.builder.mod.ModPackageEntry
@@ -12,7 +12,6 @@ import fledware.definitions.builder.processors.entries.findAnnotatedClassOrNull
 import fledware.definitions.builder.processors.entries.findResourceOrNull
 import fledware.definitions.builder.processors.withBuilderModPackageEntryProcessor
 import fledware.definitions.builder.processors.withDefinitionModPackageEntryProcessor
-import fledware.definitions.builder.withContext
 import fledware.definitions.exceptions.IncompleteDefinitionException
 import fledware.objectupdater.DirectiveHandler
 import fledware.objectupdater.NegationPredicateDirective
@@ -35,7 +34,7 @@ annotation class AddObjectUpdaterDirective(val canNegate: Boolean = true)
 /**
  *
  */
-fun DefinitionsBuilder.withObjectUpdater(mutationsGlob: String = "*.mutations.*") =
+fun DefinitionsBuilderFactory.withObjectUpdater(mutationsGlob: String = "*.mutations.*") =
     this.withContext(ObjectUpdater.default())
         .withBuilderModPackageEntryProcessor(AddObjectUpdaterDirectiveProcessor())
         .withDefinitionModPackageEntryProcessor(ObjectUpdaterProcessor(mutationsGlob.globToRegex()))
@@ -43,7 +42,7 @@ fun DefinitionsBuilder.withObjectUpdater(mutationsGlob: String = "*.mutations.*"
 /**
  * gets the [ObjectUpdater] used for mutating definitions with
  */
-val BuilderContext.objectUpdater: ObjectUpdater
+val BuilderState.objectUpdater: ObjectUpdater
   get() = this.contexts.getOrNull() ?: throw IllegalStateException(
       "ObjectUpdater not in context. Call DefinitionsBuilder.withObjectUpdater() to add it.")
 
@@ -70,7 +69,7 @@ class AddObjectUpdaterDirectiveProcessor
           ex
       )
     }
-    val updater = modPackageContext.builderContext.objectUpdater
+    val updater = modPackageContext.builderState.objectUpdater
     when (handler) {
       is SelectDirective -> (updater.selects as MutableMap)[handler.name] = handler
       is OperationDirective -> (updater.operations as MutableMap)[handler.name] = handler
@@ -105,9 +104,9 @@ class ObjectUpdaterProcessor(
   override fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
     val entry = anyEntry.findResourceOrNull(gatherRegex) ?: return false
     val mutations = modPackageContext.readEntry(entry.path, parseType)
-    val objectUpdater = modPackageContext.builderContext.objectUpdater
+    val objectUpdater = modPackageContext.builderState.objectUpdater
     mutations.forEach { mutation ->
-      val registry = modPackageContext.builderContext.findRegistry(mutation.registry)
+      val registry = modPackageContext.builderState.findRegistry(mutation.registry)
       registry.mutate(mutation.definition, entry) {
         val target = objectUpdater.start(it)
         objectUpdater.executeCount(target, mutation.command)

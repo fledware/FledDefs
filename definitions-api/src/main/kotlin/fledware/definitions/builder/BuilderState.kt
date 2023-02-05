@@ -5,29 +5,26 @@ import fledware.definitions.builder.mod.ModPackageEntryFactory
 import fledware.definitions.builder.mod.ModPackageFactory
 import fledware.definitions.builder.mod.ModPackageReaderFactory
 import fledware.utilities.MutableTypedMap
+import fledware.utilities.TypedMap
 
 interface BuilderState {
+
   /**
    * user contexts that can be used to share data
    * during the build process
    */
-  val contexts: MutableTypedMap<Any>
+  val contexts: TypedMap<Any>
 
   /**
    * user contexts that can are passed to the
    * manager after the build process
    */
-  val managerContexts: MutableTypedMap<Any>
+  val managerContexts: TypedMap<Any>
 
   /**
    *
    */
-  val modPackageFactories: Map<String, ModPackageFactory>
-
-  /**
-   *
-   */
-  val modPackageEntryReaders: Map<Int, ModPackageEntryFactory>
+  val events: DefinitionsBuilderEvents
 
   /**
    *
@@ -38,6 +35,16 @@ interface BuilderState {
    *
    */
   val modPackageReaderFactory: ModPackageReaderFactory
+
+  /**
+   *
+   */
+  val modPackageFactories: Map<String, ModPackageFactory>
+
+  /**
+   *
+   */
+  val modPackageEntryReaders: Map<String, ModPackageEntryFactory>
 
   /**
    *
@@ -53,4 +60,8 @@ interface BuilderState {
    *
    */
   val registries: Map<String, DefinitionRegistryBuilder<Any, Any>>
+}
+
+fun BuilderState.findRegistry(name: String): DefinitionRegistryBuilder<Any, Any> {
+  return registries[name] ?: throw IllegalStateException("unable to find target registry: $name")
 }

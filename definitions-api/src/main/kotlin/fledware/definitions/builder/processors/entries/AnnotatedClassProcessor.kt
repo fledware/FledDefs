@@ -15,7 +15,7 @@ class AnnotatedClassProcessor(
 ) : ModPackageEntryProcessor {
   override fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
     val (entry, annotation) = anyEntry.findAnnotatedClassOrNull(annotation) ?: return false
-    val target = modPackageContext.builderContext.findRegistry(targetRegistry)
+    val target = modPackageContext.builderState.findRegistry(targetRegistry)
     val defName = defName(entry)
     target.apply(defName, entry, AnnotatedClassDefinition(entry.klass, annotation))
     return true

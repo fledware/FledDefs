@@ -12,11 +12,6 @@ import fledware.definitions.exceptions.UnknownDefinitionException
  */
 interface DefinitionRegistryBuilder<R : Any, D : Any> : DefinitionsBuilderHandler {
   /**
-   * the name of this registry type
-   */
-  val name: String
-
-  /**
    * where all the definitions have come from
    */
   val definitionsFrom: Map<String, List<SimpleModPackageEntry>>

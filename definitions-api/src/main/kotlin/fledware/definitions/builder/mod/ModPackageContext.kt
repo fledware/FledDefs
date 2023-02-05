@@ -3,6 +3,7 @@ package fledware.definitions.builder.mod
 import com.fasterxml.jackson.core.type.TypeReference
 import fledware.definitions.ModPackageDetails
 import fledware.definitions.builder.BuilderContext
+import fledware.definitions.builder.DefinitionsBuilderState
 import fledware.definitions.builder.figureSerializer
 import fledware.definitions.builder.readAsType
 import kotlin.reflect.KClass
@@ -11,7 +12,7 @@ interface ModPackageContext {
   /**
    *
    */
-  val builderContext: BuilderContext
+  val builderState: DefinitionsBuilderState
 
   /**
    * The [ModPackage] this context is handling
@@ -40,7 +41,7 @@ interface ModPackageContext {
  */
 inline fun <reified T : Any> ModPackageContext.readEntry(entry: String): T {
   modPackageReader.read(entry) {
-    return builderContext
+    return builderState
         .figureSerializer(entry)
         .readAsType(it)
   }
@@ -51,7 +52,7 @@ inline fun <reified T : Any> ModPackageContext.readEntry(entry: String): T {
  */
 fun <T : Any> ModPackageContext.readEntry(entry: String, klass: KClass<T>): T {
   modPackageReader.read(entry) {
-    return builderContext
+    return builderState
         .figureSerializer(entry)
         .readAsType(it, klass)
   }
@@ -62,7 +63,7 @@ fun <T : Any> ModPackageContext.readEntry(entry: String, klass: KClass<T>): T {
  */
 fun <T : Any> ModPackageContext.readEntry(entry: String, typeRef: TypeReference<T>): T {
   modPackageReader.read(entry) {
-    return builderContext
+    return builderState
         .figureSerializer(entry)
         .readAsType(it, typeRef)
   }
@@ -78,7 +79,7 @@ fun ModPackageContext.findEntry(entryWithoutExtension: String): String {
   return findEntryOrNull(entryWithoutExtension)
       ?: throw IllegalArgumentException(
           "entry ($entryWithoutExtension) with known formats not found: " +
-              "${builderContext.serializers.keys}")
+              "${builderState.serializers.keys}")
 }
 
 /**
@@ -89,7 +90,7 @@ fun ModPackageContext.findEntry(entryWithoutExtension: String): String {
  * no entry with any known format is found.
  */
 fun ModPackageContext.findEntryOrNull(entryWithoutExtension: String): String? {
-  for (format in builderContext.serializers.keys) {
+  for (format in builderState.serializers.keys) {
     val paramEntryCheck = "$entryWithoutExtension.$format"
     if (modPackage.entriesLookup.contains(paramEntryCheck))
       return paramEntryCheck

@@ -1,8 +1,7 @@
 package fledware.definitions.builder.processors
 
 import com.fasterxml.jackson.core.type.TypeReference
-import fledware.definitions.builder.BuilderContext
-import fledware.definitions.builder.DefinitionsBuilder
+import fledware.definitions.builder.DefinitionsBuilderFactory
 import fledware.definitions.builder.ModProcessor
 import fledware.definitions.builder.mod.entries.AnnotatedClassEntry
 import fledware.definitions.builder.mod.entries.AnnotatedFunctionEntry
@@ -17,14 +16,13 @@ import fledware.definitions.builder.registries.ResourceRegistryBuilderMap
 import fledware.definitions.builder.registries.ResourceRegistryBuilderTyped
 import fledware.definitions.builder.registries.ResourceRegistryBuilderUntyped
 import fledware.definitions.builder.serializers.mapStringAnyTypeReference
-import fledware.definitions.builder.withHandler
 import fledware.definitions.util.standardEntryTransform
 import fledware.utilities.globToRegex
 
 /**
  *
  */
-fun BuilderContext.findModProcessor(name: String): ModProcessor {
+fun DefinitionsBuilderFactory.findModProcessor(name: String): ModProcessor {
   return this.modProcessors[name]
       ?: throw IllegalStateException("ModProcessor $name not found")
 }
@@ -42,7 +40,7 @@ const val builderEntryModProcessorName = "builder-entry-mod-processor"
 /**
  *
  */
-fun BuilderContext.addBuilderModPackageEntryProcessor(processor: ModPackageEntryProcessor) {
+fun DefinitionsBuilderFactory.addBuilderModPackageEntryProcessor(processor: ModPackageEntryProcessor) {
   val entryProcessor = this.findModProcessor(builderEntryModProcessorName) as? EntryModProcessor
       ?: throw IllegalStateException("ModProcessor $builderEntryModProcessorName" +
                                          " must be of type EntryModProcessor")
@@ -52,18 +50,18 @@ fun BuilderContext.addBuilderModPackageEntryProcessor(processor: ModPackageEntry
 /**
  *
  */
-fun DefinitionsBuilder.withBuilderModPackageEntryProcessor(
+fun DefinitionsBuilderFactory.withBuilderModPackageEntryProcessor(
     processor: ModPackageEntryProcessor
-): DefinitionsBuilder {
-  context.addBuilderModPackageEntryProcessor(processor)
+): DefinitionsBuilderFactory {
+  addBuilderModPackageEntryProcessor(processor)
   return this
 }
 
 /**
  *
  */
-fun DefinitionsBuilder.withBuilderEntryModProcessor() =
-    this.withHandler(EntryModProcessor(
+fun DefinitionsBuilderFactory.withBuilderEntryModProcessor() =
+    this.withModProcessor(EntryModProcessor(
         order = builderEntryModProcessorOrder,
         name = builderEntryModProcessorName,
         concurrencyAllowed = false
@@ -82,7 +80,7 @@ const val definitionEntryModProcessorName = "definition-entry-mod-processor"
 /**
  *
  */
-fun BuilderContext.addDefinitionModPackageEntryProcessor(processor: ModPackageEntryProcessor) {
+fun DefinitionsBuilderFactory.addDefinitionModPackageEntryProcessor(processor: ModPackageEntryProcessor) {
   val entryProcessor = this.findModProcessor(definitionEntryModProcessorName) as? EntryModProcessor
       ?: throw IllegalStateException("ModProcessor $definitionEntryModProcessorName" +
                                          " must be of type EntryModProcessor")
@@ -92,29 +90,28 @@ fun BuilderContext.addDefinitionModPackageEntryProcessor(processor: ModPackageEn
 /**
  *
  */
-fun DefinitionsBuilder.withDefinitionModPackageEntryProcessor(
+fun DefinitionsBuilderFactory.withDefinitionModPackageEntryProcessor(
     processor: ModPackageEntryProcessor
-): DefinitionsBuilder {
-  context.addDefinitionModPackageEntryProcessor(processor)
+): DefinitionsBuilderFactory {
+  addDefinitionModPackageEntryProcessor(processor)
   return this
 }
 
 /**
  *
  */
-fun DefinitionsBuilder.withDefinitionEntryModProcessor() =
-    this.withHandler(EntryModProcessor(
+fun DefinitionsBuilderFactory.withDefinitionEntryModProcessor() =
+    this.withModProcessor(EntryModProcessor(
         order = definitionEntryModProcessorOrder,
         name = definitionEntryModProcessorName,
         concurrencyAllowed = true
     ))
 
 
-
 /**
  * Creates a lifecycle that finds classes with the given annotation type.
  */
-inline fun <reified A : Annotation> DefinitionsBuilder.withAnnotatedClassDefinition(
+inline fun <reified A : Annotation> DefinitionsBuilderFactory.withAnnotatedClassDefinition(
     name: String,
     noinline defName: (entry: AnnotatedClassEntry) -> String
 ) = withAnnotatedClassDefinitionOf<A, Any>(name, defName)
@@ -124,10 +121,10 @@ inline fun <reified A : Annotation> DefinitionsBuilder.withAnnotatedClassDefinit
  * Creates a lifecycle that finds classes with the given annotation.
  * It will also ensure that the classes extend [T].
  */
-inline fun <reified A : Annotation, reified T : Any> DefinitionsBuilder.withAnnotatedClassDefinitionOf(
+inline fun <reified A : Annotation, reified T : Any> DefinitionsBuilderFactory.withAnnotatedClassDefinitionOf(
     name: String,
     noinline defName: (entry: AnnotatedClassEntry) -> String
-) = withHandler(AnnotatedClassRegistryBuilder(name, T::class))
+) = withDefinitionRegistryBuilder(AnnotatedClassRegistryBuilder(name, T::class))
     .withDefinitionModPackageEntryProcessor(AnnotatedClassProcessor(
         type = name,
         annotation = A::class,
@@ -139,10 +136,10 @@ inline fun <reified A : Annotation, reified T : Any> DefinitionsBuilder.withAnno
 /**
  * Creates a lifecycle that finds root functions with the given annotation type.
  */
-inline fun <reified A : Annotation> DefinitionsBuilder.withAnnotatedRootFunction(
+inline fun <reified A : Annotation> DefinitionsBuilderFactory.withAnnotatedRootFunction(
     name: String,
     noinline defName: (entry: AnnotatedFunctionEntry) -> String
-) = withHandler(AnnotatedFunctionRegistryBuilder(name))
+) = withDefinitionRegistryBuilder(AnnotatedFunctionRegistryBuilder(name))
     .withDefinitionModPackageEntryProcessor(AnnotatedFunctionProcessor(
         type = name,
         annotation = A::class,
@@ -162,9 +159,9 @@ inline fun <reified A : Annotation> DefinitionsBuilder.withAnnotatedRootFunction
  *
  * The name will be everything before `.$name.*`.
  */
-inline fun <reified D : Any> DefinitionsBuilder.withRootResource(
+inline fun <reified D : Any> DefinitionsBuilderFactory.withRootResource(
     name: String
-) = withHandler(ResourceRegistryBuilderUntyped(name, D::class))
+) = withDefinitionRegistryBuilder(ResourceRegistryBuilderUntyped(name, D::class))
     .withDefinitionModPackageEntryProcessor(ResourceProcessor(
         type = name,
         gatherRegex = "*.$name.*".globToRegex(),
@@ -183,9 +180,9 @@ inline fun <reified D : Any> DefinitionsBuilder.withRootResource(
  *
  * The name will be everything before `.$name.*`.
  */
-inline fun <reified R : Any, reified D : Any> DefinitionsBuilder.withRootResourceOf(
+inline fun <reified R : Any, reified D : Any> DefinitionsBuilderFactory.withRootResourceOf(
     name: String
-) = withHandler(ResourceRegistryBuilderTyped(name, R::class, D::class))
+) = withDefinitionRegistryBuilder(ResourceRegistryBuilderTyped(name, R::class, D::class))
     .withDefinitionModPackageEntryProcessor(ResourceProcessor(
         type = name,
         gatherRegex = "*.$name.*".globToRegex(),
@@ -204,9 +201,9 @@ inline fun <reified R : Any, reified D : Any> DefinitionsBuilder.withRootResourc
  *
  * The name will be everything before `.$name.*`.
  */
-fun DefinitionsBuilder.withRootResourceOfMap(
+fun DefinitionsBuilderFactory.withRootResourceOfMap(
     name: String
-) = withHandler(ResourceRegistryBuilderMap(name))
+) = withDefinitionRegistryBuilder(ResourceRegistryBuilderMap(name))
     .withDefinitionModPackageEntryProcessor(ResourceProcessor(
         type = name,
         gatherRegex = "*.$name.*".globToRegex(),
@@ -229,10 +226,10 @@ fun DefinitionsBuilder.withRootResourceOfMap(
  * The name of the definitions will be without the directory prefix, the file ext
  * stripped, and the '/' changed to '.'.
  */
-inline fun <reified D : Any> DefinitionsBuilder.withDirectoryResource(
+inline fun <reified D : Any> DefinitionsBuilderFactory.withDirectoryResource(
     directory: String,
     name: String
-) = withHandler(ResourceRegistryBuilderUntyped(name, D::class))
+) = withDefinitionRegistryBuilder(ResourceRegistryBuilderUntyped(name, D::class))
     .withDefinitionModPackageEntryProcessor(ResourceProcessor(
         type = name,
         gatherRegex = "$directory/**.*".globToRegex(),
@@ -252,10 +249,10 @@ inline fun <reified D : Any> DefinitionsBuilder.withDirectoryResource(
  * The name of the definitions will be without the directory prefix, the file ext
  * stripped, and the '/' changed to '.'.
  */
-inline fun <reified R : Any, reified D : Any> DefinitionsBuilder.withDirectoryResourceOf(
+inline fun <reified R : Any, reified D : Any> DefinitionsBuilderFactory.withDirectoryResourceOf(
     directory: String,
     name: String
-) = withHandler(ResourceRegistryBuilderTyped(name, R::class, D::class))
+) = withDefinitionRegistryBuilder(ResourceRegistryBuilderTyped(name, R::class, D::class))
     .withDefinitionModPackageEntryProcessor(ResourceProcessor(
         type = name,
         gatherRegex = "$directory/**.*".globToRegex(),
@@ -275,10 +272,10 @@ inline fun <reified R : Any, reified D : Any> DefinitionsBuilder.withDirectoryRe
  * The name of the definitions will be without the directory prefix, the file ext
  * stripped, and the '/' changed to '.'.
  */
-fun DefinitionsBuilder.withDirectoryResourceOfMap(
+fun DefinitionsBuilderFactory.withDirectoryResourceOfMap(
     directory: String,
     name: String
-) = withHandler(ResourceRegistryBuilderMap(name))
+) = withDefinitionRegistryBuilder(ResourceRegistryBuilderMap(name))
     .withDefinitionModPackageEntryProcessor(ResourceProcessor(
         type = name,
         gatherRegex = "$directory/**.*".globToRegex(),

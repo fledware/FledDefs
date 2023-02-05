@@ -8,6 +8,8 @@ import fledware.definitions.builder.mod.ModPackageReader
 
 class ResourceEntryFactory : AbstractDefinitionsBuilderHandler(),
                              ModPackageEntryFactory {
+  override val name: String = "ResourceEntry"
+
   override val order: Int = 30
 
   override fun attemptRead(modPackage: ModPackage, modReader: ModPackageReader, entry: String): List<ModPackageEntry> {

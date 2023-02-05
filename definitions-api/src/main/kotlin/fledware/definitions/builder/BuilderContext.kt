@@ -39,22 +39,42 @@ interface BuilderContext {
   /**
    *
    */
+  var modPackageDetailsParser: ModPackageDetailsParser
+
+  /**
+   *
+   */
+  var modPackageReaderFactory: ModPackageReaderFactory
+
+  /**
+   *
+   */
   val modPackageFactories: Map<String, ModPackageFactory>
 
   /**
    *
    */
-  val modPackageEntryReaders: Map<Int, ModPackageEntryFactory>
+  fun setModPackageFactory(handler: ModPackageFactory)
 
   /**
    *
    */
-  val modPackageDetailsParser: ModPackageDetailsParser
+  fun removeModPackageFactory(name: String)
 
   /**
    *
    */
-  val modPackageReaderFactory: ModPackageReaderFactory
+  val modPackageEntryReaders: Map<String, ModPackageEntryFactory>
+
+  /**
+   *
+   */
+  fun setModPackageEntryFactory(handler: ModPackageEntryFactory)
+
+  /**
+   *
+   */
+  fun removeModPackageEntryFactory(name: String)
 
   /**
    *
@@ -64,7 +84,27 @@ interface BuilderContext {
   /**
    *
    */
+  fun setModProcessor(handler: ModProcessor)
+
+  /**
+   *
+   */
+  fun removeModProcessor(name: String)
+
+  /**
+   *
+   */
   val serializers: Map<String, BuilderSerializer>
+
+  /**
+   *
+   */
+  fun setBuilderSerializer(handler: BuilderSerializer)
+
+  /**
+   *
+   */
+  fun removeBuilderSerializer(name: String)
 
   /**
    *
@@ -74,7 +114,7 @@ interface BuilderContext {
   /**
    *
    */
-  fun addHandler(handler: DefinitionsBuilderHandler)
+  fun addDefinitionRegistryBuilder(registry: DefinitionRegistryBuilder<*, *>)
 }
 
 fun BuilderContext.findRegistry(name: String): DefinitionRegistryBuilder<Any, Any> {

@@ -8,7 +8,7 @@ import java.io.File
 
 
 class JarModPackageFactory : AbstractDefinitionsBuilderHandler(), ModPackageFactory {
-  override val type: String = "jar"
+  override val name: String = "jar"
 
   override fun attemptFactory(spec: String): ModPackage? {
     val check = File(spec)

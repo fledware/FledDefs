@@ -9,6 +9,8 @@ import fledware.definitions.util.isSynthetic
 
 class AnnotatedClassEntryFactory : AbstractDefinitionsBuilderHandler(),
                                    ModPackageEntryFactory {
+  override val name: String = "AnnotatedClassEntry"
+
   override val order: Int = 20
 
   override fun attemptRead(modPackage: ModPackage, modReader: ModPackageReader, entry: String): List<ModPackageEntry> {
