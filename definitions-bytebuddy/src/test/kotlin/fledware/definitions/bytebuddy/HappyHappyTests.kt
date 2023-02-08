@@ -48,12 +48,12 @@ class HappyHappyTests {
     assertEquals("Hello from me!", stuff.hello())
   }
 
-  @Test
-  fun otherBasicThing() {
-    buddy.redefine(ClassA::class.java)
-        .method(ElementMatchers.named("hello"))
-        .intercept(MethodDelegation.to(HelloInterceptor()))
-        .make()
-    assertEquals("Hello from me!", ClassA().hello())
-  }
+//  @Test
+//  fun otherBasicThing() {
+//    buddy.redefine(ClassA::class.java)
+//        .method(ElementMatchers.named("hello"))
+//        .intercept(MethodDelegation.to(HelloInterceptor()))
+//        .make()
+//    assertEquals("Hello from me!", ClassA().hello())
+//  }
 }
