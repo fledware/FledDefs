@@ -1,0 +1,15 @@
+dependencies {
+  api project(":definitions-api")
+
+  // https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
+  implementation 'net.bytebuddy:byte-buddy:1.12.19'
+
+
+}
+
+test {
+  // this cannot be depended on directly because the app class loader
+  // will load this class, making it able to run on all permissions
+  // and wouldn't be a true gather.
+//  it.dependsOn(":test-projects:file-search:build")
+}

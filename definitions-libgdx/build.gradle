@@ -15,7 +15,7 @@ dependencies {
 	testFixturesApi "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
   testFixturesApi "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 	testFixturesApi "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-  testFixturesApi "org.mockito.kotlin:mockito-kotlin:4.0.0"
+  testFixturesApi "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
 }
 
 

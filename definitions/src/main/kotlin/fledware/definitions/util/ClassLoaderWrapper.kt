@@ -38,8 +38,8 @@ open class ClassLoaderWrapper {
    *   be returned.
    * - resources _are_ overridden, but still referencable. This is to allow
    *   images/configs to be replaced, but still found. Calling `getResources()`
-   *   will return a list of the versions in order of loaded. Calling
-   *   `getResource()` will return the most recent resource of the entry.
+   *   will return a list of the versions in reverse order of loaded (the latest first).
+   *   Calling `getResource()` will return the most recent resource of the entry.
    *
    * @param path relative or absolute path to a jar file or directory.
    */
