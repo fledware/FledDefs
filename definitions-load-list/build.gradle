@@ -2,7 +2,7 @@ dependencies {
   api project(':definitions')
 
   implementation 'com.google.inject:guice:5.1.0'
-  implementation 'org.apache.maven:maven-resolver-provider:3.8.6'
+  implementation 'org.apache.maven:maven-resolver-provider:3.9.0'
   implementation "org.apache.maven.resolver:maven-resolver-api:$mavenResolverVersion"
   implementation "org.apache.maven.resolver:maven-resolver-impl:$mavenResolverVersion"
   implementation "org.apache.maven.resolver:maven-resolver-connector-basic:$mavenResolverVersion"
