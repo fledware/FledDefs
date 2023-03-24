@@ -1,35 +1,26 @@
 package fledware.definitions.builder.std
 
-import fledware.definitions.builder.BuilderSerializer
+import fledware.definitions.builder.BuilderHandler
+import fledware.definitions.builder.BuilderHandlerKey
 import fledware.definitions.builder.DefinitionRegistryBuilder
 import fledware.definitions.builder.DefinitionsBuilder
 import fledware.definitions.builder.DefinitionsBuilderEvents
 import fledware.definitions.builder.DefinitionsBuilderFactory
 import fledware.definitions.builder.ModProcessor
-import fledware.definitions.builder.mod.ModPackageDetailsParser
-import fledware.definitions.builder.mod.ModPackageEntryFactory
-import fledware.definitions.builder.mod.ModPackageFactory
-import fledware.definitions.builder.mod.ModPackageReaderFactory
+import fledware.definitions.builder.findHandlerKeyFor
+import fledware.definitions.exceptions.BuilderStateMutationException
 import fledware.utilities.ConcurrentTypedMap
 import fledware.utilities.MutableTypedMap
+import kotlin.reflect.KClass
 
 class DefaultDefinitionsBuilderFactory : DefinitionsBuilderFactory {
   override val contexts: MutableTypedMap<Any> = ConcurrentTypedMap()
   override val managerContexts: MutableTypedMap<Any> = ConcurrentTypedMap()
   override val events: DefinitionsBuilderEvents = DefaultDefinitionsBuilderEvents()
-
-  private var _modPackageDetailsParser: ModPackageDetailsParser? = null
-  override val modPackageDetailsParser: ModPackageDetailsParser
-    get() = _modPackageDetailsParser ?: throw IllegalStateException("no state")
-  private var _modPackageReaderFactory: ModPackageReaderFactory? = null
-  override val modPackageReaderFactory: ModPackageReaderFactory
-    get() = _modPackageReaderFactory ?: throw IllegalStateException("no state")
-
-  override val modPackageFactories: MutableMap<String, ModPackageFactory> = mutableMapOf()
-  override val modPackageEntryReaders: MutableMap<String, ModPackageEntryFactory> = mutableMapOf()
-  override val modProcessors: MutableMap<String, ModProcessor> = mutableMapOf()
-  override val serializers: MutableMap<String, BuilderSerializer> = mutableMapOf()
+  override val processors: MutableMap<String, ModProcessor> = mutableMapOf()
   override val registries: MutableMap<String, DefinitionRegistryBuilder<Any, Any>> = mutableMapOf()
+  override val handlerKeys: MutableMap<KClass<BuilderHandler>, BuilderHandlerKey<BuilderHandler, Any>> = mutableMapOf()
+  override val handlers: MutableMap<BuilderHandlerKey<BuilderHandler, Any>, Any> = mutableMapOf()
 
   override fun withContext(context: Any): DefinitionsBuilderFactory {
     contexts.put(context)
@@ -41,33 +32,24 @@ class DefaultDefinitionsBuilderFactory : DefinitionsBuilderFactory {
     return this
   }
 
-  override fun withModPackageDetailsParser(handler: ModPackageDetailsParser): DefinitionsBuilderFactory {
-    this._modPackageDetailsParser = handler
+  override fun withBuilderHandlerKey(key: BuilderHandlerKey<*, *>): DefinitionsBuilderFactory {
+    @Suppress("UNCHECKED_CAST")
+    key as BuilderHandlerKey<BuilderHandler, Any>
+    if (handlerKeys.putIfAbsent(key.handlerBaseType, key) != null)
+      throw BuilderStateMutationException("handler key already exists: $key")
     return this
   }
 
-  override fun withModPackageReaderFactory(handler: ModPackageReaderFactory): DefinitionsBuilderFactory {
-    this._modPackageReaderFactory = handler
-    return this
-  }
-
-  override fun withModPackageFactory(handler: ModPackageFactory): DefinitionsBuilderFactory {
-    modPackageFactories[handler.name] = handler
-    return this
-  }
-
-  override fun withModPackageEntryFactory(handler: ModPackageEntryFactory): DefinitionsBuilderFactory {
-    modPackageEntryReaders[handler.name] = handler
+  override fun withBuilderHandler(handler: BuilderHandler): DefinitionsBuilderFactory {
+    val key = this.findHandlerKeyFor(handler)
+    handlers.compute(key) { _, value ->
+      key.putValue(value, handler).newValue
+    }
     return this
   }
 
   override fun withModProcessor(handler: ModProcessor): DefinitionsBuilderFactory {
-    modProcessors[handler.name] = handler
-    return this
-  }
-
-  override fun withSerializer(handler: BuilderSerializer): DefinitionsBuilderFactory {
-    serializers[handler.name] = handler
+    processors[handler.name] = handler
     return this
   }
 
@@ -85,13 +67,10 @@ class DefaultDefinitionsBuilderFactory : DefinitionsBuilderFactory {
             contexts = contexts,
             managerContexts = managerContexts,
             events = events,
-            modPackageDetailsParser = modPackageDetailsParser,
-            modPackageReaderFactory = modPackageReaderFactory,
-            modPackageFactories = modPackageFactories,
-            modPackageEntryReaders = modPackageEntryReaders,
-            modProcessors = modProcessors,
-            serializers = serializers,
-            registries = registries
+            processors = processors,
+            registries = registries,
+            handlers = handlers,
+            handlerKeys = handlerKeys
         )
     )
   }

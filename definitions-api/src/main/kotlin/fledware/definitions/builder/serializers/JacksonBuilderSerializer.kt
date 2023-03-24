@@ -10,10 +10,8 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.dataformat.smile.databind.SmileMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import fledware.definitions.builder.BuilderSerializerConverter
 import fledware.definitions.builder.DefinitionsBuilderFactory
 import fledware.definitions.builder.DefinitionsBuilderState
-import fledware.definitions.builder.serializerConverterFormatName
 import java.io.InputStream
 import kotlin.reflect.KClass
 
@@ -77,7 +75,7 @@ open class JacksonBuilderSerializer(
 }
 
 fun DefinitionsBuilderFactory.withJsonSerializer() =
-    withSerializer(JacksonBuilderSerializer(
+    withBuilderHandler(JacksonBuilderSerializer(
         name = "json",
         types = listOf("json"),
         JsonMapper.builder()
@@ -91,7 +89,7 @@ fun DefinitionsBuilderFactory.withJsonSerializer() =
     ))
 
 fun DefinitionsBuilderFactory.withYamlSerializer() =
-    withSerializer(JacksonBuilderSerializer(
+    withBuilderHandler(JacksonBuilderSerializer(
         name = "yaml",
         types = listOf("yaml", "yml"),
         YAMLMapper.builder()
@@ -104,7 +102,7 @@ fun DefinitionsBuilderFactory.withYamlSerializer() =
     ))
 
 fun DefinitionsBuilderFactory.withSerializationConverter() =
-    withSerializer(JacksonBuilderSerializer(
+    withBuilderHandler(JacksonBuilderSerializer(
         name = serializerConverterFormatName,
         types = listOf(serializerConverterFormatName),
         SmileMapper.builder()

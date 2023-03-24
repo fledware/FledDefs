@@ -2,10 +2,10 @@ package fledware.definitions.builder.mod
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fledware.definitions.ModPackageDetails
-import fledware.definitions.builder.BuilderContext
 import fledware.definitions.builder.DefinitionsBuilderState
-import fledware.definitions.builder.figureSerializer
-import fledware.definitions.builder.readAsType
+import fledware.definitions.builder.serializers.figureSerializer
+import fledware.definitions.builder.serializers.readAsType
+import fledware.definitions.builder.serializers.serializers
 import kotlin.reflect.KClass
 
 interface ModPackageContext {
@@ -71,7 +71,7 @@ fun <T : Any> ModPackageContext.readEntry(entry: String, typeRef: TypeReference<
 
 /**
  * Finds an entry that starts with [entryWithoutExtension], and checks for
- * each known format from [BuilderContext.serialization].
+ * each known format from [BuilderState.serialization].
  *
  * This will return the full entry with the extension included.
  */

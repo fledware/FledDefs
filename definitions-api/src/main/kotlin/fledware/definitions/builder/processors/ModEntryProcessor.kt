@@ -1,37 +1,71 @@
 package fledware.definitions.builder.processors
 
 import fledware.definitions.ModPackageDetails
-import fledware.definitions.builder.AbstractDefinitionsBuilderHandler
+import fledware.definitions.builder.AbstractBuilderHandler
+import fledware.definitions.builder.DefinitionsBuilderFactory
 import fledware.definitions.builder.ModProcessor
 import fledware.definitions.builder.mod.ModPackageContext
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.mod.std.mutableUnhandledEntries
-import fledware.definitions.builder.processors.entries.ModPackageEntryProcessor
+import fledware.definitions.builder.processors.entries.ModEntryHandler
+import fledware.definitions.builder.processors.entries.ModEntryHandlerKey
+import fledware.definitions.builder.processors.entries.modEntryHandlers
 import fledware.definitions.util.IterationConcurrency
 import fledware.definitions.util.forEach
 import java.util.concurrent.ConcurrentHashMap
+
+
+/**
+ * the order for the builder stage of [ModEntryProcessor]
+ */
+const val builderModEntryProcessorOrder = -100
+
+/**
+ * the name for the builder stage of [ModEntryProcessor]
+ */
+const val builderModEntryProcessorName = "builder-entry-mod-processor"
+
+/**
+ * the order for the definition stage of [ModEntryProcessor]
+ */
+const val definitionModEntryProcessorOrder = 100
+
+/**
+ * the name for the definition stage of [ModEntryProcessor]
+ */
+const val definitionModEntryProcessorName = "definition-entry-mod-processor"
+
+/**
+ *
+ */
+fun DefinitionsBuilderFactory.withStandardModEntryProcessors(): DefinitionsBuilderFactory {
+  withBuilderHandlerKey(ModEntryHandlerKey)
+  withModProcessor(ModEntryProcessor(
+      order = builderModEntryProcessorOrder,
+      name = builderModEntryProcessorName,
+      concurrencyAllowed = false
+  ))
+  withModProcessor(ModEntryProcessor(
+      order = definitionModEntryProcessorOrder,
+      name = definitionModEntryProcessorName,
+      concurrencyAllowed = true
+  ))
+  return this
+}
 
 /**
  * A special processor that is meant to process the actual entries.
  *
  * This processor is able to concurrently load all entries.
  */
-open class EntryModProcessor(
+open class ModEntryProcessor(
     override val order: Int,
     override val name: String,
     private val concurrencyAllowed: Boolean
-) : AbstractDefinitionsBuilderHandler(), ModProcessor {
-
-  protected val _entryProcessors = mutableMapOf<String, ModPackageEntryProcessor>()
-  val entryProcessors: Map<String, ModPackageEntryProcessor>
-    get() = _entryProcessors
-
-  fun registerProcessor(processor: ModPackageEntryProcessor) {
-    _entryProcessors[processor.type] = processor
-  }
+) : AbstractBuilderHandler(), ModProcessor {
 
   override fun process(modPackageContext: ModPackageContext) {
-    val processors = entryProcessors.values.toList()
+    val processors = figureEntryModHandlers()
     val removing = ConcurrentHashMap.newKeySet<ModPackageEntry>()
     val iteration = figureProcessIterationConcurrency(modPackageContext.packageDetails)
     val entries = modPackageContext.mutableUnhandledEntries
@@ -42,6 +76,10 @@ open class EntryModProcessor(
       }
     }
     entries -= removing
+  }
+
+  protected open fun figureEntryModHandlers(): List<ModEntryHandler> {
+    return state.modEntryHandlers.values.filter { it.processor == name }
   }
 
   protected open fun figureProcessIterationConcurrency(

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import fledware.definitions.DefinitionRegistryManaged
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.ex.objectUpdater
-import fledware.definitions.builder.serializationConvert
+import fledware.definitions.builder.serializers.serializationConvert
 import fledware.definitions.exceptions.IncompleteDefinitionException
 import fledware.definitions.manager.DefaultDefinitionRegistry
 import kotlin.reflect.KClass

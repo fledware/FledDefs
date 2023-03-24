@@ -5,7 +5,7 @@ import fledware.definitions.tests.testJarPath
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AnnotatedFunctionProcessorTest {
+class AnnotatedFunctionHandlerTest {
 
   @Test
   fun testHappyPathFunction() {

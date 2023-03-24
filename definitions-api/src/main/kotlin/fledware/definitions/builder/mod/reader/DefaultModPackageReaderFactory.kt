@@ -1,6 +1,6 @@
 package fledware.definitions.builder.mod.reader
 
-import fledware.definitions.builder.AbstractDefinitionsBuilderHandler
+import fledware.definitions.builder.AbstractBuilderHandler
 import fledware.definitions.builder.mod.ModPackage
 import fledware.definitions.builder.mod.ModPackageReader
 import fledware.definitions.builder.mod.ModPackageReaderFactory
@@ -10,7 +10,7 @@ import fledware.definitions.builder.mod.ModPackageReaderFactory
  *
  * It will read all entries and classes from the current class loader.
  */
-class DefaultModPackageReaderFactory : AbstractDefinitionsBuilderHandler(),
+class DefaultModPackageReaderFactory : AbstractBuilderHandler(),
                                        ModPackageReaderFactory {
   override val name: String
     get() = "DefaultModPackageReaderFactory"

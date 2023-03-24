@@ -3,7 +3,7 @@ package fledware.definitions.builder
 /**
  *
  */
-interface DefinitionsBuilderHandler {
+interface BuilderHandler {
   /**
    *
    */
@@ -20,7 +20,10 @@ interface DefinitionsBuilderHandler {
   fun onRemoved()
 }
 
-abstract class AbstractDefinitionsBuilderHandler : DefinitionsBuilderHandler {
+/**
+ *
+ */
+abstract class AbstractBuilderHandler : BuilderHandler {
   private var _state: DefinitionsBuilderState? = null
 
   protected val state: DefinitionsBuilderState

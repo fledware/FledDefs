@@ -3,7 +3,11 @@ package fledware.definitions.builder.mod
 import com.vdurmont.semver4j.Requirement
 import fledware.definitions.ModPackageDependency
 import fledware.definitions.ModPackageDetails
-import fledware.definitions.builder.DefinitionsBuilderHandler
+import fledware.definitions.builder.BuilderHandler
+import fledware.definitions.builder.BuilderState
+import fledware.definitions.builder.NameMapHandlerKey
+import fledware.definitions.builder.SingletonHandlerKey
+import fledware.definitions.builder.findHandler
 
 
 /**
@@ -17,41 +21,37 @@ data class ModPackageDetailsRaw(val version: String = "0.0.1",
 
 const val modPackageEntryPrefix = "mod-package"
 
+val BuilderState.modPackageDetailsParser: ModPackageDetailsParser
+  get() = this.findHandler(ModPackageDetailsParserKey)
+
+object ModPackageDetailsParserKey : SingletonHandlerKey<ModPackageDetailsParser>() {
+  override val handlerBaseType = ModPackageDetailsParser::class
+}
+
 /**
  * this is used to parse [ModPackageDetailsRaw] to [ModPackageDetails]
  */
-interface ModPackageDetailsParser: DefinitionsBuilderHandler {
-  val dependencyParsers: Map<String, ModPackageDependencyParser>
-  fun register(parser: ModPackageDependencyParser)
+interface ModPackageDetailsParser : BuilderHandler {
   fun parse(name: String, raw: ModPackageDetailsRaw): ModPackageDetails
+}
+
+/**
+ *
+ */
+val BuilderState.modPackageDependencyParsers: Map<String, ModPackageDependencyParser>
+  get() = this.findHandler(ModPackageDependencyParserKey)
+
+/**
+ *
+ */
+object ModPackageDependencyParserKey : NameMapHandlerKey<ModPackageDependencyParser>() {
+  override val handlerBaseType = ModPackageDependencyParser::class
 }
 
 /**
  * the parser of a specific type of dependency.
  */
-interface ModPackageDependencyParser {
-  val type: String
+interface ModPackageDependencyParser : BuilderHandler {
+
   fun parse(rawDepSpec: String): ModPackageDependency
-}
-
-
-
-
-
-
-
-data class ModPackageDependency(
-  val modName: String,
-  val version: String
-) {
-  val versionRequirement = Requirement.buildNPM(version)!!
-}
-
-data class MavenPackageDependency(
-  val group: String,
-  val artifact: String,
-  val version: String
-) {
-  val versionRequirement = Requirement.buildNPM(version)!!
-  val mavenSpec: String = "$group:$artifact:$version"
 }

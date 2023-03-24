@@ -7,7 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class AnnotatedClassProcessorTest {
+class AnnotatedClassHandlerTest {
   @Test
   fun testBasicSomeClassAnnotation() {
     val manager = defaultBuilder()

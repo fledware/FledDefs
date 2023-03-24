@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
   ext {
@@ -80,7 +81,7 @@ subprojects {
     maxHeapSize = "2048m"
   }
 
-  tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+  tasks.withType(KotlinCompile).configureEach {
     kotlinOptions {
       jvmTarget = "11"
       freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"

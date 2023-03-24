@@ -1,10 +1,5 @@
 package fledware.definitions.builder
 
-import fledware.definitions.builder.mod.ModPackageDetailsParser
-import fledware.definitions.builder.mod.ModPackageEntryFactory
-import fledware.definitions.builder.mod.ModPackageFactory
-import fledware.definitions.builder.mod.ModPackageReaderFactory
-
 /**
  * builds the initial state used to load mods.
  *
@@ -15,17 +10,11 @@ interface DefinitionsBuilderFactory : BuilderState {
 
   fun withManagerContexts(context: Any): DefinitionsBuilderFactory
 
-  fun withModPackageDetailsParser(handler: ModPackageDetailsParser): DefinitionsBuilderFactory
+  fun withBuilderHandlerKey(key: BuilderHandlerKey<*, *>): DefinitionsBuilderFactory
 
-  fun withModPackageReaderFactory(handler: ModPackageReaderFactory): DefinitionsBuilderFactory
-
-  fun withModPackageFactory(handler: ModPackageFactory): DefinitionsBuilderFactory
-
-  fun withModPackageEntryFactory(handler: ModPackageEntryFactory): DefinitionsBuilderFactory
+  fun withBuilderHandler(handler: BuilderHandler): DefinitionsBuilderFactory
 
   fun withModProcessor(handler: ModProcessor): DefinitionsBuilderFactory
-
-  fun withSerializer(handler: BuilderSerializer): DefinitionsBuilderFactory
 
   fun withDefinitionRegistryBuilder(handler: DefinitionRegistryBuilder<*, *>): DefinitionsBuilderFactory
 

@@ -5,13 +5,17 @@ import fledware.definitions.ModPackageDetails
 import fledware.definitions.builder.DefinitionsBuilder
 import fledware.definitions.builder.DefinitionsBuilderState
 import fledware.definitions.builder.ModProcessor
-import fledware.definitions.builder.figureSerializer
 import fledware.definitions.builder.mod.ModPackage
 import fledware.definitions.builder.mod.ModPackageContext
 import fledware.definitions.builder.mod.ModPackageDetailsRaw
 import fledware.definitions.builder.mod.ModPackageEntryFactory
+import fledware.definitions.builder.mod.modPackageDetailsParser
+import fledware.definitions.builder.mod.modPackageEntryFactories
+import fledware.definitions.builder.mod.modPackageFactories
+import fledware.definitions.builder.mod.modPackageReaderFactory
 import fledware.definitions.builder.mod.std.DefaultModPackageContext
-import fledware.definitions.builder.readAsType
+import fledware.definitions.builder.serializers.figureSerializer
+import fledware.definitions.builder.serializers.readAsType
 import fledware.definitions.exceptions.ModPackageReadException
 import fledware.definitions.manager.DefaultDefinitionsManager
 import fledware.utilities.ConcurrentTypedMap
@@ -108,7 +112,7 @@ open class DefaultDefinitionsBuilder(
   }
 
   protected open fun getOrderedEntryReader(): List<ModPackageEntryFactory> {
-    val orderedEntryReader = state.modPackageEntryReaders.values.sortedBy { it.order }
+    val orderedEntryReader = state.modPackageEntryFactories.values.sortedBy { it.order }
     if (orderedEntryReader.isEmpty())
       throw IllegalStateException("no entryReaders found")
     if (logger.isDebugEnabled) {
@@ -119,7 +123,7 @@ open class DefaultDefinitionsBuilder(
   }
 
   protected open fun getOrderedModProcessors(): List<ModProcessor> {
-    val orderedModProcessors = state.modProcessors.values.sortedBy { it.order }
+    val orderedModProcessors = state.processors.values.sortedBy { it.order }
     if (orderedModProcessors.isEmpty())
       throw IllegalStateException("no ModProcessors found")
     if (logger.isDebugEnabled) {

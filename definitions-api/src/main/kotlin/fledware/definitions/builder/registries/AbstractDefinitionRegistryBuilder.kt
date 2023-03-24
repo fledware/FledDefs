@@ -1,13 +1,13 @@
 package fledware.definitions.builder.registries
 
-import fledware.definitions.builder.AbstractDefinitionsBuilderHandler
+import fledware.definitions.builder.AbstractBuilderHandler
 import fledware.definitions.builder.DefinitionRegistryBuilder
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.mod.SimpleModPackageEntry
 import fledware.definitions.builder.mod.simplify
 import java.util.concurrent.ConcurrentHashMap
 
-abstract class AbstractDefinitionRegistryBuilder<R : Any, D : Any> : AbstractDefinitionsBuilderHandler(),
+abstract class AbstractDefinitionRegistryBuilder<R : Any, D : Any> : AbstractBuilderHandler(),
                                                                      DefinitionRegistryBuilder<R, D> {
   override val definitionsFrom = ConcurrentHashMap<String, MutableList<SimpleModPackageEntry>>()
   override val definitions = ConcurrentHashMap<String, R>()

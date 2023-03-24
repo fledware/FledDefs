@@ -6,15 +6,14 @@ import definitions_api.tests.SomeDeepClassAnnotation
 import definitions_api.tests.SomeFunctionAnnotation
 import fledware.definitions.DefinitionRegistry
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.builder.DefinitionsBuilder
 import fledware.definitions.builder.DefinitionsBuilderFactory
-import fledware.definitions.builder.processors.withAnnotatedClassDefinition
-import fledware.definitions.builder.processors.withAnnotatedClassDefinitionOf
-import fledware.definitions.builder.processors.withAnnotatedRootFunction
-import fledware.definitions.builder.processors.withDirectoryResource
-import fledware.definitions.builder.processors.withDirectoryResourceOf
 import fledware.definitions.builder.registries.AnnotatedClassDefinition
 import fledware.definitions.builder.registries.AnnotatedFunctionDefinition
+import fledware.definitions.builder.std.withAnnotatedClassDefinition
+import fledware.definitions.builder.std.withAnnotatedClassDefinitionOf
+import fledware.definitions.builder.std.withAnnotatedRootFunction
+import fledware.definitions.builder.std.withDirectoryResource
+import fledware.definitions.builder.std.withDirectoryResourceOf
 import fledware.definitions.util.firstOfType
 
 
@@ -47,7 +46,8 @@ fun DefinitionsBuilderFactory.withSimpleFilesOthers(directory: String) =
     withDirectoryResource<SimpleFilesOthers>(directory, "others")
 
 @Suppress("UNCHECKED_CAST")
-val DefinitionsManager.others get() =
+val DefinitionsManager.others
+  get() =
     this.registry("others") as DefinitionRegistry<SimpleFilesOthers>
 
 // ============================================================================
@@ -58,11 +58,12 @@ val DefinitionsManager.others get() =
 
 fun DefinitionsBuilderFactory.withSomeFunctionAnnotation() =
     withAnnotatedRootFunction<SomeFunctionAnnotation>("some-function") {
-        it.annotations.firstOfType<SomeFunctionAnnotation>().name
+      it.annotations.firstOfType<SomeFunctionAnnotation>().name
     }
 
 @Suppress("UNCHECKED_CAST")
-val DefinitionsManager.someFunction get() =
+val DefinitionsManager.someFunction
+  get() =
     this.registry("some-function") as DefinitionRegistry<AnnotatedFunctionDefinition>
 
 // ============================================================================
@@ -73,11 +74,12 @@ val DefinitionsManager.someFunction get() =
 
 fun DefinitionsBuilderFactory.withSomeClassAnnotation() =
     withAnnotatedClassDefinition<SomeClassAnnotation>("some-class") {
-        it.annotations.firstOfType<SomeClassAnnotation>().name
+      it.annotations.firstOfType<SomeClassAnnotation>().name
     }
 
 @Suppress("UNCHECKED_CAST")
-val DefinitionsManager.someClass get() =
+val DefinitionsManager.someClass
+  get() =
     this.registry("some-class") as DefinitionRegistry<AnnotatedClassDefinition<Any>>
 
 // ============================================================================
@@ -88,9 +90,10 @@ val DefinitionsManager.someClass get() =
 
 fun DefinitionsBuilderFactory.withSomeDeepClassAnnotation() =
     withAnnotatedClassDefinitionOf<SomeDeepClassAnnotation, SomeDeepClass>("some-deep-class") {
-        it.annotations.firstOfType<SomeDeepClassAnnotation>().name
+      it.annotations.firstOfType<SomeDeepClassAnnotation>().name
     }
 
 @Suppress("UNCHECKED_CAST")
-val DefinitionsManager.someDeepClass get() =
+val DefinitionsManager.someDeepClass
+  get() =
     this.registry("some-deep-class") as DefinitionRegistry<AnnotatedClassDefinition<SomeDeepClass>>
