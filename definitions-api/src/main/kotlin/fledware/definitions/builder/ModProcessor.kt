@@ -11,7 +11,7 @@ import fledware.definitions.builder.mod.ModPackageContext
  * Names cannot conflict, and if setting a new processor has the same name,
  * then the new processor will override.
  */
-interface ModProcessor: DefinitionsBuilderHandler {
+interface ModProcessor: BuilderHandler {
   /**
    * the order that this processor should be called.
    */

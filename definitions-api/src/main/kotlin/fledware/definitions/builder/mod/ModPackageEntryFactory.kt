@@ -1,13 +1,24 @@
 package fledware.definitions.builder.mod
 
-import fledware.definitions.builder.DefinitionsBuilderHandler
+import fledware.definitions.builder.BuilderHandler
+import fledware.definitions.builder.BuilderState
+import fledware.definitions.builder.NameMapHandlerKey
+import fledware.definitions.builder.findHandler
 
+val BuilderState.modPackageEntryFactories: Map<String, ModPackageEntryFactory>
+  get() = this.findHandler(ModPackageEntryFactoryKey)
+
+
+object ModPackageEntryFactoryKey : NameMapHandlerKey<ModPackageEntryFactory>() {
+  override val handlerBaseType = ModPackageEntryFactory::class
+}
 
 /**
  * used to add extra information about a specific entry
  * within a [ModPackage].
  */
-interface ModPackageEntryFactory : DefinitionsBuilderHandler {
+interface ModPackageEntryFactory : BuilderHandler {
+
   /**
    * the order that an entry is checked for reading
    */

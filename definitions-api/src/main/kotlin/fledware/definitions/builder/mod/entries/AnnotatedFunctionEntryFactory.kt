@@ -1,13 +1,13 @@
 package fledware.definitions.builder.mod.entries
 
-import fledware.definitions.builder.AbstractDefinitionsBuilderHandler
+import fledware.definitions.builder.AbstractBuilderHandler
 import fledware.definitions.builder.mod.ModPackage
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.mod.ModPackageEntryFactory
 import fledware.definitions.builder.mod.ModPackageReader
 import kotlin.reflect.jvm.kotlinFunction
 
-class AnnotatedFunctionEntryFactory : AbstractDefinitionsBuilderHandler(),
+class AnnotatedFunctionEntryFactory : AbstractBuilderHandler(),
                                       ModPackageEntryFactory {
   override val name: String = "AnnotatedFunctionEntry"
 

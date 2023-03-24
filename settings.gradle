@@ -25,6 +25,7 @@ include 'examples:spacer-mod-hyperspace-renderer'
 include 'examples:spacer-mod-info'
 
 // test projects
+include 'test-projects:definitions-api-tests:add-definition-handler'
 include 'test-projects:definitions-api-tests:add-object-updater-directive'
 include 'test-projects:definitions-api-tests:simple-annotations'
 include 'test-projects:definitions-api-tests:simple-functions-1'

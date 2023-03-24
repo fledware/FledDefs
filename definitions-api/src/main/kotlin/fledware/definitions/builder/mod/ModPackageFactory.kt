@@ -1,9 +1,20 @@
 package fledware.definitions.builder.mod
 
-import fledware.definitions.builder.DefinitionsBuilderHandler
+import fledware.definitions.builder.BuilderHandler
+import fledware.definitions.builder.BuilderState
+import fledware.definitions.builder.NameMapHandlerKey
+import fledware.definitions.builder.findHandler
 import fledware.definitions.exceptions.ModPackageReadException
 
-interface ModPackageFactory : DefinitionsBuilderHandler {
+
+val BuilderState.modPackageFactories: Map<String, ModPackageFactory>
+  get() = this.findHandler(ModPackageFactoryKey)
+
+object ModPackageFactoryKey : NameMapHandlerKey<ModPackageFactory>() {
+  override val handlerBaseType = ModPackageFactory::class
+}
+
+interface ModPackageFactory : BuilderHandler {
   fun attemptFactory(spec: String): ModPackage?
 }
 

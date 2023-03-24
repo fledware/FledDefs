@@ -10,7 +10,7 @@ import fledware.definitions.exceptions.UnknownDefinitionException
  * apply/mutate doesn't make sense for all registries. The best would be to
  * probably have a single mutate method that takes a block that inputs a R?.
  */
-interface DefinitionRegistryBuilder<R : Any, D : Any> : DefinitionsBuilderHandler {
+interface DefinitionRegistryBuilder<R : Any, D : Any> : BuilderHandler {
   /**
    * where all the definitions have come from
    */

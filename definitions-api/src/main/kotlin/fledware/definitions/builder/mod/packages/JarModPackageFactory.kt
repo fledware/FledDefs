@@ -1,13 +1,13 @@
 package fledware.definitions.builder.mod.packages
 
-import fledware.definitions.builder.AbstractDefinitionsBuilderHandler
+import fledware.definitions.builder.AbstractBuilderHandler
 import fledware.definitions.builder.mod.ModPackage
 import fledware.definitions.builder.mod.ModPackageFactory
 import fledware.definitions.exceptions.ModPackageReadException
 import java.io.File
 
 
-class JarModPackageFactory : AbstractDefinitionsBuilderHandler(), ModPackageFactory {
+class JarModPackageFactory : AbstractBuilderHandler(), ModPackageFactory {
   override val name: String = "jar"
 
   override fun attemptFactory(spec: String): ModPackage? {

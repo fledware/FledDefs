@@ -1,4 +1,4 @@
-package defintions_api.tests
+package definitions_api.tests
 
 import fledware.definitions.builder.ex.AddObjectUpdaterDirective
 import fledware.objectupdater.Directive

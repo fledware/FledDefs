@@ -1,12 +1,12 @@
 package fledware.definitions.builder.mod.packages
 
-import fledware.definitions.builder.AbstractDefinitionsBuilderHandler
+import fledware.definitions.builder.AbstractBuilderHandler
 import fledware.definitions.builder.mod.ModPackage
 import fledware.definitions.builder.mod.ModPackageFactory
 import java.io.File
 
 
-class DirectoryModPackageFactory : AbstractDefinitionsBuilderHandler(), ModPackageFactory {
+class DirectoryModPackageFactory : AbstractBuilderHandler(), ModPackageFactory {
   override val name: String = "directory"
 
   override fun attemptFactory(spec: String): ModPackage? {

@@ -7,11 +7,12 @@ import fledware.definitions.builder.mod.ModPackageEntryFactory
 import fledware.definitions.builder.mod.ModPackageReader
 import fledware.definitions.util.isSynthetic
 
-class AnnotatedClassEntryFactory : AbstractBuilderHandler(),
+class AnnotatedObjectEntryFactory: AbstractBuilderHandler(),
                                    ModPackageEntryFactory {
-  override val name: String = "AnnotatedClassEntry"
 
-  override val order: Int = 20
+  override val name: String = "AnnotatedObjectEntry"
+
+  override val order: Int = 30
 
   override fun attemptRead(modPackage: ModPackage, modReader: ModPackageReader, entry: String): List<ModPackageEntry> {
     if (!entry.endsWith(".class"))
@@ -21,6 +22,7 @@ class AnnotatedClassEntryFactory : AbstractBuilderHandler(),
       return emptyList()
     if (klass.annotations.isEmpty())
       return emptyList()
-    return listOf(AnnotatedClassEntry(modPackage.name, entry, klass, klass.annotations))
+    val objectInstance = klass.objectInstance ?: return emptyList()
+    return listOf(AnnotatedObjectEntry(modPackage.name, entry, objectInstance, klass.annotations))
   }
 }

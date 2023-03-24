@@ -1,17 +1,18 @@
 package fledware.definitions.builder.ex
 
 import com.fasterxml.jackson.core.type.TypeReference
+import fledware.definitions.builder.AbstractBuilderHandler
 import fledware.definitions.builder.BuilderState
 import fledware.definitions.builder.DefinitionsBuilderFactory
 import fledware.definitions.builder.findRegistry
 import fledware.definitions.builder.mod.ModPackageContext
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.mod.readEntry
-import fledware.definitions.builder.processors.entries.ModPackageEntryProcessor
+import fledware.definitions.builder.processors.builderModEntryProcessorName
+import fledware.definitions.builder.processors.definitionModEntryProcessorName
+import fledware.definitions.builder.processors.entries.ModEntryHandler
 import fledware.definitions.builder.processors.entries.findAnnotatedClassOrNull
 import fledware.definitions.builder.processors.entries.findResourceOrNull
-import fledware.definitions.builder.processors.withBuilderModPackageEntryProcessor
-import fledware.definitions.builder.processors.withDefinitionModPackageEntryProcessor
 import fledware.definitions.exceptions.IncompleteDefinitionException
 import fledware.objectupdater.DirectiveHandler
 import fledware.objectupdater.NegationPredicateDirective
@@ -36,8 +37,8 @@ annotation class AddObjectUpdaterDirective(val canNegate: Boolean = true)
  */
 fun DefinitionsBuilderFactory.withObjectUpdater(mutationsGlob: String = "*.mutations.*") =
     this.withContext(ObjectUpdater.default())
-        .withBuilderModPackageEntryProcessor(AddObjectUpdaterDirectiveProcessor())
-        .withDefinitionModPackageEntryProcessor(ObjectUpdaterProcessor(mutationsGlob.globToRegex()))
+        .withBuilderHandler(AddObjectUpdaterDirectiveHandler())
+        .withBuilderHandler(ObjectUpdaterHandler(mutationsGlob.globToRegex()))
 
 /**
  * gets the [ObjectUpdater] used for mutating definitions with
@@ -49,15 +50,16 @@ val BuilderState.objectUpdater: ObjectUpdater
 /**
  *
  */
-class AddObjectUpdaterDirectiveProcessor
-  : ModPackageEntryProcessor {
-  override val type: String = "AddObjectUpdaterDirectiveProcessor"
+class AddObjectUpdaterDirectiveHandler
+  : AbstractBuilderHandler(), ModEntryHandler {
+  override val name: String = "AddObjectUpdaterDirective"
+  override val processor: String = builderModEntryProcessorName
 
   override fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
     val (entry, annotation) = anyEntry.findAnnotatedClassOrNull(AddObjectUpdaterDirective::class) ?: return false
     if (!entry.klass.isSubclassOf(DirectiveHandler::class))
-      throw IllegalArgumentException("classes annotated with @AddObjectUpdaterDirective" +
-                                         " must implement DirectiveHandler")
+      throw IllegalArgumentException(
+          "classes annotated with @AddObjectUpdaterDirective must implement DirectiveHandler")
     val handler = try {
       entry.klass.createInstance()
     }
@@ -95,10 +97,11 @@ data class ObjectUpdaterMutation(
 /**
  *
  */
-class ObjectUpdaterProcessor(
+open class ObjectUpdaterHandler(
     private val gatherRegex: Regex
-) : ModPackageEntryProcessor {
-  override val type: String = "ObjectUpdaterProcessor"
+) : AbstractBuilderHandler(), ModEntryHandler {
+  override val name: String = "ObjectUpdaterHandler"
+  override val processor: String = definitionModEntryProcessorName
   private val parseType = object : TypeReference<List<ObjectUpdaterMutation>>() {}
 
   override fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean {

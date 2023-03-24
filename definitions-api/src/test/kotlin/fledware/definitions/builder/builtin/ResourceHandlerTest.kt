@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class ResourceProcessorTest {
+class ResourceHandlerTest {
   companion object {
     @JvmStatic
     fun incompleteTypeBuilds(): Stream<Arguments> = listOf(
