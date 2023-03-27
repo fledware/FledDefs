@@ -7,7 +7,7 @@ buildscript {
     ktxVersion="1.11.0-rc1"
     jacksonVersion="2.14.2"
     junitVersion="5.9.2"
-    slf4jVersion="2.0.6"
+    slf4jVersion="2.0.7"
     semver4jVersion="3.1.0"
     log4jVersion="2.20.0"
     gdxVersion="1.11.0"
