@@ -2,7 +2,7 @@ dependencies {
   api project(":definitions-api")
 
   // https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
-  implementation 'net.bytebuddy:byte-buddy:1.14.2'
+  implementation 'net.bytebuddy:byte-buddy:1.14.4'
 
 
 }
