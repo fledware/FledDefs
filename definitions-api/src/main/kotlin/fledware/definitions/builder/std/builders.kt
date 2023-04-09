@@ -13,7 +13,6 @@ import fledware.definitions.builder.mod.entries.ResourceEntryFactory
 import fledware.definitions.builder.mod.packages.DirectoryModPackageFactory
 import fledware.definitions.builder.mod.packages.JarModPackageFactory
 import fledware.definitions.builder.mod.packages.ZipModPackageFactory
-import fledware.definitions.builder.mod.reader.DefaultModPackageReaderFactory
 import fledware.definitions.builder.mod.std.DefaultModPackageDetailsParser
 import fledware.definitions.builder.mod.std.ModModPackageDependencyParser
 import fledware.definitions.builder.processors.definitionModEntryProcessorName
@@ -35,7 +34,6 @@ import fledware.definitions.util.standardEntryTransform
 import fledware.utilities.globToRegex
 
 fun defaultBuilder() = DefaultDefinitionsBuilderFactory()
-    .withBuilderHandler(DefaultModPackageReaderFactory())
     .withBuilderHandler(DefaultModPackageDetailsParser())
     .withBuilderHandler(ModModPackageDependencyParser())
     .withBuilderHandler(DirectoryModPackageFactory())

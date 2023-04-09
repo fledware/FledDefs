@@ -20,11 +20,6 @@ interface ModPackageContext {
   val modPackage: ModPackage
 
   /**
-   * The reader for the give [modPackage]
-   */
-  val modPackageReader: ModPackageReader
-
-  /**
    *
    */
   val packageDetails: ModPackageDetails
@@ -40,7 +35,7 @@ interface ModPackageContext {
  * reads an entry to the [T] type.
  */
 inline fun <reified T : Any> ModPackageContext.readEntry(entry: String): T {
-  modPackageReader.read(entry) {
+  modPackage.read(entry) {
     return builderState
         .figureSerializer(entry)
         .readAsType(it)
@@ -51,7 +46,7 @@ inline fun <reified T : Any> ModPackageContext.readEntry(entry: String): T {
  * reads an entry to the [T] type.
  */
 fun <T : Any> ModPackageContext.readEntry(entry: String, klass: KClass<T>): T {
-  modPackageReader.read(entry) {
+  modPackage.read(entry) {
     return builderState
         .figureSerializer(entry)
         .readAsType(it, klass)
@@ -62,7 +57,7 @@ fun <T : Any> ModPackageContext.readEntry(entry: String, klass: KClass<T>): T {
  * reads an entry to the [T] type.
  */
 fun <T : Any> ModPackageContext.readEntry(entry: String, typeRef: TypeReference<T>): T {
-  modPackageReader.read(entry) {
+  modPackage.read(entry) {
     return builderState
         .figureSerializer(entry)
         .readAsType(it, typeRef)

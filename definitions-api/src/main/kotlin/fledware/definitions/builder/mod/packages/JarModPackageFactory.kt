@@ -1,24 +1,18 @@
 package fledware.definitions.builder.mod.packages
 
-import fledware.definitions.builder.AbstractBuilderHandler
 import fledware.definitions.builder.mod.ModPackage
-import fledware.definitions.builder.mod.ModPackageFactory
 import fledware.definitions.exceptions.ModPackageReadException
 import java.io.File
 
 
-class JarModPackageFactory : AbstractBuilderHandler(), ModPackageFactory {
+class JarModPackageFactory : AbstractModPackageFactory() {
   override val name: String = "jar"
+  override val extension: String = "jar"
 
-  override fun attemptFactory(spec: String): ModPackage? {
-    val check = File(spec)
-    if (!check.path.endsWith(".jar"))
-      return null
-    if (!check.exists())
-      throw ModPackageReadException(spec, "jar file doesn't exist: $check")
-    if (!check.isFile)
-      throw ModPackageReadException(spec, "jar file isn't a file: $check")
-
-    return JarModPackage(check, spec)
+  override fun actualAttemptFactory(spec: String, file: File): ModPackage {
+    if (!file.isFile)
+      throw ModPackageReadException(spec, "jar file isn't a file: $file")
+    state.classLoaderWrapper.append(file)
+    return JarModPackage(file, spec, state.classLoaderWrapper.currentLoader)
   }
 }

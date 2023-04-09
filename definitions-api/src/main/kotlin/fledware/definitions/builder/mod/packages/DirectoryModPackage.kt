@@ -1,6 +1,7 @@
 package fledware.definitions.builder.mod.packages
 
 import java.io.File
+import java.io.InputStream
 
 
 class DirectoryModPackage(
@@ -14,4 +15,12 @@ class DirectoryModPackage(
       .map { it.path.removePrefix(this.root.path) }
       .map { it.replace('\\', '/').removePrefix("/") }
       .toList()
+
+  override fun read(entry: String): InputStream {
+    return File(root, entry).inputStream()
+  }
+
+  override fun loadClass(entry: String): Class<*> {
+    throw IllegalStateException("directories cannot have classes")
+  }
 }

@@ -4,7 +4,6 @@ import fledware.definitions.builder.AbstractBuilderHandler
 import fledware.definitions.builder.mod.ModPackage
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.mod.ModPackageEntryFactory
-import fledware.definitions.builder.mod.ModPackageReader
 import kotlin.reflect.jvm.kotlinFunction
 
 class AnnotatedFunctionEntryFactory : AbstractBuilderHandler(),
@@ -13,11 +12,11 @@ class AnnotatedFunctionEntryFactory : AbstractBuilderHandler(),
 
   override val order: Int = 10
 
-  override fun attemptRead(modPackage: ModPackage, modReader: ModPackageReader, entry: String): List<ModPackageEntry> {
+  override fun attemptRead(modPackage: ModPackage, entry: String): List<ModPackageEntry> {
     // Root class files. This is how we find root methods.
     if (!entry.endsWith("Kt.class"))
       return emptyList()
-    val klass = modReader.loadClass(entry)
+    val klass = modPackage.loadClass(entry)
     return klass.methods.mapNotNull { javaMethod ->
       val function = javaMethod.kotlinFunction ?: return@mapNotNull null
       if (function.name == "hashCode") return@mapNotNull null

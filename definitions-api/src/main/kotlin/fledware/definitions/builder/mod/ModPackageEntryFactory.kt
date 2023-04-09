@@ -33,7 +33,6 @@ interface ModPackageEntryFactory : BuilderHandler {
    */
   fun attemptRead(
       modPackage: ModPackage,
-      modReader: ModPackageReader,
       entry: String
   ): List<ModPackageEntry>
 }

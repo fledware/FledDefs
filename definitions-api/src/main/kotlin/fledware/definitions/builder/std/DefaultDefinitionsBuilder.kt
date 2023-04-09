@@ -13,7 +13,6 @@ import fledware.definitions.builder.mod.ModPackageEntryFactory
 import fledware.definitions.builder.mod.modPackageDetailsParser
 import fledware.definitions.builder.mod.modPackageEntryFactories
 import fledware.definitions.builder.mod.modPackageFactories
-import fledware.definitions.builder.mod.modPackageReaderFactory
 import fledware.definitions.builder.mod.std.DefaultModPackageContext
 import fledware.definitions.builder.modProcessingSteps
 import fledware.definitions.builder.serializers.figureSerializer
@@ -58,9 +57,6 @@ open class DefaultDefinitionsBuilder(
     // append the files of the package to the ClassLoaderWrapper
     state.classLoaderWrapper.append(modPackage.root)
 
-    // create the ModPackageReader
-    val modPackageReader = state.modPackageReaderFactory.factory(modPackage)
-
     // create the details of this package
     val modPackageDetails = loadModPackageDetails(modPackage)
 
@@ -72,7 +68,7 @@ open class DefaultDefinitionsBuilder(
     // create all the entry infos that can be processed
     val unhandledEntries = modPackage.entries.mapNotNull { entry ->
       orderedEntryParsers.firstNotNullOfOrNull {
-        it.attemptRead(modPackage, modPackageReader, entry).ifEmpty { null }
+        it.attemptRead(modPackage, entry).ifEmpty { null }
       }
     }.flatMapTo(linkedSetOf()) { it }
     if (logger.isDebugEnabled) {
@@ -83,7 +79,6 @@ open class DefaultDefinitionsBuilder(
     return DefaultModPackageContext(
         builderState = state,
         modPackage = modPackage,
-        modPackageReader = modPackageReader,
         packageDetails = modPackageDetails,
         unhandledEntries = unhandledEntries
     )

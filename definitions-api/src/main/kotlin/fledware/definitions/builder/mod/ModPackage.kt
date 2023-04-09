@@ -1,10 +1,14 @@
 package fledware.definitions.builder.mod
 
 import java.io.File
+import java.io.InputStream
 
 /**
- * This defines what is in a mod. This does not handle
- * reading the contents.
+ * This defines what is in a mod.
+ *
+ * If you would like to have a special format for mods,
+ * then create a [ModPackageFactory] that creates a custom
+ * implementation of [ModPackage].
  */
 interface ModPackage {
   /**
@@ -42,4 +46,25 @@ interface ModPackage {
    * all entries in a given root.
    */
   val entriesLookup: Set<String>
+
+  /**
+   * gets a new InputStream for the given entry
+   */
+  fun read(entry: String): InputStream
+
+  /**
+   * Loads a class with the current class loader and asserts that it
+   * is from this specific reader.
+   *
+   * Classes with the same name cannot (and should not) be overridden.
+   */
+  fun loadClass(entry: String): Class<*>
+}
+
+/**
+ * A helper that gets the input stream of a entry and ensures
+ * it is closed after usage.
+ */
+inline fun <T: Any> ModPackage.read(entry: String, block: (steam: InputStream) -> T): T {
+  return read(entry).use(block)
 }
