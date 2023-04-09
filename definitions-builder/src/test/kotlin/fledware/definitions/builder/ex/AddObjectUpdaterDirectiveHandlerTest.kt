@@ -10,7 +10,7 @@ class AddObjectUpdaterDirectiveHandlerTest {
   @Test
   fun testBasicLoading() {
     val builder = defaultBuilder().create()
-    builder.withModPackage("definitions-api-tests/add-object-updater-directive".testJarPath.path)
+    builder.withModPackage("definitions-builder-tests/add-object-updater-directive".testJarPath.path)
     assertContains(builder.state.objectUpdater.selects.keys, "SomeNewSelectDirective")
     assertContains(builder.state.objectUpdater.operations.keys, "SomeNewOperationDirective")
     assertContains(builder.state.objectUpdater.predicates.keys, "SomeNewPredicateDirective")

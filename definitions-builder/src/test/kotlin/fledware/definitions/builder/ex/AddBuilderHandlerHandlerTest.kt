@@ -13,7 +13,7 @@ class AddBuilderHandlerHandlerTest {
   fun canOverrideModPackageDetailsParser() {
     val builder = defaultBuilder().create()
     assertIs<DefaultModPackageDetailsParser>(builder.state.modPackageDetailsParser)
-    builder.withModPackage("definitions-api-tests/add-definition-handler".testJarPath.path)
+    builder.withModPackage("definitions-builder-tests/add-definition-handler".testJarPath.path)
     assertEquals("definitions_api.tests.SomeModPackageDetailsParser",
                  builder.state.modPackageDetailsParser::class.qualifiedName)
   }

@@ -1,0 +1,3 @@
+dependencies {
+  implementation project(":test-projects:definitions-builder-tests:simple-annotations")
+}

@@ -13,7 +13,7 @@ class AnnotatedClassHandlerTest {
     val manager = defaultBuilder()
         .withSomeClassAnnotation()
         .create()
-        .withModPackage("definitions-api-tests/simple-functions-1".testJarPath.path)
+        .withModPackage("definitions-builder-tests/simple-functions-1".testJarPath.path)
         .build()
 
     val someClass = manager.someClass
@@ -26,7 +26,7 @@ class AnnotatedClassHandlerTest {
     val manager = defaultBuilder()
         .withSomeDeepClassAnnotation()
         .create()
-        .withModPackage("definitions-api-tests/simple-functions-1".testJarPath.path)
+        .withModPackage("definitions-builder-tests/simple-functions-1".testJarPath.path)
         .build()
 
     val someClass = manager.someDeepClass
@@ -40,7 +40,7 @@ class AnnotatedClassHandlerTest {
       defaultBuilder()
           .withSomeDeepClassAnnotation()
           .create()
-          .withModPackage("definitions-api-tests/simple-functions-2".testJarPath.path)
+          .withModPackage("definitions-builder-tests/simple-functions-2".testJarPath.path)
           .build()
     }
     assertEquals("lala", exception.definition)

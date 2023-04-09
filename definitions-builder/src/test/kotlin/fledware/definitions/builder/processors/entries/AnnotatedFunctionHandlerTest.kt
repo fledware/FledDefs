@@ -12,7 +12,7 @@ class AnnotatedFunctionHandlerTest {
     val manager = defaultBuilder()
         .withSomeFunctionAnnotation()
         .create()
-        .withModPackage("definitions-api-tests/simple-functions-1".testJarPath.path)
+        .withModPackage("definitions-builder-tests/simple-functions-1".testJarPath.path)
         .build()
 
     val someFunction = manager.someFunction

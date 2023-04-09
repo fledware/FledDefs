@@ -19,14 +19,14 @@ class ResourceHandlerTest {
                        defaultBuilder()
                            .withSimpleFilesOthersRaw("others2")
                            .create()
-                           .withModPackage("definitions-api-tests/simple-files-1".testDirectoryPath.path)
+                           .withModPackage("definitions-builder-tests/simple-files-1".testDirectoryPath.path)
                            .build()
                      }),
         Arguments.of({
                        defaultBuilder()
                            .withSimpleFilesOthers("others2")
                            .create()
-                           .withModPackage("definitions-api-tests/simple-files-2".testDirectoryPath.path)
+                           .withModPackage("definitions-builder-tests/simple-files-2".testDirectoryPath.path)
                            .build()
                      })
     ).stream()
@@ -37,7 +37,7 @@ class ResourceHandlerTest {
     val manager = defaultBuilder()
         .withSimpleFilesOthersRaw("others1")
         .create()
-        .withModPackage("definitions-api-tests/simple-files-1".testDirectoryPath.path)
+        .withModPackage("definitions-builder-tests/simple-files-1".testDirectoryPath.path)
         .build()
 
     val others = manager.others
@@ -56,8 +56,8 @@ class ResourceHandlerTest {
     val manager = defaultBuilder()
         .withSimpleFilesOthersRaw("others2")
         .create()
-        .withModPackage("definitions-api-tests/simple-files-1".testDirectoryPath.path)
-        .withModPackage("definitions-api-tests/simple-files-2".testDirectoryPath.path)
+        .withModPackage("definitions-builder-tests/simple-files-1".testDirectoryPath.path)
+        .withModPackage("definitions-builder-tests/simple-files-2".testDirectoryPath.path)
         .build()
     val other1 = manager.others["other-1"]
     assertEquals("hello world!", other1.someString)
