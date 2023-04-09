@@ -1,4 +1,4 @@
-package fledware.definitions.builder.builtin
+package fledware.definitions.builder.processors.entries
 
 import definitions_api.tests.SomeClassAnnotation
 import definitions_api.tests.SomeDeepClass

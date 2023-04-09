@@ -1,4 +1,4 @@
-package fledware.definitions.builder.builtin.ex
+package fledware.definitions.builder.ex
 
 import fledware.definitions.builder.mod.modPackageDetailsParser
 import fledware.definitions.builder.mod.modPackageReaderFactory

@@ -1,13 +1,11 @@
 package fledware.definitions.builder.mod
 
-import com.vdurmont.semver4j.Requirement
 import fledware.definitions.ModPackageDependency
 import fledware.definitions.ModPackageDetails
 import fledware.definitions.builder.BuilderHandler
 import fledware.definitions.builder.BuilderState
-import fledware.definitions.builder.NameMapHandlerKey
-import fledware.definitions.builder.SingletonHandlerKey
-import fledware.definitions.builder.findHandler
+import fledware.definitions.builder.findHandlerGroupAsSingletonOf
+import fledware.definitions.builder.findHandlerGroupOf
 
 
 /**
@@ -19,39 +17,56 @@ data class ModPackageDetailsRaw(val version: String = "0.0.1",
                                 val options: Map<String, Any> = emptyMap(),
                                 val dependencies: List<String> = listOf())
 
+/**
+ * the prefix used to find the mod package information.
+ *
+ * The extension for this file can be any registered serializer.
+ * for instance:
+ *  - mod-package.json
+ *  - mod-package.yaml
+ */
 const val modPackageEntryPrefix = "mod-package"
 
-val BuilderState.modPackageDetailsParser: ModPackageDetailsParser
-  get() = this.findHandler(ModPackageDetailsParserKey)
+/**
+ * the name of the group for [ModPackageDetailsParser]
+ */
+val modPackageDetailsParserGroupName = ModPackageDetailsParser::class.simpleName!!
 
-object ModPackageDetailsParserKey : SingletonHandlerKey<ModPackageDetailsParser>() {
-  override val handlerBaseType = ModPackageDetailsParser::class
-}
+/**
+ *
+ */
+val BuilderState.modPackageDetailsParser: ModPackageDetailsParser
+  get() = this.findHandlerGroupAsSingletonOf(modPackageDetailsParserGroupName)
 
 /**
  * this is used to parse [ModPackageDetailsRaw] to [ModPackageDetails]
  */
 interface ModPackageDetailsParser : BuilderHandler {
+  override val group: String
+    get() = modPackageDetailsParserGroupName
+  override val name: String
+    get() = modPackageDetailsParserGroupName
+
   fun parse(name: String, raw: ModPackageDetailsRaw): ModPackageDetails
 }
+
+/**
+ * the name of the group for [ModPackageDetailsParser]
+ */
+val modPackageDependencyParserGroupName = ModPackageDependencyParser::class.simpleName!!
 
 /**
  *
  */
 val BuilderState.modPackageDependencyParsers: Map<String, ModPackageDependencyParser>
-  get() = this.findHandler(ModPackageDependencyParserKey)
-
-/**
- *
- */
-object ModPackageDependencyParserKey : NameMapHandlerKey<ModPackageDependencyParser>() {
-  override val handlerBaseType = ModPackageDependencyParser::class
-}
+  get() = this.findHandlerGroupOf(modPackageDependencyParserGroupName)
 
 /**
  * the parser of a specific type of dependency.
  */
 interface ModPackageDependencyParser : BuilderHandler {
+  override val group: String
+    get() = modPackageDependencyParserGroupName
 
   fun parse(rawDepSpec: String): ModPackageDependency
 }

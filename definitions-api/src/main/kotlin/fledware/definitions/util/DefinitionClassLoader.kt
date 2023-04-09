@@ -60,9 +60,8 @@ open class ClassLoaderWrapper(
 }
 
 /**
- * An implementation of the URLClassLoader that does two things:
- * - allows resources to be overridden
- * - allows the RestrictiveSecurityPolicy to apply only permitted operations.
+ * An implementation of the URLClassLoader that reverses the order
+ * for getting resources to allow resources to be overloaded.
  */
 class DefinitionClassLoader(
   urls: URL, parent: ClassLoader?,

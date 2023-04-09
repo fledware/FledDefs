@@ -2,14 +2,8 @@ package fledware.definitions.builder.std
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fledware.definitions.builder.DefinitionsBuilderFactory
-import fledware.definitions.builder.ex.withAddBuilderHandlerKeyHandler
 import fledware.definitions.builder.ex.withAddBuilderHandlerHandler
 import fledware.definitions.builder.ex.withObjectUpdater
-import fledware.definitions.builder.mod.ModPackageDependencyParserKey
-import fledware.definitions.builder.mod.ModPackageDetailsParserKey
-import fledware.definitions.builder.mod.ModPackageEntryFactoryKey
-import fledware.definitions.builder.mod.ModPackageFactoryKey
-import fledware.definitions.builder.mod.ModPackageReaderFactoryKey
 import fledware.definitions.builder.mod.entries.AnnotatedClassEntry
 import fledware.definitions.builder.mod.entries.AnnotatedClassEntryFactory
 import fledware.definitions.builder.mod.entries.AnnotatedFunctionEntry
@@ -32,43 +26,31 @@ import fledware.definitions.builder.registries.AnnotatedFunctionRegistryBuilder
 import fledware.definitions.builder.registries.ResourceRegistryBuilderMap
 import fledware.definitions.builder.registries.ResourceRegistryBuilderTyped
 import fledware.definitions.builder.registries.ResourceRegistryBuilderUntyped
-import fledware.definitions.builder.serializers.BuilderSerializerKey
 import fledware.definitions.builder.serializers.mapStringAnyTypeReference
 import fledware.definitions.builder.serializers.withJsonSerializer
 import fledware.definitions.builder.serializers.withSerializationConverter
 import fledware.definitions.builder.serializers.withYamlSerializer
+import fledware.definitions.builder.serializers.withYmlSerializer
 import fledware.definitions.util.standardEntryTransform
 import fledware.utilities.globToRegex
 
 fun defaultBuilder() = DefaultDefinitionsBuilderFactory()
-    .withBuilderHandlerKey(ModPackageReaderFactoryKey)
     .withBuilderHandler(DefaultModPackageReaderFactory())
-
-    .withBuilderHandlerKey(ModPackageDetailsParserKey)
     .withBuilderHandler(DefaultModPackageDetailsParser())
-
-    .withBuilderHandlerKey(ModPackageDependencyParserKey)
     .withBuilderHandler(ModModPackageDependencyParser())
-
-    .withBuilderHandlerKey(ModPackageFactoryKey)
     .withBuilderHandler(DirectoryModPackageFactory())
     .withBuilderHandler(ZipModPackageFactory())
     .withBuilderHandler(JarModPackageFactory())
-
-    .withBuilderHandlerKey(ModPackageEntryFactoryKey)
     .withBuilderHandler(AnnotatedClassEntryFactory())
     .withBuilderHandler(AnnotatedFunctionEntryFactory())
     .withBuilderHandler(AnnotatedFunctionEntryFactory())
     .withBuilderHandler(ResourceEntryFactory())
-
     .withStandardModEntryProcessors()
-    .withAddBuilderHandlerKeyHandler()
     .withAddBuilderHandlerHandler()
     .withObjectUpdater()
-
-    .withBuilderHandlerKey(BuilderSerializerKey)
     .withJsonSerializer()
     .withYamlSerializer()
+    .withYmlSerializer()
     .withSerializationConverter()
 
 
@@ -88,7 +70,7 @@ inline fun <reified A : Annotation> DefinitionsBuilderFactory.withAnnotatedClass
 inline fun <reified A : Annotation, reified T : Any> DefinitionsBuilderFactory.withAnnotatedClassDefinitionOf(
     name: String,
     noinline defName: (entry: AnnotatedClassEntry) -> String
-) = withDefinitionRegistryBuilder(AnnotatedClassRegistryBuilder(name, T::class))
+) = withBuilderHandler(AnnotatedClassRegistryBuilder(name, T::class))
     .withBuilderHandler(AnnotatedClassHandler(
         name = name,
         processor = definitionModEntryProcessorName,
@@ -104,7 +86,7 @@ inline fun <reified A : Annotation, reified T : Any> DefinitionsBuilderFactory.w
 inline fun <reified A : Annotation> DefinitionsBuilderFactory.withAnnotatedRootFunction(
     name: String,
     noinline defName: (entry: AnnotatedFunctionEntry) -> String
-) = withDefinitionRegistryBuilder(AnnotatedFunctionRegistryBuilder(name))
+) = withBuilderHandler(AnnotatedFunctionRegistryBuilder(name))
     .withBuilderHandler(AnnotatedFunctionHandler(
         name = name,
         processor = definitionModEntryProcessorName,
@@ -127,7 +109,7 @@ inline fun <reified A : Annotation> DefinitionsBuilderFactory.withAnnotatedRootF
  */
 inline fun <reified D : Any> DefinitionsBuilderFactory.withRootResource(
     name: String
-) = withDefinitionRegistryBuilder(ResourceRegistryBuilderUntyped(name, D::class))
+) = withBuilderHandler(ResourceRegistryBuilderUntyped(name, D::class))
     .withBuilderHandler(ResourceHandler(
         name = name,
         processor = definitionModEntryProcessorName,
@@ -149,7 +131,7 @@ inline fun <reified D : Any> DefinitionsBuilderFactory.withRootResource(
  */
 inline fun <reified R : Any, reified D : Any> DefinitionsBuilderFactory.withRootResourceOf(
     name: String
-) = withDefinitionRegistryBuilder(ResourceRegistryBuilderTyped(name, R::class, D::class))
+) = withBuilderHandler(ResourceRegistryBuilderTyped(name, R::class, D::class))
     .withBuilderHandler(ResourceHandler(
         name = name,
         processor = definitionModEntryProcessorName,
@@ -171,7 +153,7 @@ inline fun <reified R : Any, reified D : Any> DefinitionsBuilderFactory.withRoot
  */
 fun DefinitionsBuilderFactory.withRootResourceOfMap(
     name: String
-) = withDefinitionRegistryBuilder(ResourceRegistryBuilderMap(name))
+) = withBuilderHandler(ResourceRegistryBuilderMap(name))
     .withBuilderHandler(ResourceHandler(
         name = name,
         processor = definitionModEntryProcessorName,
@@ -198,7 +180,7 @@ fun DefinitionsBuilderFactory.withRootResourceOfMap(
 inline fun <reified D : Any> DefinitionsBuilderFactory.withDirectoryResource(
     directory: String,
     name: String
-) = withDefinitionRegistryBuilder(ResourceRegistryBuilderUntyped(name, D::class))
+) = withBuilderHandler(ResourceRegistryBuilderUntyped(name, D::class))
     .withBuilderHandler(ResourceHandler(
         name = name,
         processor = definitionModEntryProcessorName,
@@ -222,7 +204,7 @@ inline fun <reified D : Any> DefinitionsBuilderFactory.withDirectoryResource(
 inline fun <reified R : Any, reified D : Any> DefinitionsBuilderFactory.withDirectoryResourceOf(
     directory: String,
     name: String
-) = withDefinitionRegistryBuilder(ResourceRegistryBuilderTyped(name, R::class, D::class))
+) = withBuilderHandler(ResourceRegistryBuilderTyped(name, R::class, D::class))
     .withBuilderHandler(ResourceHandler(
         name = name,
         processor = definitionModEntryProcessorName,
@@ -246,7 +228,7 @@ inline fun <reified R : Any, reified D : Any> DefinitionsBuilderFactory.withDire
 fun DefinitionsBuilderFactory.withDirectoryResourceOfMap(
     directory: String,
     name: String
-) = withDefinitionRegistryBuilder(ResourceRegistryBuilderMap(name))
+) = withBuilderHandler(ResourceRegistryBuilderMap(name))
     .withBuilderHandler(ResourceHandler(
         name = name,
         processor = definitionModEntryProcessorName,

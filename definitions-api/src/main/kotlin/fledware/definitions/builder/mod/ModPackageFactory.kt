@@ -2,34 +2,26 @@ package fledware.definitions.builder.mod
 
 import fledware.definitions.builder.BuilderHandler
 import fledware.definitions.builder.BuilderState
-import fledware.definitions.builder.NameMapHandlerKey
-import fledware.definitions.builder.findHandler
-import fledware.definitions.exceptions.ModPackageReadException
-
-
-val BuilderState.modPackageFactories: Map<String, ModPackageFactory>
-  get() = this.findHandler(ModPackageFactoryKey)
-
-object ModPackageFactoryKey : NameMapHandlerKey<ModPackageFactory>() {
-  override val handlerBaseType = ModPackageFactory::class
-}
-
-interface ModPackageFactory : BuilderHandler {
-  fun attemptFactory(spec: String): ModPackage?
-}
+import fledware.definitions.builder.findHandlerGroupOf
 
 /**
- *
+ * the name for the [ModPackageFactory] group
  */
-data class ModPackageSpec(
-    val rawSpec: String,
-    val type: String,
-    val details: String
-)
+val modPackageFactoryGroupName = ModPackageFactory::class.simpleName!!
 
-fun String.parseModPackageSpec(): ModPackageSpec {
-  val split = this.split(':', limit = 2)
-  if (split.size != 2)
-    throw ModPackageReadException(this, "illegal mod spec format")
-  return ModPackageSpec(this, split[0], split[1])
+/**
+ * gets the group for [ModPackageFactory]
+ */
+val BuilderState.modPackageFactories: Map<String, ModPackageFactory>
+  get() = this.findHandlerGroupOf(modPackageFactoryGroupName)
+
+/**
+ * this factory takes in a spec and will attempt to create
+ * a [ModPackage].
+ */
+interface ModPackageFactory : BuilderHandler {
+  override val group: String
+    get() = modPackageFactoryGroupName
+
+  fun attemptFactory(spec: String): ModPackage?
 }

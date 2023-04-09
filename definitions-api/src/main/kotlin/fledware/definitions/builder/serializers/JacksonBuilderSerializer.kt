@@ -20,7 +20,6 @@ val mapStringAnyTypeReference = object : TypeReference<Map<String, Any>>() {}
 
 open class JacksonBuilderSerializer(
     override val name: String,
-    override val types: List<String>,
     val mapper: ObjectMapper
 ) : BuilderSerializerConverter {
   override fun init(state: DefinitionsBuilderState) {
@@ -77,7 +76,6 @@ open class JacksonBuilderSerializer(
 fun DefinitionsBuilderFactory.withJsonSerializer() =
     withBuilderHandler(JacksonBuilderSerializer(
         name = "json",
-        types = listOf("json"),
         JsonMapper.builder()
             .disable(MapperFeature.AUTO_DETECT_IS_GETTERS)
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
@@ -91,7 +89,18 @@ fun DefinitionsBuilderFactory.withJsonSerializer() =
 fun DefinitionsBuilderFactory.withYamlSerializer() =
     withBuilderHandler(JacksonBuilderSerializer(
         name = "yaml",
-        types = listOf("yaml", "yml"),
+        YAMLMapper.builder()
+            .disable(MapperFeature.AUTO_DETECT_IS_GETTERS)
+            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+            .build()
+            .registerKotlinModule()
+    ))
+
+fun DefinitionsBuilderFactory.withYmlSerializer() =
+    withBuilderHandler(JacksonBuilderSerializer(
+        name = "yml",
         YAMLMapper.builder()
             .disable(MapperFeature.AUTO_DETECT_IS_GETTERS)
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
@@ -104,7 +113,6 @@ fun DefinitionsBuilderFactory.withYamlSerializer() =
 fun DefinitionsBuilderFactory.withSerializationConverter() =
     withBuilderHandler(JacksonBuilderSerializer(
         name = serializerConverterFormatName,
-        types = listOf(serializerConverterFormatName),
         SmileMapper.builder()
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
             .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)

@@ -2,21 +2,22 @@ package fledware.definitions.builder.mod
 
 import fledware.definitions.builder.BuilderHandler
 import fledware.definitions.builder.BuilderState
-import fledware.definitions.builder.SingletonHandlerKey
-import fledware.definitions.builder.findHandler
+import fledware.definitions.builder.findHandlerGroupAsSingletonOf
 
-val BuilderState.modPackageReaderFactory : ModPackageReaderFactory
-  get() = this.findHandler(ModPackageReaderFactoryKey)
+val modPackageReaderFactoryGroupName = ModPackageReaderFactory::class.simpleName!!
 
-
-object ModPackageReaderFactoryKey : SingletonHandlerKey<ModPackageReaderFactory>() {
-  override val handlerBaseType = ModPackageReaderFactory::class
-}
+val BuilderState.modPackageReaderFactory: ModPackageReaderFactory
+  get() = this.findHandlerGroupAsSingletonOf(modPackageReaderFactoryGroupName)
 
 /**
  *
  */
 interface ModPackageReaderFactory : BuilderHandler {
+  override val group: String
+    get() = modPackageReaderFactoryGroupName
+  override val name: String
+    get() = modPackageReaderFactoryGroupName
+
   /**
    *
    */

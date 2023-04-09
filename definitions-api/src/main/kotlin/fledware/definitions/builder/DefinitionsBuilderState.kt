@@ -9,13 +9,9 @@ interface DefinitionsBuilderState : BuilderState {
 
   val packages: List<ModPackageDetails>
 
-  fun setModProcessor(handler: ModProcessor)
+  fun putBuilderHandler(handler: BuilderHandler)
 
-  fun removeModProcessor(name: String)
+  fun removeBuilderHandler(handler: BuilderHandler): Boolean
 
-  fun addDefinitionRegistryBuilder(registry: DefinitionRegistryBuilder<*, *>)
-
-  fun addBuilderHandlerKey(key: BuilderHandlerKey<*, *>)
-
-  fun addBuilderHandler(handler: BuilderHandler)
+  fun removeBuilderHandler(group: String, name: String): Boolean
 }

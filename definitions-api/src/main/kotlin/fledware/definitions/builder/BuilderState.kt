@@ -1,10 +1,7 @@
 package fledware.definitions.builder
 
-import fledware.definitions.exceptions.BuilderStateMutationException
 import fledware.definitions.exceptions.UnknownHandlerException
 import fledware.utilities.TypedMap
-import kotlin.reflect.KClass
-import kotlin.reflect.full.isSuperclassOf
 
 interface BuilderState {
 
@@ -28,52 +25,27 @@ interface BuilderState {
   /**
    *
    */
-  val registries: Map<String, DefinitionRegistryBuilder<Any, Any>>
-
-  /**
-   *
-   */
-  val processors: Map<String, ModProcessor>
-
-  /**
-   *
-   */
-  val handlers: Map<BuilderHandlerKey<BuilderHandler, Any>, Any>
-
-  /**
-   *
-   */
-  val handlerKeys: Map<KClass<BuilderHandler>, BuilderHandlerKey<BuilderHandler, Any>>
+  val handlerGroups: Map<String, Map<String, BuilderHandler>>
 }
 
-fun BuilderState.findRegistry(name: String): DefinitionRegistryBuilder<Any, Any> {
-  return registries[name] ?: throw UnknownHandlerException("unable to find registry: $name")
+fun BuilderState.findHandlerGroup(groupName: String): Map<String, BuilderHandler> {
+  return handlerGroups[groupName]
+      ?: throw UnknownHandlerException("unable to find handler group: $groupName")
 }
 
-fun BuilderState.findProcessor(name: String): ModProcessor {
-  return processors[name] ?: throw UnknownHandlerException("unable to find processor: $name")
+@Suppress("UNCHECKED_CAST")
+fun <T : BuilderHandler> BuilderState.findHandlerGroupOf(groupName: String): Map<String, T> {
+  return findHandlerGroup(groupName) as Map<String, T>
 }
 
-fun <T : Any> BuilderState.findHandler(key: BuilderHandlerKey<*, T>): T {
-  @Suppress("UNCHECKED_CAST")
-  key as BuilderHandlerKey<BuilderHandler, Any>
-  val result = handlers[key] ?: throw UnknownHandlerException("unable to find handler: $key")
-  try {
-    @Suppress("UNCHECKED_CAST")
-    return result as T
-  }
-  catch (ex: ClassCastException) {
-    throw UnknownHandlerException("unable to cast $result to $key", ex)
-  }
+fun BuilderState.findHandlerGroupAsSingleton(name: String): BuilderHandler {
+  val group = findHandlerGroup(name)
+  if (group.size != 1)
+    throw IllegalStateException("invalid group for singleton: $name had ${group.size} elements")
+  return group.values.first()
 }
 
-fun BuilderState.findHandlerKeyFor(handler: BuilderHandler): BuilderHandlerKey<BuilderHandler, Any> {
-    // TODO: this might be a performance issue if we have a lot of different handler types
-    return handlerKeys.values.find { it.handlerBaseType.isSuperclassOf(handler::class) }
-        ?: throw BuilderStateMutationException("unable to find key with handler: $handler")
-}
-
-fun BuilderState.findHandlerKey(klass: KClass<*>): BuilderHandlerKey<BuilderHandler, Any> {
-    return handlerKeys[klass]
-        ?: throw BuilderStateMutationException("unable to find key: $klass")
+@Suppress("UNCHECKED_CAST")
+fun <T: BuilderHandler> BuilderState.findHandlerGroupAsSingletonOf(name: String): T {
+  return findHandlerGroupAsSingleton(name) as T
 }

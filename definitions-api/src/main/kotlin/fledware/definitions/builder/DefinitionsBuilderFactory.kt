@@ -10,13 +10,7 @@ interface DefinitionsBuilderFactory : BuilderState {
 
   fun withManagerContexts(context: Any): DefinitionsBuilderFactory
 
-  fun withBuilderHandlerKey(key: BuilderHandlerKey<*, *>): DefinitionsBuilderFactory
-
   fun withBuilderHandler(handler: BuilderHandler): DefinitionsBuilderFactory
-
-  fun withModProcessor(handler: ModProcessor): DefinitionsBuilderFactory
-
-  fun withDefinitionRegistryBuilder(handler: DefinitionRegistryBuilder<*, *>): DefinitionsBuilderFactory
 
   fun create(): DefinitionsBuilder
 }

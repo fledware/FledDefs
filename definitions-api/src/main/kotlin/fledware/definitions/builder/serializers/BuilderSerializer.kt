@@ -2,35 +2,29 @@ package fledware.definitions.builder.serializers
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fledware.definitions.builder.BuilderHandler
-import fledware.definitions.builder.BuilderHandlerKey
+import fledware.definitions.builder.BuilderState
 import fledware.definitions.builder.DefinitionsBuilderState
-import fledware.definitions.builder.PutValueResult
-import fledware.definitions.builder.findHandler
+import fledware.definitions.builder.findHandlerGroupOf
 import java.io.InputStream
 import kotlin.reflect.KClass
 
-object BuilderSerializerKey : BuilderHandlerKey<BuilderSerializer, Map<String, BuilderSerializer>> {
-  override val handlerBaseType = BuilderSerializer::class
+/**
+ * the name of the [BuilderSerializer] group
+ */
+val builderSerializerGroupName = BuilderSerializer::class.simpleName!!
 
-  override fun allHandlers(value: Map<String, BuilderSerializer>): Collection<BuilderSerializer> {
-    return value.values
-  }
-
-  override fun putValue(value: Map<String, BuilderSerializer>?, handler: BuilderSerializer): PutValueResult {
-    val newValue = value as MutableMap? ?: mutableMapOf()
-    val toRemove = mutableListOf<BuilderSerializer>()
-    handler.types.forEach { type ->
-      newValue.put(type, handler)?.also { toRemove += it }
-    }
-    return PutValueResult(newValue, toRemove)
-  }
-}
+/**
+ * returns all known serializers based on extension (i.e. JSON, yaml.. etc)
+ */
+val BuilderState.serializers: Map<String, BuilderSerializer>
+  get() = findHandlerGroupOf(builderSerializerGroupName)
 
 /**
  * A simple wrapper around serializers.
  */
 interface BuilderSerializer : BuilderHandler {
-  val types: List<String>
+  override val group: String
+    get() = builderSerializerGroupName
 
   fun readAsMap(input: InputStream): Map<String, Any>
   fun readAsMap(input: ByteArray): Map<String, Any>
@@ -80,12 +74,6 @@ inline fun <reified T : Any> BuilderSerializer.readAsType(input: ByteArray): T {
 inline fun <reified T : Any> BuilderSerializer.readAsType(input: String): T {
   return readAsType(input, T::class)
 }
-
-/**
- * returns all known serializers based on extension (i.e. JSON, yaml.. etc)
- */
-val DefinitionsBuilderState.serializers: Map<String, BuilderSerializer>
-  get() = findHandler(BuilderSerializerKey)
 
 /**
  *

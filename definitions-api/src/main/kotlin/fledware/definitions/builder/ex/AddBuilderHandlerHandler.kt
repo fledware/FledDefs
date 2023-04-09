@@ -4,7 +4,7 @@ import fledware.definitions.builder.AbstractBuilderHandler
 import fledware.definitions.builder.DefinitionsBuilderFactory
 import fledware.definitions.builder.BuilderHandler
 import fledware.definitions.builder.DefinitionRegistryBuilder
-import fledware.definitions.builder.ModProcessor
+import fledware.definitions.builder.ModProcessingStep
 import fledware.definitions.builder.mod.ModPackageContext
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.processors.builderModEntryProcessorName
@@ -51,11 +51,7 @@ open class AddBuilderHandlerHandler
       )
     }
 
-    when (handler) {
-      is ModProcessor -> state.setModProcessor(handler)
-      is DefinitionRegistryBuilder<*, *> -> state.addDefinitionRegistryBuilder(handler)
-      else -> state.addBuilderHandler(handler)
-    }
+    state.putBuilderHandler(handler)
 
     return true
   }

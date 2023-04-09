@@ -2,8 +2,7 @@ package fledware.definitions.builder.processors.entries
 
 import fledware.definitions.builder.BuilderHandler
 import fledware.definitions.builder.BuilderState
-import fledware.definitions.builder.NameMapHandlerKey
-import fledware.definitions.builder.findHandler
+import fledware.definitions.builder.findHandlerGroupOf
 import fledware.definitions.builder.mod.ModPackageContext
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.mod.entries.AnnotatedClassEntry
@@ -12,18 +11,24 @@ import fledware.definitions.builder.mod.entries.AnnotatedObjectEntry
 import fledware.definitions.builder.mod.entries.ResourceEntry
 import kotlin.reflect.KClass
 
+/**
+ * the group name for [ModEntryHandler]
+ */
+const val modEntryHandlerGroupName = "ModEntryHandler"
+
+/**
+ * gets the group for [ModEntryHandler]
+ */
 val BuilderState.modEntryHandlers: Map<String, ModEntryHandler>
-  get() = this.findHandler(ModEntryHandlerKey)
-
-
-object ModEntryHandlerKey : NameMapHandlerKey<ModEntryHandler>() {
-  override val handlerBaseType = ModEntryHandler::class
-}
+  get() = this.findHandlerGroupOf(modEntryHandlerGroupName)
 
 /**
  *
  */
 interface ModEntryHandler : BuilderHandler {
+  override val group: String
+    get() = modEntryHandlerGroupName
+
   /**
    *
    */

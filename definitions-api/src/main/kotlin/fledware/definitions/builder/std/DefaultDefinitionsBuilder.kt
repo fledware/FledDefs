@@ -4,7 +4,8 @@ import fledware.definitions.DefinitionsManager
 import fledware.definitions.ModPackageDetails
 import fledware.definitions.builder.DefinitionsBuilder
 import fledware.definitions.builder.DefinitionsBuilderState
-import fledware.definitions.builder.ModProcessor
+import fledware.definitions.builder.ModProcessingStep
+import fledware.definitions.builder.definitionRegistryBuilders
 import fledware.definitions.builder.mod.ModPackage
 import fledware.definitions.builder.mod.ModPackageContext
 import fledware.definitions.builder.mod.ModPackageDetailsRaw
@@ -14,6 +15,7 @@ import fledware.definitions.builder.mod.modPackageEntryFactories
 import fledware.definitions.builder.mod.modPackageFactories
 import fledware.definitions.builder.mod.modPackageReaderFactory
 import fledware.definitions.builder.mod.std.DefaultModPackageContext
+import fledware.definitions.builder.modProcessingSteps
 import fledware.definitions.builder.serializers.figureSerializer
 import fledware.definitions.builder.serializers.readAsType
 import fledware.definitions.exceptions.ModPackageReadException
@@ -36,7 +38,7 @@ open class DefaultDefinitionsBuilder(
         contexts = ConcurrentTypedMap().also {
           state.managerContexts.values.forEach { value -> it.put(value) }
         },
-        initialRegistries = state.registries.values.map { it.build() }
+        initialRegistries = state.definitionRegistryBuilders.values.map { it.build() }
     )
   }
 
@@ -122,8 +124,8 @@ open class DefaultDefinitionsBuilder(
     return orderedEntryReader
   }
 
-  protected open fun getOrderedModProcessors(): List<ModProcessor> {
-    val orderedModProcessors = state.processors.values.sortedBy { it.order }
+  protected open fun getOrderedModProcessors(): List<ModProcessingStep> {
+    val orderedModProcessors = state.modProcessingSteps.values.sortedBy { it.order }
     if (orderedModProcessors.isEmpty())
       throw IllegalStateException("no ModProcessors found")
     if (logger.isDebugEnabled) {

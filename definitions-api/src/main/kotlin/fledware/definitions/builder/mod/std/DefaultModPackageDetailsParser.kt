@@ -8,8 +8,6 @@ import fledware.definitions.builder.mod.modPackageDependencyParsers
 import fledware.definitions.exceptions.PackageDependencyException
 
 open class DefaultModPackageDetailsParser : AbstractBuilderHandler(), ModPackageDetailsParser {
-  override val name: String = "ModPackageDetailsParser"
-
   protected open val rawSpecValidation = "[0-9a-zA-Z:_-]*".toRegex()
 
   override fun parse(name: String, raw: ModPackageDetailsRaw): ModPackageDetails {

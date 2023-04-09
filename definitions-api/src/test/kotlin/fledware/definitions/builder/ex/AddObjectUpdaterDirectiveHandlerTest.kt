@@ -1,4 +1,4 @@
-package fledware.definitions.builder.builtin.ex
+package fledware.definitions.builder.ex
 
 import fledware.definitions.builder.ex.objectUpdater
 import fledware.definitions.builder.std.defaultBuilder
@@ -6,9 +6,9 @@ import fledware.definitions.tests.testJarPath
 import kotlin.test.Test
 import kotlin.test.assertContains
 
-class ObjectUpdaterHandlerTest {
+class AddObjectUpdaterDirectiveHandlerTest {
   @Test
-  fun testSimpleMutation() {
+  fun testBasicLoading() {
     val builder = defaultBuilder().create()
     builder.withModPackage("definitions-api-tests/add-object-updater-directive".testJarPath.path)
     assertContains(builder.state.objectUpdater.selects.keys, "SomeNewSelectDirective")

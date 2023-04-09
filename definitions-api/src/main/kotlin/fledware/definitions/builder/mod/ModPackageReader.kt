@@ -8,7 +8,7 @@ import java.io.InputStream
  * entries are not required to be loaded into memory when the
  * package is initially loaded.
  *
- * We want to allow loading of the classpath and resrouces before
+ * We want to allow loading of the classpath and resources before
  * we actually start reading the data.
  */
 interface ModPackageReader {

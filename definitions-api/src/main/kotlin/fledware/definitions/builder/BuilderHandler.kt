@@ -5,7 +5,12 @@ package fledware.definitions.builder
  */
 interface BuilderHandler {
   /**
-   *
+   * the group this handler belongs to
+   */
+  val group: String
+
+  /**
+   * the name of the handler within the given group
    */
   val name: String
 

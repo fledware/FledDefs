@@ -1,4 +1,4 @@
-package fledware.definitions.builder.builtin
+package fledware.definitions.builder.processors.entries
 
 import fledware.definitions.builder.std.defaultBuilder
 import fledware.definitions.exceptions.IncompleteDefinitionException

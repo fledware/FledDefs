@@ -4,6 +4,29 @@ import fledware.definitions.DefinitionRegistryManaged
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.mod.SimpleModPackageEntry
 import fledware.definitions.exceptions.UnknownDefinitionException
+import fledware.definitions.exceptions.UnknownHandlerException
+
+/**
+ * the name of the group for [DefinitionRegistryBuilder]
+ * within a [BuilderState]
+ */
+const val definitionRegistryBuilderGroupName = "DefinitionRegistryBuilder"
+
+/**
+ * gets the group for all know registry builders
+ */
+@Suppress("UNCHECKED_CAST")
+val BuilderState.definitionRegistryBuilders: Map<String, DefinitionRegistryBuilder<Any, Any>>
+  get() = findHandlerGroupOf(definitionRegistryBuilderGroupName)
+
+/**
+ * finds a specific [DefinitionRegistryBuilder] within the
+ * [definitionRegistryBuilderGroupName] state.
+ */
+fun BuilderState.findRegistry(name: String): DefinitionRegistryBuilder<Any, Any> {
+  return definitionRegistryBuilders[name]
+      ?: throw UnknownHandlerException("unable to find DefinitionRegistryBuilder: $name")
+}
 
 /**
  * TODO: the mutators of entries need to be rethought
@@ -11,6 +34,9 @@ import fledware.definitions.exceptions.UnknownDefinitionException
  * probably have a single mutate method that takes a block that inputs a R?.
  */
 interface DefinitionRegistryBuilder<R : Any, D : Any> : BuilderHandler {
+  override val group: String
+    get() = definitionRegistryBuilderGroupName
+
   /**
    * where all the definitions have come from
    */
