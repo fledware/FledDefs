@@ -2,6 +2,7 @@ package fledware.definitions.builder.std
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fledware.definitions.builder.DefinitionsBuilderFactory
+import fledware.definitions.builder.InstantiatorFactoryHolder
 import fledware.definitions.builder.ex.withAddBuilderHandlerHandler
 import fledware.definitions.builder.ex.withObjectUpdater
 import fledware.definitions.builder.mod.entries.AnnotatedClassEntry
@@ -41,8 +42,8 @@ fun defaultBuilder() = DefaultDefinitionsBuilderFactory()
     .withBuilderHandler(JarModPackageFactory())
     .withBuilderHandler(AnnotatedClassEntryFactory())
     .withBuilderHandler(AnnotatedFunctionEntryFactory())
-    .withBuilderHandler(AnnotatedFunctionEntryFactory())
     .withBuilderHandler(ResourceEntryFactory())
+    .withBuilderHandler(InstantiatorFactoryHolder())
     .withStandardModEntryProcessors()
     .withAddBuilderHandlerHandler()
     .withObjectUpdater()

@@ -2,19 +2,19 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
   ext {
-    kotlinVersion="1.8.10"
+    kotlinVersion="1.8.20"
     coroutineVersion="1.6.4"
     ktxVersion="1.11.0-rc1"
     jacksonVersion="2.14.2"
     junitVersion="5.9.2"
-    slf4jVersion="2.0.6"
+    slf4jVersion="2.0.7"
     semver4jVersion="3.1.0"
     log4jVersion="2.20.0"
     gdxVersion="1.11.0"
-    mavenResolverVersion="1.9.5"
+    mavenResolverVersion="1.9.7"
     mockitoKotlinVersion="4.1.0"
     eclipseCollectionsVersion="11.1.0"
-    fledUtilsVersion="0.1.9-SNAPSHOT"
+    fledUtilsVersion="0.1.10-SNAPSHOT"
     fledEcsVersion="0.1.9-SNAPSHOT"
     fledObjectUpdaterVersion="0.1.9-SNAPSHOT"
   }

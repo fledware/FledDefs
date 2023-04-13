@@ -3,14 +3,15 @@
 package fledware.ecs.definitions.fled
 
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.reader.gatherJar
-import fledware.definitions.registry.DefaultDefinitionsBuilder
+import fledware.definitions.builder.std.defaultBuilder
 import fledware.definitions.tests.testJarPath
 import fledware.ecs.Engine
 import fledware.ecs.Entity
 import fledware.ecs.World
-import fledware.ecs.definitions.instantiator.EntityInstantiator
-import fledware.ecs.definitions.instantiator.SceneInstantiator
+import fledware.ecs.definitions.EntityInstantiator
+import fledware.ecs.definitions.SceneInstantiator
+import fledware.ecs.definitions.entityInstantiatorFactory
+import fledware.ecs.definitions.sceneInstantiatorFactory
 import fledware.ecs.definitions.test.ManagerDriver
 import fledware.ecs.ex.withEntityFlags
 import fledware.ecs.ex.withWorldScenes
@@ -18,16 +19,12 @@ import fledware.ecs.impl.DefaultEngine
 import kotlin.reflect.KClass
 
 
-fun createFledManager() = DefaultDefinitionsBuilder(listOf(
-    fledComponentDefinitionLifecycle(),
-    fledEntityDefinitionLifecycle(),
-    fledSceneDefinitionLifecycle(),
-    fledSystemDefinitionLifecycle(),
-    fledWorldDefinitionLifecycle()
-)).also {
-  it.gatherJar("ecs-loading".testJarPath)
-  it.gatherJar("ecs-loading-fled".testJarPath)
-}.build()
+fun createFledManager() = defaultBuilder()
+    .withFledEcs()
+    .create()
+    .withModPackage("ecs-loading".testJarPath.path)
+    .withModPackage("ecs-loading-fled".testJarPath.path)
+    .build()
 
 fun createFledEngine() = createFledManager().also { manager ->
   DefaultEngine()
@@ -51,8 +48,8 @@ class FledManagerDriver(override val manager: DefinitionsManager) : ManagerDrive
   override val systems: List<Any>
     get() = world?.data?.systems?.values?.toList() ?: emptyList()
 
-  override fun entityInstantiator(type: String): EntityInstantiator<Any, Any> {
-    return manager.entityInstantiator(type) as EntityInstantiator<Any, Any>
+  override fun entityInstantiator(type: String): EntityInstantiator<Any> {
+    return manager.entityInstantiatorFactory.getOrCreate(type)
   }
 
   override fun entityComponent(entity: Any, type: KClass<out Any>): Any {
@@ -67,8 +64,8 @@ class FledManagerDriver(override val manager: DefinitionsManager) : ManagerDrive
     return (entity as Entity).definitionType
   }
 
-  override fun sceneInstantiator(type: String): SceneInstantiator<Any, Any, Any> {
-    return manager.sceneInstantiator(type) as SceneInstantiator<Any, Any, Any>
+  override fun sceneInstantiator(type: String): SceneInstantiator<Any, Any> {
+    return manager.sceneInstantiatorFactory.getOrCreate(type)
   }
 
   override fun decorateWithScene(type: String) {

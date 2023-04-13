@@ -1,4 +1,4 @@
-package fledware.ecs.definitions.instantiator
+package fledware.ecs.definitions
 
 
 interface ComponentArgument {

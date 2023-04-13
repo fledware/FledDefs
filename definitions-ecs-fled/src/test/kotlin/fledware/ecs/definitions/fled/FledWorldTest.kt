@@ -1,7 +1,7 @@
 package fledware.ecs.definitions.fled
 
 import fledware.definitions.util.safeGet
-import fledware.ecs.definitions.instantiator.ComponentArgument
+import fledware.ecs.definitions.ComponentArgument
 import fledware.ecs.definitions.test.WorldTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -18,7 +18,7 @@ class FledWorldTest : WorldTest() {
   @Test
   fun canCreateWorldWithComponent() {
     val driver = createDriver()
-    driver.engine.createDefinedWorldAndFlush("/main")
+    driver.engine.createDefinedWorldAndFlush("main")
     val worldComponent = driver.worldComponent
     assertEquals(0, worldComponent.safeGet("sizeX"))
     assertEquals(0, worldComponent.safeGet("sizeY"))
@@ -27,7 +27,7 @@ class FledWorldTest : WorldTest() {
   @Test
   fun canCreateWorldWithInputNames() {
     val driver = createDriver()
-    driver.engine.createDefinedWorldAndFlush("/main", mapOf(
+    driver.engine.createDefinedWorldAndFlush("main", mapOf(
         "world-component" to mapOf(
             "sizeX" to 123
         )
@@ -40,7 +40,7 @@ class FledWorldTest : WorldTest() {
   @Test
   fun canCreateWorldWithInputArgs() {
     val driver = createDriver()
-    driver.engine.createDefinedWorldAndFlush("/main", listOf(
+    driver.engine.createDefinedWorldAndFlush("main", listOf(
         ComponentArgument("world-component", "sizeX", 234),
         ComponentArgument("world-component", "sizeY", 456)
     ))

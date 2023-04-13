@@ -11,7 +11,7 @@ import fledware.definitions.builtin.functionDefinitions
 import fledware.ecs.Entity
 import fledware.ecs.debugToString
 import fledware.ecs.definitions.fled.entityInstantiator
-import fledware.ecs.definitions.instantiator.ComponentArgument
+import fledware.ecs.definitions.ComponentArgument
 import fledware.ecs.get
 import org.slf4j.LoggerFactory
 import kotlin.random.Random
@@ -79,9 +79,9 @@ fun figureOrbit(parent: Entity?, arguments: MutableList<ComponentArgument>) {
   }
   else {
     arguments += ComponentArgument("orbit", PointOrbit::orbitingId.name, parent.id)
-    arguments += ComponentArgument("orbit", PointOrbit::alpha.name, Random.Default.nextFloat() * MathUtils.PI2)
+    arguments += ComponentArgument("orbit", PointOrbit::alpha.name, Random.nextFloat() * MathUtils.PI2)
     arguments += ComponentArgument("orbit", PointOrbit::distance.name, 10)
-    arguments += ComponentArgument("orbit", PointOrbit::deltaPerSecond.name, Random.Default.nextFloat())
+    arguments += ComponentArgument("orbit", PointOrbit::deltaPerSecond.name, Random.nextFloat())
   }
 }
 

@@ -16,16 +16,20 @@ data class DefinitionsManagerWrapper(val manager: DefinitionsManager)
     manager.contexts.put(engine)
     manager.contexts.put(engine.data)
 
-    val engineEvents = manager.engineEventDefinitionsOrNull
+    val engineEvents = manager.ecsEngineEventDefinitionsOrNull
     @Suppress("IfThenToSafeAccess")
     if (engineEvents != null) {
       engineEvents.definitions.values.forEach { function ->
         val annotation = function.annotation as EngineEvent
         when (annotation.type) {
-          EngineEventType.OnEngineStarted -> engine.events.onEngineStart += { function.callWith(it) }
-          EngineEventType.OnEngineShutdown -> engine.events.onEngineShutdown += { function.callWith(it) }
-          EngineEventType.OnWorldCreated -> engine.events.onWorldCreated += { function.callWith(it) }
-          EngineEventType.OnWorldDestroyed -> engine.events.onWorldDestroyed += { function.callWith(it) }
+          EngineEventType.OnEngineStarted ->
+            engine.events.onEngineStart += { function.functionWrapper.callWithContexts(it) }
+          EngineEventType.OnEngineShutdown ->
+            engine.events.onEngineShutdown += { function.functionWrapper.callWithContexts(it) }
+          EngineEventType.OnWorldCreated ->
+            engine.events.onWorldCreated += { function.functionWrapper.callWithContexts(it) }
+          EngineEventType.OnWorldDestroyed ->
+            engine.events.onWorldDestroyed += { function.functionWrapper.callWithContexts(it) }
         }
       }
     }

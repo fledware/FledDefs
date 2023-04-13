@@ -2,6 +2,8 @@ package fledware.definitions
 
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.exceptions.UnknownDefinitionException
+import fledware.utilities.ConcurrentHierarchyMap
+import fledware.utilities.HierarchyMap
 
 /**
  *

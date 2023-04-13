@@ -13,6 +13,8 @@ class AnnotatedClassEntryFactory : AbstractBuilderHandler(),
   override val order: Int = 20
 
   override fun attemptRead(modPackage: ModPackage, entry: String): List<ModPackageEntry> {
+    if (entry.endsWith("Kt.class"))
+      return emptyList()
     if (!entry.endsWith(".class"))
       return emptyList()
     val klass = modPackage.loadClass(entry).kotlin

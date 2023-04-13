@@ -1,17 +1,18 @@
 package fledware.definitions.builder.registries
 
 import fledware.definitions.DefinitionRegistryManaged
+import fledware.definitions.DefinitionWithType
 import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.exceptions.IncompleteDefinitionException
 import fledware.definitions.manager.DefaultDefinitionRegistry
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
-
+// TODO: move this to an interface and put in public place?
 data class AnnotatedClassDefinition<T : Any>(
-    val klass: KClass<out T>,
+    override val klass: KClass<out T>,
     val annotation: Annotation
-)
+): DefinitionWithType<T>
 
 class AnnotatedClassRegistryBuilder<T : Any>(
     override val name: String,

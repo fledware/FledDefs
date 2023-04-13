@@ -1,7 +1,7 @@
 dependencies {
-  api project(':definitions')
+  api project(':definitions-builder')
 
-  testFixturesApi testFixtures(project(":definitions"))
+  testFixturesApi testFixtures(project(":definitions-builder"))
 }
 
 test {
