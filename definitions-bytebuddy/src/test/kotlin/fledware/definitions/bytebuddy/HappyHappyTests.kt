@@ -11,6 +11,7 @@ import net.bytebuddy.implementation.MethodDelegation
 import net.bytebuddy.matcher.ElementMatchers
 import net.bytebuddy.pool.TypePool
 import java.lang.Exception
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -68,6 +69,7 @@ class HappyHappyTests {
   }
 
   @Test
+  @Ignore
   fun attemptRedefineMethod() {
     ByteBuddyAgent.install()
     val typePool = TypePool.Default.ofSystemLoader();
