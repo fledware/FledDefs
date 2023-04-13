@@ -3,48 +3,46 @@ package fledware.ecs.definitions.ashley
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
-import fledware.definitions.DefinitionsManager
-import fledware.definitions.DefinitionInstantiationLifecycle
-import fledware.ecs.definitions.EntityDefinition
-import fledware.ecs.definitions.entityLifecycle
-import fledware.ecs.definitions.entityLifecycleName
-import fledware.ecs.definitions.instantiator.EntityInstantiator
+import fledware.definitions.instantiator.ReflectInstantiator
+import fledware.ecs.definitions.EntityInstantiator
+import fledware.ecs.definitions.EntityInstantiatorFactory
 import fledware.utilities.get
 import kotlin.reflect.KClass
 
-
-/**
- * Gets or creates the [AshleyEntityInstantiator] for [type].
- */
-fun DefinitionsManager.entityInstantiator(type: String): AshleyEntityInstantiator {
-  return instantiator(entityLifecycleName, type) as AshleyEntityInstantiator
+class AshleyEntityInstantiatorFactory : EntityInstantiatorFactory<Entity>() {
+  override fun entityInstantiator(
+      instantiatorName: String,
+      defaultComponentValues: Map<String, Map<String, Any?>>,
+      componentInstantiators: Map<String, ReflectInstantiator<Any>>
+  ): EntityInstantiator<Entity> {
+    return AshleyEntityInstantiator(
+        manager.contexts.get(),
+        instantiatorName,
+        defaultComponentValues,
+        componentInstantiators
+    )
+  }
 }
 
-/**
- * creates an entity lifecycle with [AshleyEntityInstantiator]
- */
-fun ashleyEntityDefinitionLifecycle() = entityLifecycle(AshleyEntityInstantiator.instantiated())
+class AshleyEntityInstantiator(
+    val engine: Engine,
+    override val instantiatorName: String,
+    defaultComponentValues: Map<String, Map<String, Any?>>,
+    componentInstantiators: Map<String, ReflectInstantiator<Any>>
+) : EntityInstantiator<Entity>(defaultComponentValues, componentInstantiators) {
 
-class AshleyEntityInstantiator(definition: EntityDefinition,
-                               manager: DefinitionsManager)
-  : EntityInstantiator<Entity, Component>(definition, manager) {
-  companion object {
-    fun instantiated() = DefinitionInstantiationLifecycle<EntityDefinition> {
-      AshleyEntityInstantiator(it, this)
-    }
-  }
+  override val instantiating = Entity::class
 
-  val engine = manager.contexts.get<Engine>()
-
+  @Suppress("UNCHECKED_CAST")
   override fun actualCreate(input: Map<String, Map<String, Any?>>): Entity {
     val entity = engine.createEntity()
     entity.add(engine.createComponent(EntityDefinitionInfo::class.java).also {
-      it.type = definition.defName
+      it.type = instantiatorName
     })
     input.forEach { (name, values) ->
       val instantiator = componentInstantiators[name]
           ?: throw IllegalStateException("unknown component definition: $name")
-      val component = engine.createComponent(instantiator.clazz.java)
+      val component = engine.createComponent(instantiator.instantiating.java as Class<out Component>)
       instantiator.mutateWithNames(component, values)
       entity.add(component)
     }

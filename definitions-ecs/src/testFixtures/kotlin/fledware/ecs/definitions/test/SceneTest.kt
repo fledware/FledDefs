@@ -13,7 +13,7 @@ abstract class SceneTest {
 
     assertEquals(0, driver.entities.size)
     assertEquals(0, driver.systems.size)
-    driver.decorateWithWorld("/empty-scene")
+    driver.decorateWithWorld("empty-scene")
     assertEquals(0, driver.entities.size)
     assertEquals(2, driver.systems.size)
   }
@@ -21,7 +21,7 @@ abstract class SceneTest {
   @Test
   fun canCreateSceneObject() {
     val driver = createDriver()
-    val sceneInstantiator = driver.sceneInstantiator("/two-person")
+    val sceneInstantiator = driver.sceneInstantiator("two-person")
     val scene = sceneInstantiator.create()
     assertNotNull(scene)
   }
@@ -29,8 +29,8 @@ abstract class SceneTest {
   @Test
   fun canLoadDefinedScene() {
     val driver = createDriver()
-    driver.decorateWithWorld("/empty-scene")
-    driver.decorateWithScene("/two-person")
+    driver.decorateWithWorld("empty-scene")
+    driver.decorateWithScene("two-person")
     assertEquals(3, driver.entities.size)
     assertEquals(2, driver.systems.size)
   }

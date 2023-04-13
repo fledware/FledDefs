@@ -1,9 +1,34 @@
 package fledware.ecs.definitions.ashley
 
+import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Engine
+import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.EntitySystem
 import fledware.definitions.DefinitionsManager
-import fledware.ecs.definitions.instantiator.ComponentArgument
+import fledware.definitions.builder.DefinitionsBuilderFactory
+import fledware.ecs.definitions.ComponentArgument
+import fledware.ecs.definitions.entityInstantiatorFactory
+import fledware.ecs.definitions.withEcsComponents
+import fledware.ecs.definitions.withEcsEntities
+import fledware.ecs.definitions.withEcsScenes
+import fledware.ecs.definitions.withEcsSystems
+import fledware.ecs.definitions.withEcsWorlds
+import fledware.ecs.definitions.worldInstantiatorFactory
 import fledware.utilities.get
+
+
+// ==================================================================
+//
+// builders
+//
+// ==================================================================
+
+fun DefinitionsBuilderFactory.withAshleyEcs() = this
+    .withEcsComponents<Component>()
+    .withEcsEntities(AshleyEntityInstantiatorFactory())
+    .withEcsSystems<EntitySystem>()
+    .withEcsScenes(AshleySceneInstantiatorFactory())
+    .withEcsWorlds(AshleyWorldInstantiatorFactory())
 
 
 // ==================================================================
@@ -20,7 +45,7 @@ import fledware.utilities.get
  * @param type the definition type for create
  */
 fun DefinitionsManager.createDefinedEntity(type: String) =
-    entityInstantiator(type).create()
+    entityInstantiatorFactory<Entity>().getOrCreate(type).create()
 
 /**
  * Creates an entity with the given type definition and inputs
@@ -31,7 +56,7 @@ fun DefinitionsManager.createDefinedEntity(type: String) =
  * @param inputs the inputs for the components of the entity
  */
 fun DefinitionsManager.createDefinedEntity(type: String, inputs: Map<String, Map<String, Any>>) =
-    entityInstantiator(type).createWithNames(inputs)
+    entityInstantiatorFactory<Entity>().getOrCreate(type).createWithNames(inputs)
 
 /**
  * Creates an entity with the given type definition and inputs
@@ -42,7 +67,7 @@ fun DefinitionsManager.createDefinedEntity(type: String, inputs: Map<String, Map
  * @param inputs the inputs for the components of the entity
  */
 fun DefinitionsManager.createDefinedEntity(type: String, inputs: List<ComponentArgument>) =
-    entityInstantiator(type).createWithArgs(inputs)
+    entityInstantiatorFactory<Entity>().getOrCreate(type).createWithArgs(inputs)
 
 /**
  * Creates and adds an entity with the given type definition
@@ -50,7 +75,7 @@ fun DefinitionsManager.createDefinedEntity(type: String, inputs: List<ComponentA
  * @param type the definition type for create
  */
 fun DefinitionsManager.addDefinedEntity(type: String) =
-    entityInstantiator(type).create()
+    entityInstantiatorFactory<Entity>().getOrCreate(type).create()
         .also { contexts.get<Engine>().addEntity(it) }
 
 /**
@@ -60,7 +85,7 @@ fun DefinitionsManager.addDefinedEntity(type: String) =
  * @param inputs the inputs for the components of the entity
  */
 fun DefinitionsManager.addDefinedEntity(type: String, inputs: Map<String, Map<String, Any>>) =
-    entityInstantiator(type).createWithNames(inputs)
+    entityInstantiatorFactory<Entity>().getOrCreate(type).createWithNames(inputs)
         .also { contexts.get<Engine>().addEntity(it) }
 
 /**
@@ -70,7 +95,7 @@ fun DefinitionsManager.addDefinedEntity(type: String, inputs: Map<String, Map<St
  * @param inputs the inputs for the components of the entity
  */
 fun DefinitionsManager.addDefinedEntity(type: String, inputs: List<ComponentArgument>) =
-    entityInstantiator(type).createWithArgs(inputs)
+    entityInstantiatorFactory<Entity>().getOrCreate(type).createWithArgs(inputs)
         .also { contexts.get<Engine>().addEntity(it) }
 
 
@@ -86,7 +111,7 @@ fun DefinitionsManager.addDefinedEntity(type: String, inputs: List<ComponentArgu
  * @param name the name of the scene to populate the engine
  */
 fun DefinitionsManager.decorateWithScene(name: String) {
-  val scene = this.sceneInstantiator(name)
+  val scene = this.ashleySceneInstantiatorFactory.getOrCreate(name)
   val engine = contexts.get<Engine>()
   engine.removeAllEntities()
   scene.decorate(engine)
@@ -99,7 +124,7 @@ fun DefinitionsManager.decorateWithScene(name: String) {
  * @param name the name of the world definition to populate the engine with
  */
 fun DefinitionsManager.decorateWithWorld(name: String) {
-  val world = this.worldInstantiator(name)
+  val world = this.ashleyWorldInstantiatorFactory.getOrCreate(name)
   val engine = contexts.get<Engine>()
   engine.removeAllEntities()
   engine.removeAllSystems()

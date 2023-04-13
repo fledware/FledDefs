@@ -6,25 +6,22 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.reader.gatherJar
-import fledware.definitions.registry.DefaultDefinitionsBuilder
+import fledware.definitions.builder.std.defaultBuilder
 import fledware.definitions.tests.testJarPath
-import fledware.ecs.definitions.instantiator.EntityInstantiator
-import fledware.ecs.definitions.instantiator.SceneInstantiator
+import fledware.ecs.definitions.EntityInstantiator
+import fledware.ecs.definitions.SceneInstantiator
+import fledware.ecs.definitions.entityInstantiatorFactory
+import fledware.ecs.definitions.sceneInstantiatorFactory
 import fledware.ecs.definitions.test.ManagerDriver
 import kotlin.reflect.KClass
 
 
-fun createAshleyManager() = DefaultDefinitionsBuilder(listOf(
-    ashleyComponentDefinitionLifecycle(),
-    ashleyEntityDefinitionLifecycle(),
-    ashleySceneDefinitionLifecycle(),
-    ashleySystemDefinitionLifecycle(),
-    ashleyWorldDefinitionLifecycle()
-)).also {
-  it.gatherJar("ecs-loading".testJarPath)
-  it.gatherJar("ecs-loading-ashley".testJarPath)
-}.build()
+fun createAshleyManager() = defaultBuilder()
+    .withAshleyEcs()
+    .create()
+    .withModPackage("ecs-loading".testJarPath.path)
+    .withModPackage("ecs-loading-ashley".testJarPath.path)
+    .build()
 
 fun createAshleyEngine() = createAshleyManager().also { manager ->
   Engine().withDefinitionsManager(manager)
@@ -41,8 +38,8 @@ class AshleyManagerDriver(override val manager: DefinitionsManager) : ManagerDri
   override val systems: List<Any>
     get() = engine.systems.toList()
 
-  override fun entityInstantiator(type: String): EntityInstantiator<Any, Any> {
-    return manager.entityInstantiator(type) as EntityInstantiator<Any, Any>
+  override fun entityInstantiator(type: String): EntityInstantiator<Any> {
+    return manager.entityInstantiatorFactory.getOrCreate(type)
   }
 
   override fun entityComponent(entity: Any, type: KClass<out Any>): Any {
@@ -57,8 +54,8 @@ class AshleyManagerDriver(override val manager: DefinitionsManager) : ManagerDri
     return (entity as Entity).definitionType
   }
 
-  override fun sceneInstantiator(type: String): SceneInstantiator<Any, Any, Any> {
-    return manager.sceneInstantiator(type) as SceneInstantiator<Any, Any, Any>
+  override fun sceneInstantiator(type: String): SceneInstantiator<Any, Any> {
+    return manager.sceneInstantiatorFactory.getOrCreate(type)
   }
 
   override fun decorateWithScene(type: String) {

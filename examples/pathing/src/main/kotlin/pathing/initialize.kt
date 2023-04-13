@@ -5,7 +5,7 @@ import fledware.definitions.DefinitionsManager
 import fledware.definitions.builtin.Function
 import fledware.ecs.Engine
 import fledware.ecs.definitions.fled.createDefinedWorldAndFlush
-import fledware.ecs.definitions.instantiator.ComponentArgument
+import fledware.ecs.definitions.ComponentArgument
 import fledware.utilities.get
 
 /**
