@@ -16,6 +16,5 @@ open class DefaultDefinitionRegistry<D : Any>(
   }
 
   override fun tearDown() {
-
   }
 }

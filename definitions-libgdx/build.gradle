@@ -1,13 +1,10 @@
 dependencies {
-  implementation project(':definitions')
+  implementation project(':definitions-builder')
 
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
   api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
-  testImplementation "io.fledware:fledecs:$fledEcsVersion"
-  testImplementation project(":definitions-ecs")
-
-  testFixturesApi testFixtures(project(":definitions"))
+  testFixturesApi testFixtures(project(":definitions-builder"))
   testFixturesApi "com.badlogicgames.gdx:gdx:$gdxVersion"
   testFixturesApi "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 	testFixturesApi "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
@@ -20,5 +17,5 @@ dependencies {
 
 
 test {
-  it.dependsOn(":test-projects:simplegame:build")
+  it.dependsOn(":test-projects:definitions-libgdx-tests:all-resource-types:build")
 }

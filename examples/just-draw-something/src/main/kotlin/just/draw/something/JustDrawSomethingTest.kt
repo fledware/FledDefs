@@ -33,10 +33,10 @@ import fledware.definitions.libgdx.lifecycles.bitmapFontDefinitions
 import fledware.definitions.libgdx.lifecycles.musicDefinitions
 import fledware.definitions.libgdx.lifecycles.skinDefinitions
 import fledware.definitions.libgdx.lifecycles.soundDefinitions
-import fledware.definitions.libgdx.lifecycles.textureDefinitions
+import fledware.definitions.libgdx.types.textureDefinitions
 import fledware.definitions.libgdx.lifecycles.tiledMapDefinitions
 import fledware.definitions.libgdx.lifecycles.trueTypeFontDefinitions
-import fledware.definitions.libgdx.loadAll
+import fledware.definitions.libgdx.loadAllAssets
 import fledware.definitions.libgdx.setupLibGdxFilesWrapper
 import fledware.definitions.registry.DefaultDefinitionsBuilder
 import fledware.definitions.tests.testJarPath
@@ -84,7 +84,7 @@ private class JustDrawSomething(val lifecycles: List<Lifecycle>) : ApplicationLi
     }.also { println("gathered and built definitions in $it ms") }
     measureTimeMillis {
       assetManager = createAssetManager()
-      definitions.loadAll(assetManager)
+      definitions.loadAllAssets(assetManager)
       assetManager.finishLoading()
     }.also { println("loaded all assets in $it ms") }
 

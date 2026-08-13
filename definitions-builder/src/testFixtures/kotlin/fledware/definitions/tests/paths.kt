@@ -12,21 +12,30 @@ val thisVersion by lazy {
   File("../../version.txt").readText()
 }
 
-val String.testJarPath: File
+val String.testJarFile: File
   get() {
     val version = thisVersion
     val lastPart = this.split('/').last()
     return File("$testPathPrefix/test-projects/$this/build/libs/$lastPart-$version.jar").canonicalFile
   }
 
-val String.testDirectoryPath: File
+val String.testJarPath: String
+  get() = testJarFile.canonicalPath
+
+val String.testDirectoryFile: File
   get() {
     thisVersion
     return File("$testPathPrefix/test-projects/$this/").canonicalFile
   }
 
-val String.testResourcePath: File
+val String.testDirectoryPath: String
+  get() = testDirectoryFile.canonicalPath
+
+val String.testResourceFile: File
   get() {
     thisVersion
     return File("$testPathPrefix/test-projects/$this/src/main/resources").canonicalFile
   }
+
+val String.testResourcePath: String
+  get() = testResourceFile.canonicalPath

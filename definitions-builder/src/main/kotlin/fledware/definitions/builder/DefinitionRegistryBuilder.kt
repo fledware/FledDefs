@@ -5,6 +5,7 @@ import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.mod.SimpleModPackageEntry
 import fledware.definitions.exceptions.UnknownDefinitionException
 import fledware.definitions.exceptions.UnknownHandlerException
+import kotlin.reflect.KClass
 
 /**
  * the name of the group for [DefinitionRegistryBuilder]

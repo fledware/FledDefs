@@ -1,7 +1,6 @@
 package fledware.definitions.libgdx
 
 import com.badlogic.gdx.assets.AssetDescriptor
-import fledware.definitions.Definition
 
 /**
  * The DefinitionsManager is not an asset lifecycle handler.
@@ -9,7 +8,12 @@ import fledware.definitions.Definition
  * to instantiate those things. For this reason, we do not actually
  * load any assets into memory.
  */
-interface LibGdxDefinition<T> : Definition {
+interface LibGdxDefinition<T> {
+  /**
+   * the AssetDescriptor that can be used for working
+   * with an AssetManager
+   */
+  val assetDescriptor: AssetDescriptor<T>
   /**
    * gets a new asset for this definition.
    *
@@ -20,10 +24,4 @@ interface LibGdxDefinition<T> : Definition {
    * parameters will not be respected.
    */
   fun getNew(): T
-
-  /**
-   * the AssetDescriptor that can be used for working
-   * with an AssetManager
-   */
-  val assetDescriptor: AssetDescriptor<T>
 }

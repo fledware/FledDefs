@@ -2,7 +2,7 @@ package fledware.definitions.builder.processors.entries
 
 import fledware.definitions.builder.std.defaultBuilder
 import fledware.definitions.exceptions.IncompleteDefinitionException
-import fledware.definitions.tests.testJarPath
+import fledware.definitions.tests.testJarFile
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -13,7 +13,7 @@ class AnnotatedClassHandlerTest {
     val manager = defaultBuilder()
         .withSomeClassAnnotation()
         .create()
-        .withModPackage("definitions-builder-tests/simple-functions-1".testJarPath.path)
+        .withModPackage("definitions-builder-tests/simple-functions-1".testJarFile.path)
         .build()
 
     val someClass = manager.someClass
@@ -26,7 +26,7 @@ class AnnotatedClassHandlerTest {
     val manager = defaultBuilder()
         .withSomeDeepClassAnnotation()
         .create()
-        .withModPackage("definitions-builder-tests/simple-functions-1".testJarPath.path)
+        .withModPackage("definitions-builder-tests/simple-functions-1".testJarFile.path)
         .build()
 
     val someClass = manager.someDeepClass
@@ -40,7 +40,7 @@ class AnnotatedClassHandlerTest {
       defaultBuilder()
           .withSomeDeepClassAnnotation()
           .create()
-          .withModPackage("definitions-builder-tests/simple-functions-2".testJarPath.path)
+          .withModPackage("definitions-builder-tests/simple-functions-2".testJarFile.path)
           .build()
     }
     assertEquals("lala", exception.definition)

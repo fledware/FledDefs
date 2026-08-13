@@ -1,7 +1,7 @@
 package fledware.ecs.definitions
 
 import fledware.definitions.builder.std.defaultBuilder
-import fledware.definitions.tests.testJarPath
+import fledware.definitions.tests.testJarFile
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -14,7 +14,7 @@ class BasicLoadingTest {
         .withEcsScenes()
         .withEcsWorlds()
         .create()
-    builder.withModPackage("ecs-loading".testJarPath.absolutePath)
+    builder.withModPackage("ecs-loading".testJarFile.absolutePath)
     assertEquals(setOf("map", "person", "coolguy", "coolguy2"),
                  builder.state.entityDefinitions.definitions.keys)
     assertEquals(setOf("two-person"),
@@ -30,8 +30,8 @@ class BasicLoadingTest {
         .withEcsScenes()
         .withEcsWorlds()
         .create()
-    builder.withModPackage("ecs-loading".testJarPath.absolutePath)
-    builder.withModPackage("ecs-loading-override".testJarPath.absolutePath)
+    builder.withModPackage("ecs-loading".testJarFile.absolutePath)
+    builder.withModPackage("ecs-loading-override".testJarFile.absolutePath)
     assertEquals(setOf("map", "person", "coolguy", "coolguy2"),
                  builder.state.entityDefinitions.definitions.keys)
     assertEquals(setOf("two-person", "three-person"),

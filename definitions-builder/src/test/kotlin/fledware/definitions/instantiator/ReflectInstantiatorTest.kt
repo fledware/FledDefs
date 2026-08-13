@@ -25,7 +25,7 @@ class ReflectInstantiatorTest {
   @Test
   fun testCreateWithNames() {
     val map = mapOf<String, Any?>("ok" to true, "blah" to 234, "stuff" to null, "dude" to "lala")
-    val instance = factory.createWithNames(map) as SomeDefType
+    val instance = factory.createWithNames(map)
     assertEquals(true, instance.ok)
     assertEquals(234, instance.blah)
     assertEquals(null, instance.stuff)
@@ -35,7 +35,7 @@ class ReflectInstantiatorTest {
   @Test
   fun testCreateWithNamesWithDefaults() {
     val map = mapOf<String, Any?>("ok" to true, "blah" to 234, "stuff" to null)
-    val instance = factory.createWithNames(map) as SomeDefType
+    val instance = factory.createWithNames(map)
     assertEquals(true, instance.ok)
     assertEquals(234, instance.blah)
     assertEquals(null, instance.stuff)
@@ -46,7 +46,7 @@ class ReflectInstantiatorTest {
   fun createWithNamesThrowsOnRequiredParam() {
     val map = mapOf<String, Any?>("ok" to true, "stuff" to "blah")
     val exception = assertFailsWith<ReflectionCallException> {
-      factory.createWithNames(map) as SomeDefType
+      factory.createWithNames(map)
     }
     assertEquals(
         mapOf(
@@ -63,7 +63,7 @@ class ReflectInstantiatorTest {
   fun createWithNamesThrowsOnUnknownParam() {
     val map = mapOf<String, Any?>("ok" to true, "blah" to 234, "stuff" to null, "omg" to 123)
     val exception = assertFailsWith<ReflectionCallException> {
-      factory.createWithNames(map) as SomeDefType
+      factory.createWithNames(map)
     }
     assertEquals(
         mapOf(
@@ -79,7 +79,7 @@ class ReflectInstantiatorTest {
   @Test
   fun mutateWithNames() {
     val map = mapOf<String, Any?>("ok" to true, "blah" to 234, "stuff" to "blah")
-    val instance = factory.createWithNames(map) as SomeDefType
+    val instance = factory.createWithNames(map)
     assertEquals(234, instance.blah)
     factory.mutateWithNames(instance, mapOf("blah" to 567))
     assertEquals(567, instance.blah)
@@ -88,7 +88,7 @@ class ReflectInstantiatorTest {
   @Test
   fun mutateWithNamesErrorsWithImmutableProp() {
     val map = mapOf<String, Any?>("ok" to true, "blah" to 234, "stuff" to "blah")
-    val instance = factory.createWithNames(map) as SomeDefType
+    val instance = factory.createWithNames(map)
     val exception = assertFailsWith<ReflectionMutateException> {
       factory.mutateWithNames(instance, mapOf("stuff" to "yea"))
     }
@@ -100,7 +100,7 @@ class ReflectInstantiatorTest {
   @Test
   fun mutateWithNamesErrorsWithPrivateProp() {
     val map = mapOf<String, Any?>("ok" to true, "blah" to 234, "stuff" to "blah")
-    val instance = factory.createWithNames(map) as SomeDefType
+    val instance = factory.createWithNames(map)
     val exception = assertFailsWith<ReflectionMutateException> {
       factory.mutateWithNames(instance, mapOf("privateValue" to 2))
     }
@@ -116,7 +116,7 @@ class ReflectInstantiatorTest {
   @Test
   fun mutateWithNamesErrorsWithPrivateSetterProp() {
     val map = mapOf<String, Any?>("ok" to true, "blah" to 234, "stuff" to "blah")
-    val instance = factory.createWithNames(map) as SomeDefType
+    val instance = factory.createWithNames(map)
     val exception = assertFailsWith<ReflectionMutateException> {
       factory.mutateWithNames(instance, mapOf("protectedSetterValue" to false))
     }
@@ -132,7 +132,7 @@ class ReflectInstantiatorTest {
   @Test
   fun mutateWithNamesErrorsWithInvalidType() {
     val map = mapOf<String, Any?>("ok" to true, "blah" to 234, "stuff" to "blah")
-    val instance = factory.createWithNames(map) as SomeDefType
+    val instance = factory.createWithNames(map)
     val exception = assertFailsWith<ReflectionMutateException> {
       factory.mutateWithNames(instance, mapOf("stuff" to false))
     }
@@ -149,7 +149,7 @@ class ReflectInstantiatorTest {
   @Test
   fun mutateWithNamesErrorsWithUnknownProp() {
     val map = mapOf<String, Any?>("ok" to true, "blah" to 234, "stuff" to "blah")
-    val instance = factory.createWithNames(map) as SomeDefType
+    val instance = factory.createWithNames(map)
     val exception = assertFailsWith<ReflectionMutateException> {
       factory.mutateWithNames(instance, mapOf("unknown" to "yea"))
     }
@@ -165,7 +165,7 @@ class ReflectInstantiatorTest {
   @Test
   fun mutateWithNamesErrorsWithMultipleIssues() {
     val map = mapOf<String, Any?>("ok" to true, "blah" to 234, "stuff" to "blah")
-    val instance = factory.createWithNames(map) as SomeDefType
+    val instance = factory.createWithNames(map)
     val exception = assertFailsWith<ReflectionMutateException> {
       factory.mutateWithNames(instance, mapOf(
           "unknown" to "yea", "stuff" to "yea", "privateValue" to 2))

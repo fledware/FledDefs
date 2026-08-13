@@ -7,7 +7,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import fledware.definitions.DefinitionsManager
 import fledware.definitions.builder.std.defaultBuilder
-import fledware.definitions.tests.testJarPath
+import fledware.definitions.tests.testJarFile
 import fledware.ecs.definitions.EntityInstantiator
 import fledware.ecs.definitions.SceneInstantiator
 import fledware.ecs.definitions.entityInstantiatorFactory
@@ -19,8 +19,8 @@ import kotlin.reflect.KClass
 fun createAshleyManager() = defaultBuilder()
     .withAshleyEcs()
     .create()
-    .withModPackage("ecs-loading".testJarPath.path)
-    .withModPackage("ecs-loading-ashley".testJarPath.path)
+    .withModPackage("ecs-loading".testJarFile.path)
+    .withModPackage("ecs-loading-ashley".testJarFile.path)
     .build()
 
 fun createAshleyEngine() = createAshleyManager().also { manager ->

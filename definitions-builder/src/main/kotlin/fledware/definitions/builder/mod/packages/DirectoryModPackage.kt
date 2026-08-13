@@ -5,8 +5,8 @@ import java.io.InputStream
 
 
 class DirectoryModPackage(
-    override val root: File,
-    override val spec: String
+    override val spec: String,
+    override val root: File
 ) : AbstractModPackage() {
   override val type: String = "directory"
 

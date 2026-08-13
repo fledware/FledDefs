@@ -10,6 +10,6 @@ class DirectoryModPackageFactory : AbstractModPackageFactory() {
   override fun actualAttemptFactory(spec: String, file: File): ModPackage? {
     if (!file.isDirectory)
       return null
-    return DirectoryModPackage(file, spec)
+    return DirectoryModPackage(spec, file)
   }
 }

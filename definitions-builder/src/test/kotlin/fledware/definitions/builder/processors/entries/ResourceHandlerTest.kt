@@ -2,7 +2,7 @@ package fledware.definitions.builder.processors.entries
 
 import fledware.definitions.builder.std.defaultBuilder
 import fledware.definitions.exceptions.IncompleteDefinitionException
-import fledware.definitions.tests.testDirectoryPath
+import fledware.definitions.tests.testDirectoryFile
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -19,14 +19,14 @@ class ResourceHandlerTest {
                        defaultBuilder()
                            .withSimpleFilesOthersRaw("others2")
                            .create()
-                           .withModPackage("definitions-builder-tests/simple-files-1".testDirectoryPath.path)
+                           .withModPackage("definitions-builder-tests/simple-files-1".testDirectoryFile.path)
                            .build()
                      }),
         Arguments.of({
                        defaultBuilder()
                            .withSimpleFilesOthers("others2")
                            .create()
-                           .withModPackage("definitions-builder-tests/simple-files-2".testDirectoryPath.path)
+                           .withModPackage("definitions-builder-tests/simple-files-2".testDirectoryFile.path)
                            .build()
                      })
     ).stream()
@@ -37,7 +37,7 @@ class ResourceHandlerTest {
     val manager = defaultBuilder()
         .withSimpleFilesOthersRaw("others1")
         .create()
-        .withModPackage("definitions-builder-tests/simple-files-1".testDirectoryPath.path)
+        .withModPackage("definitions-builder-tests/simple-files-1".testDirectoryFile.path)
         .build()
 
     val others = manager.others
@@ -56,8 +56,8 @@ class ResourceHandlerTest {
     val manager = defaultBuilder()
         .withSimpleFilesOthersRaw("others2")
         .create()
-        .withModPackage("definitions-builder-tests/simple-files-1".testDirectoryPath.path)
-        .withModPackage("definitions-builder-tests/simple-files-2".testDirectoryPath.path)
+        .withModPackage("definitions-builder-tests/simple-files-1".testDirectoryFile.path)
+        .withModPackage("definitions-builder-tests/simple-files-2".testDirectoryFile.path)
         .build()
     val other1 = manager.others["other-1"]
     assertEquals("hello world!", other1.someString)

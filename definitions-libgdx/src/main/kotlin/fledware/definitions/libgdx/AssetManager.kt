@@ -1,9 +1,10 @@
 package fledware.definitions.libgdx
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.assets.AssetLoaderParameters
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.assets.loaders.resolvers.ClasspathFileHandleResolver
+import com.badlogic.gdx.assets.loaders.FileHandleResolver
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
@@ -12,21 +13,23 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
 import com.badlogic.gdx.maps.tiled.TideMapLoader
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
-import fledware.definitions.DefinitionsBuilder
+import fledware.definitions.DefinitionRegistry
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.reader.RawDefinitionReader
-import fledware.definitions.reader.findEntryOrNull
+import fledware.definitions.builder.DefinitionsBuilderFactory
+import fledware.definitions.builder.mod.ModPackageContext
+import fledware.definitions.builder.mod.findEntryOrNull
+import fledware.definitions.builder.mod.readEntry
+import fledware.utilities.get
+import java.io.File
 import kotlin.reflect.KClass
-import kotlin.reflect.full.isSubclassOf
 
 
 /**
  * a common way of finding params to be loaded by the AssetManager
  */
-fun <T : Any> RawDefinitionReader.findParametersOrNull(entry: String, paramClass: KClass<T>): T? {
-  val paramEntry = findEntryOrNull("$entry.params") ?: return null
-  val serializer = serialization.figureSerializer(paramEntry)
-  return serializer.readValue(read(paramEntry), paramClass.java)
+fun <T : Any> ModPackageContext.findParametersOrNull(entry: String, paramClass: KClass<T>): T? {
+  val entryParams = this.findEntryOrNull("$entry.params") ?: return null
+  return this.readEntry(entryParams, paramClass)
 }
 
 /**
@@ -40,7 +43,7 @@ fun <T : Any> RawDefinitionReader.findParametersOrNull(entry: String, paramClass
  * @return a new asset manager that is able to load defined assets.
  */
 fun createAssetManager(): AssetManager {
-  val resolver = ClasspathFileHandleResolver()
+  val resolver = DefinitionsFileHandleResolver()
   val result = AssetManager(resolver)
   result.setLoader(TiledMap::class.java, ".tmx", TmxMapLoader(resolver))
   result.setLoader(TiledMap::class.java, ".tide", TideMapLoader(resolver))
@@ -50,39 +53,43 @@ fun createAssetManager(): AssetManager {
 }
 
 /**
- * Adds the [assetManager] to [DefinitionsBuilder.contexts] and returns
- * this [DefinitionsBuilder]. This will also result in the built [DefinitionsManager]
+ * Adds the [assetManager] to [DefinitionsBuilderFactory.contexts] and returns
+ * this [DefinitionsBuilderFactory]. This will also result in the built [DefinitionsManager]
  * to have the same [assetManager] instance.
  */
-fun DefinitionsBuilder.withAssetManager(
+fun DefinitionsBuilderFactory.withAssetManager(
     assetManager: AssetManager = createAssetManager()
-): DefinitionsBuilder {
-  this.contexts.add(assetManager)
+): DefinitionsBuilderFactory {
+  this.withContext(assetManager)
   return this
 }
 
 /**
  * loads all definitions to the given [assetManager]
  */
-fun DefinitionsManager.loadAll(assetManager: AssetManager) {
-  registries.values.forEach { registry ->
-    val type = registry.lifecycle.definition.type
-    if (type.isSubclassOf(LibGdxDefinition::class)) {
-      registry.definitions.values.forEach {
-        assetManager.load((it as LibGdxDefinition<*>).assetDescriptor)
-      }
+fun DefinitionsManager.loadAllAssets(assetManager: AssetManager = this.contexts.get()) {
+  fun DefinitionRegistry<out Any>.attemptLoad() {
+    definitions.values.forEach {
+      val definition = it as? LibGdxDefinition<*> ?: return
+      assetManager.load(definition.assetDescriptor)
     }
   }
+  registries.values.forEach { it.attemptLoad() }
 }
 
 /**
- * convenience method for creating a descriptor
+ * convenience method for creating an [AssetDescriptor]
  */
 inline fun <reified A> descriptor(file: FileHandle, params: AssetLoaderParameters<A>? = null) =
     AssetDescriptor(file, A::class.java, params)
 
 /**
- * convenience method for creating a descriptor
+ *
  */
-inline fun <reified A> descriptor(file: String, params: AssetLoaderParameters<A>? = null) =
-    AssetDescriptor(file, A::class.java, params)
+class DefinitionsFileHandleResolver : FileHandleResolver {
+  override fun resolve(fileName: String): FileHandle {
+    if (File(fileName).exists())
+      return Gdx.files.absolute(fileName)
+    return Gdx.files.classpath(fileName)
+  }
+}

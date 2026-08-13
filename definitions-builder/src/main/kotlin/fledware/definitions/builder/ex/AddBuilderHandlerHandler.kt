@@ -34,7 +34,7 @@ open class AddBuilderHandlerHandler
   override val name = "AddBuilderHandler"
   override val processor: String = builderModEntryProcessorName
 
-  override fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
+  override fun processMaybe(context: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
     val (entry, _) = anyEntry.findAnnotatedClassOrNull(AddBuilderHandler::class) ?: return false
     if (!entry.klass.isSubclassOf(BuilderHandler::class))
       throw IllegalArgumentException("classes annotated with @AddBuilderHandler" +

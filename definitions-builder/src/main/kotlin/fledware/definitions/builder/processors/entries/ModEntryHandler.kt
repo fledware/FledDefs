@@ -23,21 +23,39 @@ val BuilderState.modEntryHandlers: Map<String, ModEntryHandler>
   get() = this.findHandlerGroupOf(modEntryHandlerGroupName)
 
 /**
+ * the actual processor for a single entry. This doesn't have
+ * to worry about threading or finding the entry. It just needs
+ * to check if the entry should be processed by this, and then
+ * does so.
  *
+ * Processing can be anything. The result doesn't have to result
+ * in a mutation of an object or definition.
  */
 interface ModEntryHandler : BuilderHandler {
   override val group: String
     get() = modEntryHandlerGroupName
 
   /**
+   * the [fledware.definitions.builder.processors.ModEntryProcessingStep] that this
+   * handler is meant to be used by.
    *
+   * @see fledware.definitions.builder.processors.builderModEntryProcessorName
+   * for being used to mutate the builder itself
+   *
+   * @see fledware.definitions.builder.processors.definitionModEntryProcessorName
+   * for being used to mutate definitions
    */
   val processor: String
 
   /**
+   * attempts to process [anyEntry].
    *
+   * If it does process the entry, return true and the ModEntryProcessingStep
+   * will remove this entry from further processing.
+   *
+   * @return true, if the entry was processed
    */
-  fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean
+  fun processMaybe(context: ModPackageContext, anyEntry: ModPackageEntry): Boolean
 }
 
 

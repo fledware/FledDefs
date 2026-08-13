@@ -4,7 +4,7 @@ package fledware.ecs.definitions.fled
 
 import fledware.definitions.DefinitionsManager
 import fledware.definitions.builder.std.defaultBuilder
-import fledware.definitions.tests.testJarPath
+import fledware.definitions.tests.testJarFile
 import fledware.ecs.Engine
 import fledware.ecs.Entity
 import fledware.ecs.World
@@ -22,8 +22,8 @@ import kotlin.reflect.KClass
 fun createFledManager() = defaultBuilder()
     .withFledEcs()
     .create()
-    .withModPackage("ecs-loading".testJarPath.path)
-    .withModPackage("ecs-loading-fled".testJarPath.path)
+    .withModPackage("ecs-loading".testJarFile.path)
+    .withModPackage("ecs-loading-fled".testJarFile.path)
     .build()
 
 fun createFledEngine() = createFledManager().also { manager ->
