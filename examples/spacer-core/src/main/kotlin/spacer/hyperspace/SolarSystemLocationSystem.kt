@@ -6,7 +6,7 @@ import fledware.ecs.WorldData
 import fledware.ecs.componentIndexOf
 import fledware.ecs.definitions.EcsSystem
 import fledware.ecs.definitions.fled.createDefinedEntity
-import fledware.ecs.definitions.instantiator.ComponentArgument
+import fledware.ecs.definitions.ComponentArgument
 import fledware.utilities.getOrNull
 import spacer.solarsystem.SolarSystemLocation
 

@@ -1,10 +1,11 @@
 package fledware.ecs.definitions.test
 
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.lifecycle.BasicClassDefinition
-import fledware.ecs.definitions.componentLifecycleName
-import fledware.ecs.definitions.instantiator.EntityInstantiator
-import fledware.ecs.definitions.instantiator.SceneInstantiator
+import fledware.definitions.builder.registries.AnnotatedClassDefinition
+import fledware.definitions.findRegistryOf
+import fledware.ecs.definitions.EntityInstantiator
+import fledware.ecs.definitions.SceneInstantiator
+import fledware.ecs.definitions.ecsComponentsRegistryName
 import kotlin.reflect.KClass
 
 /**
@@ -18,17 +19,17 @@ interface ManagerDriver {
 
   fun componentClass(name: String): KClass<out Any> {
     val definition = manager
-        .registry(componentLifecycleName)
-        .definitions[name] as BasicClassDefinition<*>
+        .findRegistryOf<Any>(ecsComponentsRegistryName)
+        .definitions[name] as AnnotatedClassDefinition<*>
     return definition.klass
   }
 
-  fun entityInstantiator(type: String): EntityInstantiator<Any, Any>
+  fun entityInstantiator(type: String): EntityInstantiator<Any>
   fun entityComponent(entity: Any, type: KClass<out Any>): Any
   fun entityComponentOrNull(entity: Any, type: KClass<out Any>): Any?
   fun entityDefinitionType(entity: Any): String
 
-  fun sceneInstantiator(type: String): SceneInstantiator<Any, Any, Any>
+  fun sceneInstantiator(type: String): SceneInstantiator<Any, Any>
   fun decorateWithScene(type: String)
   fun decorateWithWorld(type: String)
 

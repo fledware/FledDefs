@@ -1,8 +1,7 @@
 package fledware.definitions.builder.ex
 
-import fledware.definitions.builder.ex.objectUpdater
 import fledware.definitions.builder.std.defaultBuilder
-import fledware.definitions.tests.testJarPath
+import fledware.definitions.tests.testJarFile
 import kotlin.test.Test
 import kotlin.test.assertContains
 
@@ -10,7 +9,7 @@ class AddObjectUpdaterDirectiveHandlerTest {
   @Test
   fun testBasicLoading() {
     val builder = defaultBuilder().create()
-    builder.withModPackage("definitions-builder-tests/add-object-updater-directive".testJarPath.path)
+    builder.withModPackage("definitions-builder-tests/add-object-updater-directive".testJarFile.path)
     assertContains(builder.state.objectUpdater.selects.keys, "SomeNewSelectDirective")
     assertContains(builder.state.objectUpdater.operations.keys, "SomeNewOperationDirective")
     assertContains(builder.state.objectUpdater.predicates.keys, "SomeNewPredicateDirective")

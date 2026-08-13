@@ -7,7 +7,7 @@ import fledware.ecs.Engine
 import fledware.ecs.WorldBuilder
 import fledware.ecs.definitions.fled.createDefinedEntity
 import fledware.ecs.definitions.fled.createDefinedWorldAndFlush
-import fledware.ecs.definitions.instantiator.ComponentArgument
+import fledware.ecs.definitions.ComponentArgument
 import fledware.utilities.get
 
 @Suppress("unused")

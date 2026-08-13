@@ -16,7 +16,7 @@ abstract class SystemTest {
     val placementClass = driver.componentClass("placement")
     val movementClass = driver.componentClass("movement")
 
-    driver.decorateWithWorld("/main")
+    driver.decorateWithWorld("main")
     val entity1 = driver.entities.first { driver.entityComponentOrNull(it, placementClass)?.safeGet("x") == 1 }
     val entity8 = driver.entities.first { driver.entityComponentOrNull(it, placementClass)?.safeGet("x") == 8 }
 
@@ -50,7 +50,7 @@ abstract class SystemTest {
     val placementClass = driver.componentClass("placement")
     val healthClass = driver.componentClass("health")
 
-    driver.decorateWithWorld("/main")
+    driver.decorateWithWorld("main")
     val entity1 = driver.entities.first { driver.entityComponentOrNull(it, placementClass)?.safeGet("x") == 1 }
 
     assertTrue(entity1 in driver.entities)

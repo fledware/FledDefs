@@ -6,17 +6,21 @@ import com.badlogic.gdx.Files
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.utils.GdxRuntimeException
-import fledware.definitions.DefinitionsBuilder
-import fledware.definitions.reader.RawDefinitionReader
-import fledware.definitions.registry.DefaultDefinitionsBuilder
+import fledware.definitions.builder.DefinitionsBuilder
+import fledware.definitions.builder.mod.ModPackageContext
+import fledware.definitions.builder.mod.packages.DirectoryModPackage
+import fledware.definitions.builder.mod.packages.JarModPackage
 import java.io.File
 import java.io.InputStream
 import java.net.URL
 
-/**
- * Tries to find a full-featured FileHandle
- */
-fun RawDefinitionReader.fileHandle(entry: String): FileHandle = Gdx.files.classpath(entry)
+fun ModPackageContext.fileHandle(entry: String): FileHandle {
+  return when (this.modPackage) {
+    is DirectoryModPackage -> Gdx.files.absolute(File(this.modPackage.root.path, entry).canonicalPath)
+    is JarModPackage -> Gdx.files.classpath(entry)
+    else -> throw IllegalStateException("unable to find GDX file handle for ${this.modPackage}")
+  }
+}
 
 /**
  * must be called if files are to be read from archives by libgdx.
@@ -25,8 +29,7 @@ fun RawDefinitionReader.fileHandle(entry: String): FileHandle = Gdx.files.classp
  * but before any gather methods are called on this builder.
  */
 fun DefinitionsBuilder.setupLibGdxFilesWrapper() {
-  val wrapper = (this as DefaultDefinitionsBuilder).classLoaderWrapper
-  Gdx.files = LibGdxFilesWrapper(wrapper::currentLoader, Gdx.files)
+  Gdx.files = LibGdxFilesWrapper(this.state.classLoaderWrapper::currentLoader, Gdx.files)
 }
 
 /**

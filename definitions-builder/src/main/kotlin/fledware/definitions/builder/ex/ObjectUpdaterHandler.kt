@@ -55,7 +55,7 @@ class AddObjectUpdaterDirectiveHandler
   override val name: String = "AddObjectUpdaterDirective"
   override val processor: String = builderModEntryProcessorName
 
-  override fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
+  override fun processMaybe(context: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
     val (entry, annotation) = anyEntry.findAnnotatedClassOrNull(AddObjectUpdaterDirective::class) ?: return false
     if (!entry.klass.isSubclassOf(DirectiveHandler::class))
       throw IllegalArgumentException(
@@ -71,7 +71,7 @@ class AddObjectUpdaterDirectiveHandler
           ex
       )
     }
-    val updater = modPackageContext.builderState.objectUpdater
+    val updater = context.builderState.objectUpdater
     when (handler) {
       is SelectDirective -> (updater.selects as MutableMap)[handler.name] = handler
       is OperationDirective -> (updater.operations as MutableMap)[handler.name] = handler
@@ -104,12 +104,12 @@ open class ObjectUpdaterHandler(
   override val processor: String = definitionModEntryProcessorName
   private val parseType = object : TypeReference<List<ObjectUpdaterMutation>>() {}
 
-  override fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
+  override fun processMaybe(context: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
     val entry = anyEntry.findResourceOrNull(gatherRegex) ?: return false
-    val mutations = modPackageContext.readEntry(entry.path, parseType)
-    val objectUpdater = modPackageContext.builderState.objectUpdater
+    val mutations = context.readEntry(entry.path, parseType)
+    val objectUpdater = context.builderState.objectUpdater
     mutations.forEach { mutation ->
-      val registry = modPackageContext.builderState.findRegistry(mutation.registry)
+      val registry = context.builderState.findRegistry(mutation.registry)
       registry.mutate(mutation.definition, entry) {
         val target = objectUpdater.start(it)
         objectUpdater.executeCount(target, mutation.command)

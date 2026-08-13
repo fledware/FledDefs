@@ -15,9 +15,9 @@ class AnnotatedClassHandler(
     private val targetRegistry: String,
     private val defName: (entry: AnnotatedClassEntry) -> String
 ) : AbstractBuilderHandler(), ModEntryHandler {
-  override fun processMaybe(modPackageContext: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
+  override fun processMaybe(context: ModPackageContext, anyEntry: ModPackageEntry): Boolean {
     val (entry, annotation) = anyEntry.findAnnotatedClassOrNull(annotation) ?: return false
-    val target = modPackageContext.builderState.findRegistry(targetRegistry)
+    val target = context.builderState.findRegistry(targetRegistry)
     val defName = defName(entry)
     target.apply(defName, entry, AnnotatedClassDefinition(entry.klass, annotation))
     return true

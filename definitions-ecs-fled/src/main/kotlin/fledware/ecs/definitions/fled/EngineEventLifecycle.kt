@@ -1,11 +1,14 @@
 package fledware.ecs.definitions.fled
 
 import fledware.definitions.DefinitionRegistry
-import fledware.definitions.DefinitionsBuilder
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.RawDefinitionProcessor
-import fledware.definitions.lifecycle.BasicFunctionDefinition
-import fledware.definitions.lifecycle.rootFunctionLifecycle
+import fledware.definitions.builder.BuilderState
+import fledware.definitions.builder.DefinitionRegistryBuilder
+import fledware.definitions.builder.DefinitionsBuilderFactory
+import fledware.definitions.builder.findRegistryOf
+import fledware.definitions.builder.registries.AnnotatedFunctionDefinition
+import fledware.definitions.builder.std.withAnnotatedRootFunction
+import fledware.definitions.findRegistryOf
 
 
 @Target(AnnotationTarget.FUNCTION)
@@ -20,16 +23,17 @@ enum class EngineEventType {
 
 const val engineEventLifecycleName = "engine-events"
 
-fun engineEventLifecycle() = rootFunctionLifecycle<EngineEvent>(engineEventLifecycleName)
+fun DefinitionsBuilderFactory.withEcsEngineEvents() =
+    withAnnotatedRootFunction<EngineEvent>(engineEventLifecycleName) { it.path }
 
 @Suppress("UNCHECKED_CAST")
-val DefinitionsManager.engineEventDefinitions: DefinitionRegistry<BasicFunctionDefinition>
-  get() = registry(engineEventLifecycleName) as DefinitionRegistry<BasicFunctionDefinition>
+val DefinitionsManager.ecsEngineEventDefinitions: DefinitionRegistry<AnnotatedFunctionDefinition>
+  get() = findRegistryOf(engineEventLifecycleName)
 
 @Suppress("UNCHECKED_CAST")
-val DefinitionsManager.engineEventDefinitionsOrNull: DefinitionRegistry<BasicFunctionDefinition>?
-  get() = registries[engineEventLifecycleName] as? DefinitionRegistry<BasicFunctionDefinition>
+val DefinitionsManager.ecsEngineEventDefinitionsOrNull: DefinitionRegistry<AnnotatedFunctionDefinition>?
+  get() = registries[engineEventLifecycleName] as? DefinitionRegistry<AnnotatedFunctionDefinition>
 
 @Suppress("UNCHECKED_CAST")
-val DefinitionsBuilder.engineEventDefinitions: RawDefinitionProcessor<BasicFunctionDefinition>
-  get() = this[engineEventLifecycleName] as RawDefinitionProcessor<BasicFunctionDefinition>
+val BuilderState.engineEventDefinitions: DefinitionRegistryBuilder<AnnotatedFunctionDefinition, AnnotatedFunctionDefinition>
+  get() = findRegistryOf(engineEventLifecycleName)

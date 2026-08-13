@@ -1,5 +1,5 @@
 dependencies {
-  api project(':definitions')
+  api project(':definitions-builder')
   api project(':definitions-ecs')
   api "io.fledware:fledecs:$fledEcsVersion"
   api "org.eclipse.collections:eclipse-collections-api:$eclipseCollectionsVersion"

@@ -11,7 +11,7 @@ import driver.helpers.InputSystem
 import driver.helpers.TwoDGraphics
 import driver.helpers.drawGrid
 import fledware.definitions.libgdx.lifecycles.textureAtlasDefinitions
-import fledware.definitions.libgdx.lifecycles.textureDefinitions
+import fledware.definitions.libgdx.types.textureDefinitions
 import fledware.ecs.World
 import fledware.ecs.WorldData
 import fledware.ecs.componentIndexOf

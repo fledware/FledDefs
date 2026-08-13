@@ -56,6 +56,17 @@ fun <T : Any> ModPackageContext.readEntry(entry: String, klass: KClass<T>): T {
 /**
  * reads an entry to the [T] type.
  */
+fun <T : Any> ModPackageContext.readEntry(entry: String, klass: Class<T>): T {
+  modPackage.read(entry) {
+    return builderState
+        .figureSerializer(entry)
+        .readAsType(it, klass)
+  }
+}
+
+/**
+ * reads an entry to the [T] type.
+ */
 fun <T : Any> ModPackageContext.readEntry(entry: String, typeRef: TypeReference<T>): T {
   modPackage.read(entry) {
     return builderState
@@ -66,7 +77,7 @@ fun <T : Any> ModPackageContext.readEntry(entry: String, typeRef: TypeReference<
 
 /**
  * Finds an entry that starts with [entryWithoutExtension], and checks for
- * each known format from [BuilderState.serialization].
+ * each known format from [DefinitionsBuilderState.serializers].
  *
  * This will return the full entry with the extension included.
  */
@@ -79,7 +90,7 @@ fun ModPackageContext.findEntry(entryWithoutExtension: String): String {
 
 /**
  * Finds an entry that starts with [entryWithoutExtension], and checks for
- * each known format from [BuilderContext.serialization].
+ * each known format from [DefinitionsBuilderState.serializers].
  *
  * This will return the full entry with the extension included, or null if
  * no entry with any known format is found.

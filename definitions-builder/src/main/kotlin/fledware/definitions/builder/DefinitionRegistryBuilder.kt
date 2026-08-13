@@ -5,6 +5,7 @@ import fledware.definitions.builder.mod.ModPackageEntry
 import fledware.definitions.builder.mod.SimpleModPackageEntry
 import fledware.definitions.exceptions.UnknownDefinitionException
 import fledware.definitions.exceptions.UnknownHandlerException
+import kotlin.reflect.KClass
 
 /**
  * the name of the group for [DefinitionRegistryBuilder]
@@ -21,11 +22,20 @@ val BuilderState.definitionRegistryBuilders: Map<String, DefinitionRegistryBuild
 
 /**
  * finds a specific [DefinitionRegistryBuilder] within the
- * [definitionRegistryBuilderGroupName] state.
+ * [definitionRegistryBuilderGroupName] group.
  */
 fun BuilderState.findRegistry(name: String): DefinitionRegistryBuilder<Any, Any> {
   return definitionRegistryBuilders[name]
       ?: throw UnknownHandlerException("unable to find DefinitionRegistryBuilder: $name")
+}
+
+/**
+ * finds a specific [DefinitionRegistryBuilder] within the
+ * [definitionRegistryBuilderGroupName] group and casts it to the given types.
+ */
+@Suppress("UNCHECKED_CAST")
+fun <R : Any, D : Any> BuilderState.findRegistryOf(name: String): DefinitionRegistryBuilder<R, D> {
+  return findRegistry(name) as DefinitionRegistryBuilder<R, D>
 }
 
 /**

@@ -1,13 +1,22 @@
 package fledware.definitions.tests
 
-import fledware.definitions.Lifecycle
-import fledware.definitions.registry.DefaultDefinitionsBuilder
+import fledware.definitions.DefinitionsManager
+import fledware.definitions.builder.DefinitionsBuilder
 
-fun libgdxBuilder(lifecycles: List<Lifecycle> = emptyList(),
-            block: (builder: DefaultDefinitionsBuilder) -> Unit) = builder(lifecycles) { builder ->
-  LibGdxHeadlessContainer.loader = builder.classLoaderWrapper::currentLoader
+fun DefinitionsBuilder.withLibGdxHeadless(block: () -> Unit) {
+  LibGdxHeadlessContainer.loader = this.state.classLoaderWrapper::currentLoader
   try {
-    block(builder)
+    block()
+  }
+  finally {
+    LibGdxHeadlessContainer.loader = null
+  }
+}
+
+fun DefinitionsManager.withLibGdxHeadless(block: () -> Unit) {
+  LibGdxHeadlessContainer.loader = this::classLoader
+  try {
+    block()
   }
   finally {
     LibGdxHeadlessContainer.loader = null

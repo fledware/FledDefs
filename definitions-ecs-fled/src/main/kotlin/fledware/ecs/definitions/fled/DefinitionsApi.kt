@@ -1,19 +1,46 @@
 package fledware.ecs.definitions.fled
 
 import fledware.definitions.DefinitionsManager
+import fledware.definitions.builder.DefinitionsBuilderFactory
+import fledware.definitions.typeIndex
 import fledware.ecs.AbstractSystem
 import fledware.ecs.Engine
 import fledware.ecs.EngineData
 import fledware.ecs.Entity
 import fledware.ecs.EntityFactory
+import fledware.ecs.System
 import fledware.ecs.World
 import fledware.ecs.WorldData
 import fledware.ecs.createWorldAndFlush
-import fledware.ecs.definitions.instantiator.ComponentArgument
+import fledware.ecs.definitions.ComponentArgument
+import fledware.ecs.definitions.componentDefinitions
+import fledware.ecs.definitions.entityInstantiatorFactory
+import fledware.ecs.definitions.sceneInstantiatorFactory
+import fledware.ecs.definitions.withEcsComponents
+import fledware.ecs.definitions.withEcsEntities
+import fledware.ecs.definitions.withEcsScenes
+import fledware.ecs.definitions.withEcsSystems
+import fledware.ecs.definitions.withEcsWorlds
+import fledware.ecs.ex.Scene
 import fledware.ecs.ex.importScene
 import fledware.ecs.util.MapperIndex
 import fledware.utilities.get
 import fledware.utilities.getOrNull
+
+
+// ==================================================================
+//
+// builders
+//
+// ==================================================================
+
+fun DefinitionsBuilderFactory.withFledEcs() = this
+    .withEcsEngineEvents()
+    .withEcsComponents<Any>()
+    .withEcsEntities(FledEntityInstantiatorFactory())
+    .withEcsSystems<System>()
+    .withEcsScenes(FledSceneInstantiatorFactory())
+    .withEcsWorlds(FledWorldInstantiatorFactory())
 
 
 // ==================================================================
@@ -50,7 +77,7 @@ val WorldData.definitions: DefinitionsManager
  * Example of this is in the ecs-loading test project.
  */
 inline fun <reified T : Any> EngineData.definedComponentIndexOf(): MapperIndex<T> {
-  val componentType = definitions.componentDefinitions.typeIndex.getOrNull<T>()
+  val componentType = definitions.componentDefinitions.typeIndex().getOrNull<T>()
       ?: throw IllegalArgumentException("no type found that extends: ${T::class}")
   return componentMapper.indexOf(componentType)
 }
@@ -77,21 +104,21 @@ inline fun <reified T : Any> WorldData.definedComponentIndexOf(): MapperIndex<T>
 // ==================================================================
 
 fun EngineData.createDefinedEntity(name: String?, type: String): Entity {
-  val entity = definitions.entityInstantiator(type).create()
+  val entity = definitions.entityInstantiatorFactory<Entity>().getOrCreate(type).create()
   if (name != null)
     entity.name = name
   return entity
 }
 
 fun EngineData.createDefinedEntity(name: String?, type: String, inputs: Map<String, Map<String, Any>>): Entity {
-  val entity = definitions.entityInstantiator(type).createWithNames(inputs)
+  val entity = definitions.entityInstantiatorFactory<Entity>().getOrCreate(type).createWithNames(inputs)
   if (name != null)
     entity.name = name
   return entity
 }
 
 fun EngineData.createDefinedEntity(name: String?, type: String, inputs: List<ComponentArgument>): Entity {
-  val entity = definitions.entityInstantiator(type).createWithArgs(inputs)
+  val entity = definitions.entityInstantiatorFactory<Entity>().getOrCreate(type).createWithArgs(inputs)
   if (name != null)
     entity.name = name
   return entity
@@ -157,7 +184,7 @@ data class DefinedWorldOptions(val type: String, val options: Any?)
  */
 fun Engine.requestCreateDefinedWorld(name: String,
                                      type: String = name) {
-  val instantiator = data.definitions.worldInstantiator(type)
+  val instantiator = data.definitions.fledWorldInstantiatorFactory.getOrCreate(type)
   requestCreateWorld(name, DefinedWorldOptions(type, null),
                      instantiator::decorateWorld)
 }
@@ -169,7 +196,7 @@ fun Engine.requestCreateDefinedWorld(name: String,
  */
 fun Engine.requestCreateDefinedWorld(nameAndType: String,
                                      componentInput: Map<String, Map<String, Any?>>) {
-  val instantiator = data.definitions.worldInstantiator(nameAndType)
+  val instantiator = data.definitions.fledWorldInstantiatorFactory.getOrCreate(nameAndType)
   requestCreateWorld(nameAndType, DefinedWorldOptions(nameAndType, null)) {
     instantiator.decorateWorldWithNames(this, componentInput)
   }
@@ -184,7 +211,7 @@ fun Engine.requestCreateDefinedWorld(nameAndType: String,
  */
 fun Engine.requestCreateDefinedWorld(name: String, type: String,
                                      componentInput: Map<String, Map<String, Any?>>) {
-  val instantiator = data.definitions.worldInstantiator(type)
+  val instantiator = data.definitions.fledWorldInstantiatorFactory.getOrCreate(type)
   requestCreateWorld(name, DefinedWorldOptions(type, null)) {
     instantiator.decorateWorldWithNames(this, componentInput)
   }
@@ -200,7 +227,7 @@ fun Engine.requestCreateDefinedWorld(name: String, type: String,
  */
 fun Engine.requestCreateDefinedWorld(name: String, type: String,
                                      componentInput: List<ComponentArgument>) {
-  val instantiator = data.definitions.worldInstantiator(type)
+  val instantiator = data.definitions.fledWorldInstantiatorFactory.getOrCreate(type)
   requestCreateWorld(name, DefinedWorldOptions(type, null)) {
     instantiator.decorateWorldWithArgs(this, componentInput)
   }
@@ -215,7 +242,7 @@ fun Engine.requestCreateDefinedWorld(name: String, type: String,
  */
 fun Engine.requestCreateDefinedWorld(nameAndType: String,
                                      componentInput: List<ComponentArgument>) {
-  val instantiator = data.definitions.worldInstantiator(nameAndType)
+  val instantiator = data.definitions.fledWorldInstantiatorFactory.getOrCreate(nameAndType)
   requestCreateWorld(nameAndType, DefinedWorldOptions(nameAndType, null)) {
     instantiator.decorateWorldWithArgs(this, componentInput)
   }
@@ -230,7 +257,7 @@ fun Engine.requestCreateDefinedWorld(nameAndType: String,
  */
 fun Engine.createDefinedWorldAndFlush(name: String,
                                       type: String = name): World {
-  val instantiator = data.definitions.worldInstantiator(type)
+  val instantiator = data.definitions.fledWorldInstantiatorFactory.getOrCreate(type)
   return createWorldAndFlush(name, DefinedWorldOptions(type, null),
                              instantiator::decorateWorld)
 }
@@ -242,7 +269,7 @@ fun Engine.createDefinedWorldAndFlush(name: String,
  */
 fun Engine.createDefinedWorldAndFlush(nameAndType: String,
                                       componentInput: Map<String, Map<String, Any?>>): World {
-  val instantiator = data.definitions.worldInstantiator(nameAndType)
+  val instantiator = data.definitions.fledWorldInstantiatorFactory.getOrCreate(nameAndType)
   return createWorldAndFlush(nameAndType, DefinedWorldOptions(nameAndType, null)) {
     instantiator.decorateWorldWithNames(this, componentInput)
   }
@@ -257,7 +284,7 @@ fun Engine.createDefinedWorldAndFlush(nameAndType: String,
  */
 fun Engine.createDefinedWorldAndFlush(name: String, type: String,
                                       componentInput: Map<String, Map<String, Any?>>): World {
-  val instantiator = data.definitions.worldInstantiator(type)
+  val instantiator = data.definitions.fledWorldInstantiatorFactory.getOrCreate(type)
   return createWorldAndFlush(name, DefinedWorldOptions(type, null)) {
     instantiator.decorateWorldWithNames(this, componentInput)
   }
@@ -273,7 +300,7 @@ fun Engine.createDefinedWorldAndFlush(name: String, type: String,
  */
 fun Engine.createDefinedWorldAndFlush(name: String, type: String,
                                       componentInput: List<ComponentArgument>): World {
-  val instantiator = data.definitions.worldInstantiator(type)
+  val instantiator = data.definitions.fledWorldInstantiatorFactory.getOrCreate(type)
   return createWorldAndFlush(name, DefinedWorldOptions(type, null)) {
     instantiator.decorateWorldWithArgs(this, componentInput)
   }
@@ -288,7 +315,7 @@ fun Engine.createDefinedWorldAndFlush(name: String, type: String,
  */
 fun Engine.createDefinedWorldAndFlush(nameAndType: String,
                                       componentInput: List<ComponentArgument>): World {
-  val instantiator = data.definitions.worldInstantiator(nameAndType)
+  val instantiator = data.definitions.fledWorldInstantiatorFactory.getOrCreate(nameAndType)
   return createWorldAndFlush(nameAndType, DefinedWorldOptions(nameAndType, null)) {
     instantiator.decorateWorldWithArgs(this, componentInput)
   }
@@ -305,6 +332,6 @@ fun Engine.createDefinedWorldAndFlush(nameAndType: String,
  * Creates a defined scene and immediately imports it.
  */
 fun WorldData.importSceneFromDefinitions(name: String) {
-  val instantiator = engine.data.definitions.sceneInstantiator(name)
+  val instantiator = engine.data.definitions.fledSceneInstantiatorFactory.getOrCreate(name)
   importScene(instantiator.create())
 }

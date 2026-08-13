@@ -1,4 +1,4 @@
 dependencies {
-  implementation project(":definitions")
+  implementation project(":definitions-builder")
   implementation project(":definitions-ecs")
 }

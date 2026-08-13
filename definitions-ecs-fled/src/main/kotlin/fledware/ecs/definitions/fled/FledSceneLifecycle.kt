@@ -1,37 +1,38 @@
 package fledware.ecs.definitions.fled
 
 import fledware.definitions.DefinitionsManager
-import fledware.definitions.DefinitionInstantiationLifecycle
+import fledware.definitions.findInstantiatorFactoryOf
 import fledware.ecs.Entity
-import fledware.ecs.definitions.SceneDefinition
-import fledware.ecs.definitions.instantiator.SceneInstantiator
-import fledware.ecs.definitions.sceneLifecycle
-import fledware.ecs.definitions.sceneLifecycleName
+import fledware.ecs.definitions.EntityInstance
+import fledware.ecs.definitions.EntityInstantiator
+import fledware.ecs.definitions.SceneInstantiator
+import fledware.ecs.definitions.SceneInstantiatorFactory
+import fledware.ecs.definitions.ecsSceneDefinitionRegistryName
 import fledware.ecs.ex.Scene
 import fledware.ecs.util.exec
 
 
-/**
- * Gets or creates the [FledSceneInstantiator] for [type].
- */
-fun DefinitionsManager.sceneInstantiator(type: String): FledSceneInstantiator {
-  return instantiator(sceneLifecycleName, type) as FledSceneInstantiator
+val DefinitionsManager.fledSceneInstantiatorFactory: FledSceneInstantiatorFactory
+  get() = this.findInstantiatorFactoryOf(ecsSceneDefinitionRegistryName)
+
+class FledSceneInstantiatorFactory : SceneInstantiatorFactory<Entity, Scene, FledSceneInstantiator>() {
+  override fun sceneInstantiator(
+      instantiatorName: String,
+      entityInstantiators: Map<String, EntityInstantiator<Entity>>,
+      entities: List<EntityInstance>
+  ): FledSceneInstantiator {
+    return FledSceneInstantiator(instantiatorName, entityInstantiators, entities)
+  }
 }
 
-/**
- * creates a scene lifecycle with [FledSceneInstantiator]
- */
-fun fledSceneDefinitionLifecycle() = sceneLifecycle(FledSceneInstantiator.instantiated())
+class FledSceneInstantiator(
+    override val instantiatorName: String,
+    entityInstantiators: Map<String, EntityInstantiator<Entity>>,
+    entities: List<EntityInstance>
+) : SceneInstantiator<Entity, Scene>(entityInstantiators, entities) {
 
-class FledSceneInstantiator(definition: SceneDefinition,
-                            manager: DefinitionsManager)
-  : SceneInstantiator<Entity, Any, Scene>(definition, manager) {
-  companion object {
-    fun instantiated() = DefinitionInstantiationLifecycle<SceneDefinition> {
-      FledSceneInstantiator(it, this)
-    }
-  }
+  override val instantiating = Scene::class
 
   override fun setName(entity: Entity, name: String) = exec { entity.name = name }
-  override fun factory(entities: List<Entity>): Scene = Scene(definition.defName, entities)
+  override fun factory(entities: List<Entity>): Scene = Scene(instantiatorName, entities)
 }

@@ -14,6 +14,7 @@ import fledware.definitions.builder.std.withAnnotatedClassDefinitionOf
 import fledware.definitions.builder.std.withAnnotatedRootFunction
 import fledware.definitions.builder.std.withDirectoryResource
 import fledware.definitions.builder.std.withDirectoryResourceOf
+import fledware.definitions.findRegistryOf
 import fledware.definitions.util.firstOfType
 
 
@@ -47,8 +48,7 @@ fun DefinitionsBuilderFactory.withSimpleFilesOthers(directory: String) =
 
 @Suppress("UNCHECKED_CAST")
 val DefinitionsManager.others
-  get() =
-    this.registry("others") as DefinitionRegistry<SimpleFilesOthers>
+  get() = this.findRegistryOf<SimpleFilesOthers>("others")
 
 // ============================================================================
 //
@@ -63,8 +63,7 @@ fun DefinitionsBuilderFactory.withSomeFunctionAnnotation() =
 
 @Suppress("UNCHECKED_CAST")
 val DefinitionsManager.someFunction
-  get() =
-    this.registry("some-function") as DefinitionRegistry<AnnotatedFunctionDefinition>
+  get() = this.findRegistryOf<AnnotatedFunctionDefinition>("some-function")
 
 // ============================================================================
 //
@@ -79,8 +78,7 @@ fun DefinitionsBuilderFactory.withSomeClassAnnotation() =
 
 @Suppress("UNCHECKED_CAST")
 val DefinitionsManager.someClass
-  get() =
-    this.registry("some-class") as DefinitionRegistry<AnnotatedClassDefinition<Any>>
+  get() = this.findRegistryOf<AnnotatedClassDefinition<Any>>("some-class")
 
 // ============================================================================
 //
@@ -95,5 +93,4 @@ fun DefinitionsBuilderFactory.withSomeDeepClassAnnotation() =
 
 @Suppress("UNCHECKED_CAST")
 val DefinitionsManager.someDeepClass
-  get() =
-    this.registry("some-deep-class") as DefinitionRegistry<AnnotatedClassDefinition<SomeDeepClass>>
+  get() = this.findRegistryOf<AnnotatedClassDefinition<SomeDeepClass>>("some-deep-class")

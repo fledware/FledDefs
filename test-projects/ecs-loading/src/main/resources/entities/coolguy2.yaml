@@ -1,4 +1,4 @@
-extends: /coolguy
+extends: coolguy
 components:
   movement:
     deltaX: 1

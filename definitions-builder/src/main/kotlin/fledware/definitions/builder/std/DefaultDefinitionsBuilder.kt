@@ -6,6 +6,7 @@ import fledware.definitions.builder.DefinitionsBuilder
 import fledware.definitions.builder.DefinitionsBuilderState
 import fledware.definitions.builder.ModProcessingStep
 import fledware.definitions.builder.definitionRegistryBuilders
+import fledware.definitions.builder.instantiatorFactories
 import fledware.definitions.builder.mod.ModPackage
 import fledware.definitions.builder.mod.ModPackageContext
 import fledware.definitions.builder.mod.ModPackageDetailsRaw
@@ -17,10 +18,12 @@ import fledware.definitions.builder.mod.std.DefaultModPackageContext
 import fledware.definitions.builder.modProcessingSteps
 import fledware.definitions.builder.serializers.figureSerializer
 import fledware.definitions.builder.serializers.readAsType
+import fledware.definitions.exceptions.DefinitionException
 import fledware.definitions.exceptions.ModPackageReadException
 import fledware.definitions.manager.DefaultDefinitionsManager
 import fledware.utilities.ConcurrentTypedMap
 import org.slf4j.LoggerFactory
+import java.lang.Exception
 
 open class DefaultDefinitionsBuilder(
     override val state: DefinitionsBuilderState
@@ -37,7 +40,8 @@ open class DefaultDefinitionsBuilder(
         contexts = ConcurrentTypedMap().also {
           state.managerContexts.values.forEach { value -> it.put(value) }
         },
-        initialRegistries = state.definitionRegistryBuilders.values.map { it.build() }
+        initialRegistries = state.definitionRegistryBuilders.values.map { it.build() },
+        instantiatorFactories = state.instantiatorFactories
     )
   }
 
@@ -68,7 +72,13 @@ open class DefaultDefinitionsBuilder(
     // create all the entry infos that can be processed
     val unhandledEntries = modPackage.entries.mapNotNull { entry ->
       orderedEntryParsers.firstNotNullOfOrNull {
-        it.attemptRead(modPackage, entry).ifEmpty { null }
+        try {
+          it.attemptRead(modPackage, entry).ifEmpty { null }
+        }
+        catch (ex: Exception) {
+          throw DefinitionException(
+              "exception in ${modPackage.name} with reading entry $entry", ex)
+        }
       }
     }.flatMapTo(linkedSetOf()) { it }
     if (logger.isDebugEnabled) {

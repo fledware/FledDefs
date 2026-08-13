@@ -5,7 +5,7 @@ import fledware.ecs.GroupIteratorSystem
 import fledware.ecs.WorldData
 import fledware.ecs.definitions.EcsSystem
 import fledware.ecs.componentIndexOf
-import fledware.ecs.definitions.instantiator.MutableComponentArgument
+import fledware.ecs.definitions.MutableComponentArgument
 
 val WorldData.map get() = entitiesNamed["map"] ?: throw IllegalStateException("map not found")
 val inputX = MutableComponentArgument("placement", Placement::x.name)

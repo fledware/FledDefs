@@ -52,6 +52,18 @@ open class JacksonBuilderSerializer(
     return mapper.readValue(input, type.javaObjectType)
   }
 
+  override fun <T : Any> readAsType(input: InputStream, type: Class<T>): T {
+    return mapper.readValue(input, type)
+  }
+
+  override fun <T : Any> readAsType(input: ByteArray, type: Class<T>): T {
+    return mapper.readValue(input, type)
+  }
+
+  override fun <T : Any> readAsType(input: String, type: Class<T>): T {
+    return mapper.readValue(input, type)
+  }
+
   override fun <T : Any> readAsType(input: InputStream, type: TypeReference<T>): T {
     return mapper.readValue(input, type)
   }

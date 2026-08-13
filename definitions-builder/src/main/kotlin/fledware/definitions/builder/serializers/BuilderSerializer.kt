@@ -34,6 +34,10 @@ interface BuilderSerializer : BuilderHandler {
   fun <T : Any> readAsType(input: ByteArray, type: KClass<T>): T
   fun <T : Any> readAsType(input: String, type: KClass<T>): T
 
+  fun <T : Any> readAsType(input: InputStream, type: Class<T>): T
+  fun <T : Any> readAsType(input: ByteArray, type: Class<T>): T
+  fun <T : Any> readAsType(input: String, type: Class<T>): T
+
   fun <T : Any> readAsType(input: InputStream, type: TypeReference<T>): T
   fun <T : Any> readAsType(input: ByteArray, type: TypeReference<T>): T
   fun <T : Any> readAsType(input: String, type: TypeReference<T>): T
